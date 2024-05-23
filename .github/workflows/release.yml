@@ -1,4 +1,4 @@
-name: Deploy with Maven
+name: Release
 
 on:
   push:
@@ -51,7 +51,8 @@ jobs:
         id: generate-pmd-report
         uses: pmd/pmd-github-action@v2
         with:
-          rulesets: 'rulesets/java/quickstart.xml'
+          rulesets: 'src/main/resources/rulesets/java/pmd-dome.xml'
+          # rulesets: 'rulesets/java/quickstart.xml'
           sourcePath: 'src/main/java'
           analyzeModifiedFilesOnly: false
       
@@ -61,7 +62,7 @@ jobs:
           sarif_file: pmd-report.sarif
 
       - name: Fail build if there are violations
-        if: steps.generate-pmd-report.outputs.violations > 60
+        if: steps.generate-pmd-report.outputs.violations > 0
         run: exit 1
 
   publish:
