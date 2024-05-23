@@ -7,7 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SearchAndBrowsingApplicationTests {
 
 	@Test
-	void contextLoads() {
+    public void testFindOne() {
+		System.out.println("test here");
+		//https://mkyong.com/spring-boot/spring-boot-spring-data-elasticsearch-example/
 	}
 
 }

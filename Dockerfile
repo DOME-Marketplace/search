@@ -1,4 +1,5 @@
 FROM openjdk:11-slim
+
 COPY ./target/search-0.0.1-SNAPSHOT.jar /usr/app/
 WORKDIR /usr/app
 
