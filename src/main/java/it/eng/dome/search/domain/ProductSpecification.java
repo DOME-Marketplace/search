@@ -104,11 +104,11 @@ public class ProductSpecification {
 	}
 
 	public Attachment[] getAttachment() {
-		return attachment == null ? null : attachment.clone();
+		return attachment;
 	}
 
 	public ProductSpecCharacteristic[] getProductSpecCharacteristic() {
-		return productSpecCharacteristic == null ? null : productSpecCharacteristic.clone();
+		return productSpecCharacteristic;
 	}
 
 	public void setProductSpecCharacteristic(ProductSpecCharacteristic[] productSpecCharacteristic) {
@@ -116,7 +116,7 @@ public class ProductSpecification {
 	}
 
 	public RelatedParty[] getRelatedParty() {
-		return relatedParty == null ? null : relatedParty.clone();
+		return relatedParty;
 	}
 
 	public void setRelatedParty(RelatedParty[] relatedParty) {

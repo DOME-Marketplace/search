@@ -12,6 +12,8 @@
     <exclude name="GuardLogStatement"/>
     <exclude name="AvoidReassigningParameters"/>
     <exclude name="UseVarargs"/>
+    <exclude name="MethodReturnsInternalArray"/>
+    <exclude name="ArrayIsStoredDirectly"/>
   </rule>
   
   <!--rule ref="category/java/performance.xml"/-->
