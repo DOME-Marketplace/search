@@ -172,8 +172,8 @@ public class IndexingObject {
 		this.relatedPartyId = relatedPartyId;
 	}
 
-	public ServiceSpecification[] getServices() {
-		return services;
+	public ServiceSpecification[] getServices() {		
+		return services == null ? null : services.clone();
 	}
 
 	public void setServices(ServiceSpecification[] services) {
@@ -181,7 +181,7 @@ public class IndexingObject {
 	}
 
 	public ResourceSpecification[] getResources() {
-		return resources;
+		return resources == null ? null : resources.clone();
 	}
 
 	public void setResources(ResourceSpecification[] resources) {

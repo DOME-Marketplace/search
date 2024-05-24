@@ -1,39 +1,32 @@
 package it.eng.dome.search.domain;
 
-
-
 import org.springframework.data.annotation.Id;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProductSpecification {
 
-	
 	@Id
 	protected String id;
-	
+
 	private String href;
 	private String brand;
 	private String description;
 	private Boolean isBundle;
 	private String lastUpdate;
-    private String lifecycleStatus;
-    private String name;
+	private String lifecycleStatus;
+	private String name;
 	private String version;
-	
-	private Attachment[] attachment; 
-	
-	private ProductSpecCharacteristic[] productSpecCharacteristic; 
-	private RelatedParty[] relatedParty; 
-	private ResourceSpecification[] resourceSpecification;
 
+	private Attachment[] attachment;
+	private ProductSpecCharacteristic[] productSpecCharacteristic;
+	private RelatedParty[] relatedParty;
+	private ResourceSpecification[] resourceSpecification;
 	private ServiceSpecification[] serviceSpecification;
 
-	
 	public String getId() {
 		return id;
 	}
@@ -111,11 +104,11 @@ public class ProductSpecification {
 	}
 
 	public Attachment[] getAttachment() {
-		return attachment;
+		return attachment == null ? null : attachment.clone();
 	}
 
 	public ProductSpecCharacteristic[] getProductSpecCharacteristic() {
-		return productSpecCharacteristic;
+		return productSpecCharacteristic == null ? null : productSpecCharacteristic.clone();
 	}
 
 	public void setProductSpecCharacteristic(ProductSpecCharacteristic[] productSpecCharacteristic) {
@@ -123,14 +116,12 @@ public class ProductSpecification {
 	}
 
 	public RelatedParty[] getRelatedParty() {
-		return relatedParty;
+		return relatedParty == null ? null : relatedParty.clone();
 	}
 
 	public void setRelatedParty(RelatedParty[] relatedParty) {
 		this.relatedParty = relatedParty;
 	}
-
-
 
 	public ResourceSpecification[] getResourceSpecification() {
 		return resourceSpecification;
@@ -147,8 +138,5 @@ public class ProductSpecification {
 	public void setServiceSpecification(ServiceSpecification[] serviceSpecification) {
 		this.serviceSpecification = serviceSpecification;
 	}
-
-
-
 
 }
