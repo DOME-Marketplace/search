@@ -1,20 +1,20 @@
 package it.eng.dome.search;
 
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import it.eng.dome.search.domain.IndexingObject;
-//import it.eng.dome.search.service.OfferingProcessor;
+import it.eng.dome.search.service.OfferingProcessor;
 
-@SpringBootTest
+@SpringBootTest(classes = SearchAndBrowsingApplication.class)
 class SearchAndBrowsingApplicationTests {
 
-	//@Autowired
-	//private OfferingProcessor offering;
+	@Autowired
+	private OfferingProcessor offering;
 
 	@Test
 	public void testSave() {
@@ -35,14 +35,14 @@ class SearchAndBrowsingApplicationTests {
 		index.setProductSpecificationName("Specification Name");
 		index.setServices(null);
 		index.setResources(null);
-/* 
+
 		IndexingObject indexTest = offering.save(index);
 
 		assertNotNull(indexTest.getId());
 		assertEquals(index.getProductOfferingName(), indexTest.getProductOfferingName());
 		assertEquals(index.getProductOfferingIsBundle(), indexTest.getProductOfferingIsBundle());
 		assertEquals(index.getProductOfferingNameText(), indexTest.getProductOfferingNameText());
-*/
+
 		// https://mkyong.com/spring-boot/spring-boot-spring-data-elasticsearch-example/
 	}
 
