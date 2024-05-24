@@ -14,6 +14,7 @@
     <exclude name="UseVarargs"/>
     <exclude name="MethodReturnsInternalArray"/>
     <exclude name="ArrayIsStoredDirectly"/>
+    <exclude name="AvoidPrintStackTrace"/>
   </rule>
   
   <!--rule ref="category/java/performance.xml"/-->

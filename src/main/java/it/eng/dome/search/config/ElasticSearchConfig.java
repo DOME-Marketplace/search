@@ -55,8 +55,7 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
         if(usingSsl) {
             if(! usingSslVerification) {
                 try {
-                    SSLContextBuilder sslBuilder = null;
-                    sslBuilder = SSLContexts.custom()
+                    SSLContextBuilder sslBuilder = SSLContexts.custom()
                             .loadTrustMaterial(null, (x509Certificates, s) -> true);
 
                     final SSLContext sslContext = sslBuilder.build();
