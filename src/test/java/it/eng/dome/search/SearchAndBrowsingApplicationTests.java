@@ -25,7 +25,7 @@ class SearchAndBrowsingApplicationTests {
 		index.setProductOfferingDescription("product offering description");
 		index.setProductOffering(null);
 		index.setProductOfferingIsBundle(false);
-		index.setProductOfferingLastUpdate("");
+		index.setProductOfferingLastUpdate("2024-05-21T10:02:40.254833831Z");
 		index.setProductOfferingName("product-offering-name");
 		index.setProductOfferingNameText("Name Text");
 		index.setProductSpecification(null);
