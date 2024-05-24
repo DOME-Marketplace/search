@@ -10,39 +10,39 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Document(indexName = "indexing-object")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IndexingObject {
-	
+
 	public IndexingObject indexingObject() {
 		return this.indexingObject();
-		}
+	}
 
 	@Id
 	protected String id;
-	
-	@Field (type = FieldType.Nested)
+
+	@Field(type = FieldType.Nested)
 	private ProductOffering productOffering;
-	
-	//from ProductOffering
-	
+
+	// from ProductOffering
+
 	@Field(type = FieldType.Keyword)
 	private String productOfferingId;
-	
+
 	@Field(type = FieldType.Text)
 	private String productOfferingDescription;
 
 	@Field(type = FieldType.Keyword)
 	private String productOfferingName;
-	
+
 	@Field(type = FieldType.Text)
 	private String productOfferingNameText;
-	
-	@Field (type = FieldType.Date)
+
+	@Field(type = FieldType.Date)
 	private String productOfferingLastUpdate;
-	
-	@Field (type = FieldType.Boolean)
-	private Boolean productOfferingIsBundle;	
-	
-	//from ProductSpecification
-	
+
+	@Field(type = FieldType.Boolean)
+	private Boolean productOfferingIsBundle;
+
+	// from ProductSpecification
+
 	@Field(type = FieldType.Nested)
 	private ProductSpecification productSpecification;
 
@@ -54,25 +54,25 @@ public class IndexingObject {
 
 	@Field(type = FieldType.Text)
 	private String productSpecificationName;
-	
+
 	@Field(type = FieldType.Text)
-	private String productSpecificationDescription;	
-	
-	//from RelatedParty
+	private String productSpecificationDescription;
+
+	// from RelatedParty
 	@Field(type = FieldType.Keyword)
 	private String relatedPartyId;
 
-	//from ServiceSpecification
+	// from ServiceSpecification
 	@Field(type = FieldType.Nested)
 	private ServiceSpecification[] services;
-	
-	//from Resource Specification
+
+	// from Resource Specification
 	@Field(type = FieldType.Nested)
 	private ResourceSpecification[] resources;
-	
-	//from Categorization and Entities Extraction  //put here fields for semantic services ----
-	
-	
+
+	// from Categorization and Entities Extraction //put here fields for semantic
+	// services ----
+
 	public String getId() {
 		return id;
 	}
@@ -88,7 +88,7 @@ public class IndexingObject {
 	public void setProductOfferingId(String productOfferingId) {
 		this.productOfferingId = productOfferingId;
 	}
-	
+
 	public String getProductOfferingDescription() {
 		return productOfferingDescription;
 	}
@@ -96,7 +96,7 @@ public class IndexingObject {
 	public void setProductOfferingDescription(String productOfferingDescription) {
 		this.productOfferingDescription = productOfferingDescription;
 	}
-	
+
 	public String getProductOfferingName() {
 		return productOfferingName;
 	}
@@ -104,7 +104,6 @@ public class IndexingObject {
 	public void setProductOfferingName(String productOfferingName) {
 		this.productOfferingName = productOfferingName;
 	}
-	
 
 	public String getProductOfferingNameText() {
 		return productOfferingNameText;
@@ -121,7 +120,6 @@ public class IndexingObject {
 	public void setProductOfferingLastUpdate(String productOfferingLastUpdate) {
 		this.productOfferingLastUpdate = productOfferingLastUpdate;
 	}
-	
 
 	public Boolean getProductOfferingIsBundle() {
 		return productOfferingIsBundle;
@@ -130,8 +128,7 @@ public class IndexingObject {
 	public void setProductOfferingIsBundle(Boolean productOfferingIsBundle) {
 		this.productOfferingIsBundle = productOfferingIsBundle;
 	}
-	
-	
+
 	public String getProductSpecificationId() {
 		return productSpecificationId;
 	}
@@ -139,7 +136,7 @@ public class IndexingObject {
 	public void setProductSpecificationId(String productSpecificationId) {
 		this.productSpecificationId = productSpecificationId;
 	}
-	
+
 	public String getProductSpecificationBrand() {
 		return productSpecificationBrand;
 	}
@@ -147,7 +144,7 @@ public class IndexingObject {
 	public void setProductSpecificationBrand(String productSpecificationBrand) {
 		this.productSpecificationBrand = productSpecificationBrand;
 	}
-	
+
 	public String getProductSpecificationName() {
 		return productSpecificationName;
 	}
@@ -155,7 +152,7 @@ public class IndexingObject {
 	public void setProductSpecificationName(String productSpecificationName) {
 		this.productSpecificationName = productSpecificationName;
 	}
-	
+
 	public String getProductSpecificationDescription() {
 		return productSpecificationDescription;
 	}
@@ -172,7 +169,7 @@ public class IndexingObject {
 		this.relatedPartyId = relatedPartyId;
 	}
 
-	public ServiceSpecification[] getServices() {		
+	public ServiceSpecification[] getServices() {
 		return services;
 	}
 
@@ -187,7 +184,7 @@ public class IndexingObject {
 	public void setResources(ResourceSpecification[] resources) {
 		this.resources = resources;
 	}
-	
+
 	public ProductOffering getProductOffering() {
 		return productOffering;
 	}
