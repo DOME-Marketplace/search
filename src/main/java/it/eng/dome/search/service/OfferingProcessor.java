@@ -77,7 +77,7 @@ public class OfferingProcessor {
 
 	public List<IndexingObject> processListProductOffering() {
 
-		List<IndexingObject> toRet = new ArrayList<IndexingObject>();
+		List<IndexingObject> indexingToRet = new ArrayList<IndexingObject>();
 		String listProductOfferings = restUtil.getAllProductOfferings();
 
 		try {
@@ -89,7 +89,7 @@ public class OfferingProcessor {
 				objToIndex = indexingManager.processOffering(product,objToIndex);
 
 				objToIndex = save(objToIndex);
-				toRet.add(objToIndex);
+				indexingToRet.add(objToIndex);
 			}
 
 		} catch (JsonMappingException e) {
@@ -102,7 +102,7 @@ public class OfferingProcessor {
 			e.printStackTrace();
 		}
 
-		return toRet;
+		return indexingToRet;
 	}
 
 
@@ -198,10 +198,34 @@ public class OfferingProcessor {
 	}
 
 
+
+	public IndexingObject processProductOfferingFromTMForumAPI(ProductOffering product) {
+
+		IndexingObject toRet = new IndexingObject();
+
+		toRet= indexingManager.processOfferingFromTMForum(product, toRet);
+		
+		toRet=save(toRet);
+		
+		return toRet;
+	}
+	
+	
+	public IndexingObject processProductOfferingFromCallback(String message) {
+		return null;
+		
+	}
+
+
+
+
 	/** General usage*/
 	public void clearRepository() {		
 		offeringRepo.deleteAll();		
 	}
+
+
+
 
 
 
