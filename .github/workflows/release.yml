@@ -10,7 +10,7 @@ env:
   #IMAGE_NAME: ${{ github.repository }} # github.repository => <user>/<repo>
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/search
   #IMAGE_VERSION: 0.0.${{ github.run_number }}
-  IMAGE_VERSION: 0.0.3
+  IMAGE_VERSION: 0.0.4
 
 jobs:
   build:
