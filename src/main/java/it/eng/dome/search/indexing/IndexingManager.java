@@ -114,13 +114,13 @@ public class IndexingManager {
 			}
 			//}
 		} catch (JsonMappingException e) {
-			log.warn("JsonMappingException - Error during processProductOffering(). Skipped: {}", e.getMessage());
+			log.warn("JsonMappingException - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during processProductOffering(). Skipped: {}", e.getMessage());
+			log.warn("JsonProcessingException - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 		} catch (NullPointerException e) {
-			log.warn("JsonProcessingException - Error during processProductOffering(). Skipped: {}", e.getMessage());
+			log.warn("JsonProcessingException - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 		}
 

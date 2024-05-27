@@ -4,12 +4,16 @@ public class ProductSpecCharacteristic {
 
 	protected String id;
 	private Boolean configurable;
-	private String name; 
+	private String name;
 	private String valueType;
 	private ProductSpecCharacteristicValue[] productSpecCharacteristicValue;
-	
+
 	public void setProductSpecCharacteristicValue(ProductSpecCharacteristicValue[] productSpecCharacteristicValue) {
 		this.productSpecCharacteristicValue = productSpecCharacteristicValue;
+	}
+
+	public ProductSpecCharacteristicValue[] getProductSpecCharacteristicValue() {
+		return productSpecCharacteristicValue;
 	}
 
 	public Boolean getConfigurable() {
@@ -43,9 +47,5 @@ public class ProductSpecCharacteristic {
 	public void setValueType(String valueType) {
 		this.valueType = valueType;
 	}
-
-	
-	
-	
 
 }
