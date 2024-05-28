@@ -25,7 +25,7 @@ jobs:
 
       - name: Get Tag Version
         run: |
-          IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
           echo env.IMAGE_VERSION
         id: getVersion
 
