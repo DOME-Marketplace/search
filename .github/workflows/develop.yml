@@ -31,11 +31,6 @@ jobs:
 
       - name: Print Image Version
         run: |
-          echo "The version we just got is ${{ steps.getVersion.outputs.version }}"
-          echo ${{ steps.getVersion.outputs.version }}
-
-      - name: Print image version
-        run: |
           echo "The image version is ${{ steps.getVersion.outputs.version }}"
 
   pmd_job:
