@@ -25,7 +25,8 @@ jobs:
 
       - name: Set Release version env variable
         run: |
-          echo "RELEASE_VERSION=$(mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false)"
+          mvn versions:set -DremoveSnapshot
+          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
           echo env.RELEASE_VERSION
 
   pmd_job:
