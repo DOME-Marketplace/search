@@ -26,7 +26,7 @@ jobs:
       - name: Get Image Version
         run: |
           echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
-          echo version
+          echo ${ version }
         id: getVersion
 
       - name: Print Image Version
