@@ -24,14 +24,13 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Get Image Version
-        run: |
-          echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
         id: getVersion
 
       - name: Print Image Version
         run: |
           echo "The version we just got is ${{ steps.getVersion.outputs.version }}"
-          echo env.IMAGE_VERSION
+          echo ${{ steps.getVersion.outputs.version }}
 
   pmd_job:
     name: Static Code Analyzer
