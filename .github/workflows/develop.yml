@@ -2,7 +2,7 @@ name: Develop
 
 on:
   push:
-    branches: ["test_local"]
+    branches: ["develop"]
 
 jobs:
   build:
@@ -22,12 +22,6 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-
-      - name: Get Version
-        uses: ./
-        id: getVersion
-      - name: Print the version
-        run: echo "The version we just got is ${{ steps.getVersion.outputs.version }}"
 
   pmd_job:
     name: Static Code Analyzer
