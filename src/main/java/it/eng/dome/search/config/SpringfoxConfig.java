@@ -1,5 +1,7 @@
 package it.eng.dome.search.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,23 +13,28 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
 @Configuration
 @EnableSwagger2
 public class SpringfoxConfig {
-	
-	@Bean
+
+     @Autowired
+    private BuildProperties buildProperties;
+
+    @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build();//.apiInfo(apiEndPointsInfo());
+                .build().apiInfo(apiEndPointsInfo());
     }
 
-	/*
-	 * // private ApiInfo apiEndPointsInfo() { // return new
-	 * ApiInfoBuilder().title("DOME Search REST API") //
-	 * .description("DOME Search REST API") // .version("2.0") // .build(); // }
-	 */
+    private ApiInfo apiEndPointsInfo() {
+        return new ApiInfoBuilder()
+                .title("DOME Search REST APIs")
+                .description("DOME Search REST APIs Swagger documentation")
+                .version(buildProperties.getVersion())
+                .build();
+    }
+
 }
