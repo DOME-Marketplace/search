@@ -28,7 +28,7 @@ jobs:
         id: getVersion
 
       - name: Print the version
-        run: echo "The version we just got is ${{ steps.getVersion.outputs.version }}"
+        run: echo "The version we just got is ${{ steps.getVersion }}"
 
   pmd_job:
     name: Static Code Analyzer
