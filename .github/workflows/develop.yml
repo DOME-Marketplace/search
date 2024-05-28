@@ -24,11 +24,15 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Get Tag Version
-        run: mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+        run: |
+          IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo env.IMAGE_VERSION
         id: getVersion
 
       - name: Print the version
-        run: echo "The version we just got is ${{ steps.getVersion }}"
+        run: |
+          echo "The version we just got is ${{ steps.getVersion }}"
+          echo env.IMAGE_VERSION
 
   pmd_job:
     name: Static Code Analyzer
