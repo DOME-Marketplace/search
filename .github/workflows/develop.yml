@@ -25,13 +25,12 @@ jobs:
 
       - name: Get Image Version
         run: |
-          echo "IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          echo env.IMAGE_VERSION
+          echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
         id: getVersion
 
       - name: Print Image Version
         run: |
-          echo "The version we just got is ${{ steps.getVersion }}"
+          echo "The version we just got is ${{ steps.getVersion.outputs.version }}"
           echo env.IMAGE_VERSION
 
   pmd_job:
