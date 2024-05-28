@@ -23,16 +23,9 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Extract Maven project version
-        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-        id: project
-    
-      - name: Show extracted Maven project version
-        run: echo ${{ steps.project.outputs.version }}
-
       - name: Set Release version env variable
         run: |
-          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -DremoveSnapshot -q -DforceStdout)"
           echo env.RELEASE_VERSION
 
   pmd_job:
