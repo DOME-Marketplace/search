@@ -1,10 +1,10 @@
 FROM openjdk:11-slim
 
-COPY ./target/search-0.0.1-SNAPSHOT.jar /usr/app/
+COPY ./target/search-*.jar /usr/app/search.jar
 WORKDIR /usr/app
 
 RUN apt-get update && apt-get install -y \
 	curl \
 	wget
 	
-ENTRYPOINT exec java $JAVA_OPTS -jar search-0.0.1-SNAPSHOT.jar
+ENTRYPOINT exec java $JAVA_OPTS -jar search.jar
