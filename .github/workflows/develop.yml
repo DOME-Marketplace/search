@@ -24,9 +24,8 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Get Tag Version
-        run: |
-          mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-          id: getVersion
+        uses: mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+        id: getVersion
 
       - name: Print the version
         run: echo "The version we just got is ${{ steps.getVersion.outputs.version }}"
