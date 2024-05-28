@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.eng.dome</groupId>
 	<artifactId>search</artifactId>
-	<version>0.0.10-SNAPSHOT</version>
+	<version>0.0.7</version>
 	<name>Search and Browsing</name>
 	<description>Demo for DOME Project</description>
 	<properties>
