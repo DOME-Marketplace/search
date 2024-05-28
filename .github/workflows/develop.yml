@@ -25,6 +25,7 @@ jobs:
 
       - name: Get Image Version
         run: |
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false -DinteractiveMode=false
           echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
         id: getVersion
 
