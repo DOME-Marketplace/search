@@ -23,13 +23,13 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Get Tag Version
+      - name: Get Image Version
         run: |
           echo "IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
           echo env.IMAGE_VERSION
         id: getVersion
 
-      - name: Print the version
+      - name: Print Image Version
         run: |
           echo "The version we just got is ${{ steps.getVersion }}"
           echo env.IMAGE_VERSION
