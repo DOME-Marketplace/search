@@ -10,7 +10,6 @@ env:
   #IMAGE_NAME: ${{ github.repository }} # github.repository => <user>/<repo>
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/search
   #IMAGE_VERSION: 0.0.${{ github.run_number }}
-  IMAGE_VERSION: 0.0.4
 
 jobs:
   build:
@@ -78,6 +77,10 @@ jobs:
           java-version: "17"
           distribution: "temurin"
       - run: mvn -B package --file pom.xml -DskipTests
+
+      - name: Get Tag Version
+        run: |
+          echo "IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
