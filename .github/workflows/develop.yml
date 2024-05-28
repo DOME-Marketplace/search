@@ -2,7 +2,7 @@ name: Develop
 
 on:
   push:
-    branches: ["test_local"]
+    branches: ["develop"]
 
 jobs:
   build:
