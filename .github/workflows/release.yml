@@ -10,7 +10,6 @@ env:
   #IMAGE_NAME: ${{ github.repository }} # github.repository => <user>/<repo>
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/search
   #IMAGE_VERSION: 0.0.${{ github.run_number }}
-  IMAGE_VERSION: 0.0.0
 
 jobs:
   build:
@@ -79,10 +78,13 @@ jobs:
           distribution: "temurin"
       - run: mvn -B package --file pom.xml -DskipTests
 
-      - name: Get Tag Version
+      - name: Get image version
+        run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+        id: getVersion
+
+      - name: Print image version
         run: |
-          echo "IMAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          echo env.IMAGE_VERSION
+          echo "The image version is ${{ steps.getVersion.outputs.version }}"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -99,4 +101,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          tags: ${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
