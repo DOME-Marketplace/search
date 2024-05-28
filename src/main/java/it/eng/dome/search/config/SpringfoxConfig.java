@@ -30,10 +30,14 @@ public class SpringfoxConfig {
     }
 
     private ApiInfo apiEndPointsInfo() {
+        String version = buildProperties.getVersion();
+        if (version != null) {
+            version = version.replace("-SNAPSHOT", "");
+        }
         return new ApiInfoBuilder()
                 .title("DOME Search REST APIs")
                 .description("DOME Search REST APIs Swagger documentation")
-                .version(buildProperties.getVersion())
+                .version(version)
                 .build();
     }
 

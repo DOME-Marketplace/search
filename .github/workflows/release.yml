@@ -79,7 +79,9 @@ jobs:
       - run: mvn -B package --file pom.xml -DskipTests
 
       - name: Get image version
-        run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+        run: |
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false -DinteractiveMode=false
+          echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
         id: getVersion
 
       - name: Print image version
