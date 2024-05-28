@@ -30,6 +30,11 @@ jobs:
       - name: Show extracted Maven project version
         run: echo ${{ steps.project.outputs.version }}
 
+      - name: Set Release version env variable
+        run: |
+          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo env.RELEASE_VERSION
+
   pmd_job:
     name: Static Code Analyzer
     runs-on: ubuntu-latest  
