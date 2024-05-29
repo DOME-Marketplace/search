@@ -1,7 +1,7 @@
 version: '2.1'
 services:
     search:
-        image: mardetom/search:0.0.4
+        image: mardetom/search:0.0.5
         container_name: search
         ports:
           - 8080:8080
