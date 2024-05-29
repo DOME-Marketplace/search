@@ -51,6 +51,7 @@
  * 
  * String requestForCategorizationResults =
  * restTemplate.getCategorizationResults();
+ * 
  * ResponseEntity<CategorizationResultObject> result =
  * restTemplate.postForEntity(reqUrl, requestEnty,
  * CategorizationResultObject.class);
@@ -59,7 +60,9 @@
  * 
  * 
  * public IndexingObject processEntitiesExtraction(ProductOffering product,
- * IndexingObject objToIndex) { return objToIndex;
+ * IndexingObject objToIndex) {
+ * 
+ * return objToIndex;
  * 
  * }
  * 
