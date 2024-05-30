@@ -7,7 +7,8 @@ on:
 
 env:
   #IMAGE_NAME: ${{ github.repository }} # github.repository => <user>/<repo>
-  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/search
+  #IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/search
+  IMAGE_NAME: search
   #IMAGE_VERSION: 0.0.${{ github.run_number }}
 
 jobs:
