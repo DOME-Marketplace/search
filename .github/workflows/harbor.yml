@@ -101,6 +101,8 @@ jobs:
           docker tag ${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}        
 
       - name: Push image to Harbor
-        run: docker image ls
+        run: |
+          docker image ls
+          docker push production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
 
 
