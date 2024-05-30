@@ -1,9 +1,9 @@
 
-name: Release
+name: Release Docker Hub
 
 on:
   push:
-    branches: ["main"]
+    branches: ["dockerhub"]
   # pull_request:
   #  branches: ["main"]
 
