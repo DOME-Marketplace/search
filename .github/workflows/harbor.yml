@@ -97,10 +97,8 @@ jobs:
       - name: Build and tag image
         run: |
           ls -al
-          docker build -t production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} . 
-          docker tag ${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
+          docker build -t production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} .         
           docker image ls
-          
 
       
 
