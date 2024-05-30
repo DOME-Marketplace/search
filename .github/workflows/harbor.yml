@@ -6,10 +6,8 @@ on:
     branches: ["harbor"]
 
 env:
-  #IMAGE_NAME: ${{ github.repository }} # github.repository => <user>/<repo>
-  #IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/search
+  REPOSITORY: production.eng.it:8433 # URL Harbor
   IMAGE_NAME: search
-  #IMAGE_VERSION: 0.0.${{ github.run_number }}
 
 jobs:
   build:
@@ -90,18 +88,14 @@ jobs:
       - name: Login to Harbor
         uses: docker/login-action@v3
         with:
-          registry: production.eng.it:8433
+          registry: ${{ env.REPOSITORY }}
           username: robot-dome+dome-account
           password: AdzVCx7NnSbcAvdmxFvUi00gCSCwQM2g
 
-      - name: Build and tag image
-        run: |
-          ls -al
-          docker build -t production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} .    
+      - name: Build and Tag Image
+        run: docker build -t ${{ env.REPOSITORY }}/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} .    
       
-      - name: Push image to Harbor
-        run: |
-          docker image ls
-          docker push production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
+      - name: Push Image to Harbor
+        run: docker push ${{ env.REPOSITORY }}/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
       
 
