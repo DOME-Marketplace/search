@@ -98,4 +98,6 @@ jobs:
       - name: Push Image to Harbor
         run: docker push ${{ env.REPOSITORY }}/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
       
+      - name: Remove Image
+        run: docker rmi ${{ env.REPOSITORY }}/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
 
