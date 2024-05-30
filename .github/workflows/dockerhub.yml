@@ -1,5 +1,5 @@
 
-name: Release Docker Hub
+name: Release in Docker Hub
 
 on:
   push:

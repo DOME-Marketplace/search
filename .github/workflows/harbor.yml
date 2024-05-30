@@ -1,5 +1,5 @@
 
-name: Release Harbor
+name: Release in Harbor
 
 on:
   push:
