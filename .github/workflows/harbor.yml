@@ -98,11 +98,9 @@ jobs:
         run: |
           ls -al
           docker build -t production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} . 
-          docker tag dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
           docker image ls
-          docker push production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
-      
-      #- name: Push image to Harbor
-      #  run: docker push production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
+          
+
       
 
