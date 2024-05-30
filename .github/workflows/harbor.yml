@@ -99,6 +99,8 @@ jobs:
           ls -al
           docker build -t ${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} . 
           docker tag ${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}        
-          docker image ls
+
+      - name: Push image to Harbor
+        run: docker image ls
 
 
