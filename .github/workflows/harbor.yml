@@ -103,6 +103,7 @@ jobs:
       - name: Push image to Harbor
         run: |
           docker image ls
+          echo AdzVCx7NnSbcAvdmxFvUi00gCSCwQM2g | docker login -u robot-dome+dome-account production.eng.it:8433 --password-stdin
           docker push production.eng.it:8433/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }}
 
 
