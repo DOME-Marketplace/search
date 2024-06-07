@@ -1,7 +1,7 @@
-version: '2.1'
+
 services:
     search:
-        image: mardetom/search:0.0.5
+        image: production.eng.it:8433/dome/search:0.0.6
         container_name: search
         ports:
           - 8080:8080
