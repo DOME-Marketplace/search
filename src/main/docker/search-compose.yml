@@ -1,37 +1,40 @@
-
 services:
-    search:
-        image: production.eng.it:8433/dome/search:0.0.6
-        container_name: search
-        ports:
-          - 8080:8080
-        environment:
-          - ELASTICSEARCH_ADDRESS_HOST=elasticsearch
-          - ELASTICSEARCH_ADDRESS_PORT=9200
-        depends_on:
-          elasticsearch:
-            condition: service_healthy
-        
-    elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
-        container_name: elasticsearch
-        hostname: elasticsearch
-        volumes:
-          - elasticsearch-data:/usr/share/elasticsearch/data/
-        ports:
-          - 9200:9200  
-        environment:
-          - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
-          - discovery.type=single-node
-          - cluster.name=elasticsearch
-          - xpack.security.http.ssl.enabled=false
-          - ELASTIC_USERNAME=elastic
-          - ELASTIC_PASSWORD=dome_2024!
-        healthcheck:
-          test: [ "CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1" ]
-          interval: 10s
-          timeout: 10s
-          retries: 5
+  search:
+    image: production.eng.it:8433/dome/search:1.0.0
+    container_name: search
+    ports:
+      - 8080:8080
+    environment:
+      - ELASTICSEARCH_ADDRESS_HOST=elasticsearch
+      - ELASTICSEARCH_ADDRESS_PORT=9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
+    container_name: elasticsearch
+    hostname: elasticsearch
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data/
+    ports:
+      - 9200:9200
+    environment:
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+      - discovery.type=single-node
+      - cluster.name=elasticsearch
+      - xpack.security.http.ssl.enabled=false
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=dome_2024!
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --user elastic:dome_2024! -X GET http://localhost:9200/_cluster/health?pretty | grep status | grep -q '\\(green\\|yellow\\)'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
 volumes:
-    elasticsearch-data:
+  elasticsearch-data:
