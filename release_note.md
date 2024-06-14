@@ -2,6 +2,16 @@
 
 **Release Notes** for the *Search*:
 
+#### 1.0.0 
+**Improvement**
+* Upgrade the *Search* with `Elasticsearch` to **8.5.1**.
+* Update docker-compose files (*elasticsearch.yaml* and *search-compose.yaml*).
+
+**Feature**
+* Add credentials to connect and access in the **Elasticsearch 8.5.1**.
+
+:date: 14/06/2024
+
 #### 0.0.6 
 **Improvement**
 * Add `harbor.yml` to push docker images in the **Harbor** to *Publish in Harbor repository*.
