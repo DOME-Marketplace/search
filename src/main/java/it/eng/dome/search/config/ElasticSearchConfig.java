@@ -11,6 +11,7 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.http.HttpHeaders;
 
 import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
@@ -19,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "it.eng.dome.search.repository")
-//@EnableElasticsearchAuditing(auditorAwareRef = "springSecurityAuditorAware")
+// @EnableElasticsearchAuditing(auditorAwareRef = "springSecurityAuditorAware")
 public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
     @Value("${elasticsearch.cluster.name:elasticsearch}")
@@ -48,12 +49,16 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
     @Override
     public RestHighLevelClient elasticsearchClient() {
 
+        HttpHeaders compatibilityHeaders = new HttpHeaders();
+        compatibilityHeaders.add("Accept", "application/vnd.elasticsearch+json;compatible-with=7");
+        compatibilityHeaders.add("Content-Type", "application/vnd.elasticsearch+json;" + "compatible-with=7");
+
         ClientConfiguration.MaybeSecureClientConfigurationBuilder builder = ClientConfiguration.builder()
                 .connectedTo(elasticsearchHost + ":" + elasticsearchPort);
 
         ClientConfiguration.TerminalClientConfigurationBuilder builderWithProtocol;
-        if(usingSsl) {
-            if(! usingSslVerification) {
+        if (usingSsl) {
+            if (!usingSslVerification) {
                 try {
                     SSLContextBuilder sslBuilder = SSLContexts.custom()
                             .loadTrustMaterial(null, (x509Certificates, s) -> true);
@@ -73,17 +78,18 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
             builderWithProtocol = builder;
         }
 
-        if(elasticsearchUsername != null && elasticsearchPassword != null && !elasticsearchUsername.isBlank() && !elasticsearchPassword.isBlank()) {
+        if (elasticsearchUsername != null && elasticsearchPassword != null && !elasticsearchUsername.isBlank()
+                && !elasticsearchPassword.isBlank()) {
             builderWithProtocol = builderWithProtocol
-                    .withBasicAuth(elasticsearchUsername,elasticsearchPassword);
+                    .withBasicAuth(elasticsearchUsername, elasticsearchPassword);
         }
 
         ClientConfiguration clientConfiguration = builderWithProtocol
                 .withConnectTimeout(10000)
                 .withSocketTimeout(10000)
+                .withDefaultHeaders(compatibilityHeaders)
                 .build();
 
         return RestClients.create(clientConfiguration).rest();
     }
 }
-

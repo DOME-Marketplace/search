@@ -4,8 +4,8 @@ elasticsearch:
   address:
     host: localhost
     port: 9200
-    username: 
-    password: 
+    username: elastic
+    password: dome_2024!
     ssl:
       enabled: false
       verification: false
