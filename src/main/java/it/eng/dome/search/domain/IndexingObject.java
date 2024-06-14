@@ -35,7 +35,7 @@ public class IndexingObject {
 	@Field(type = FieldType.Text)
 	private String productOfferingNameText;
 
-	@Field(type = FieldType.Date)
+	@Field(type = FieldType.Text)
 	private String productOfferingLastUpdate;
 
 	@Field(type = FieldType.Boolean)
