@@ -2,7 +2,7 @@
 
 **Release Notes** for the *Search*:
 
-### <span style="background-color: #04AA6D; color: white; font-size: 16px; padding: 4px 8px; border-radius: 8px;">1.0.0</span> 
+### <span>${\color{#FF9933}0.1.0}$</span>
 **Improvement**
 * Upgrade the *Search* with `Elasticsearch` to **8.5.1**.
 * Update docker-compose files (*elasticsearch.yaml* and *search-compose.yaml*).
@@ -12,21 +12,21 @@
 
 :date: 14/06/2024
 
-### <span style="background-color: #04AA6D; color: white; font-size: 16px; padding: 4px 8px; border-radius: 8px;">0.0.6</span>
+### <span>${\color{#04AA6D}0.0.6}$</span>
 **Improvement**
 * Add `harbor.yml` to push docker images in the **Harbor** to *Publish in Harbor repository*.
 * Set of **custom credentials** of the **Harbor** for the *actions workflow YAML* file.
 
 :date: 30/05/2024
 
-### <span style="background-color: #ff8c1a; color: white; font-size: 16px; padding: 4px 8px; border-radius: 8px;">0.0.5</span>
+### <span>${\color{#ff8c1a}0.0.5}$</span>
 **Improvement**
 * Add third stage in the github action workflow to *Publish in Docker Hub*.
 * Set of **custom credentials** of the **Docker Hub** for the *actions workflow YAML* file.
 
 :date: 28/05/2024
 
-### <span style="background-color: #555555; color: white; font-size: 16px; padding: 4px 8px; border-radius: 8px;">0.0.4</span>
+### <span>${\color{#555555}0.0.4}$</span>
 **Feature**
 * Create the **GitHub Action workflow** with the stage *Build and Test*.
 * Add new stage in the github action workflow: *Static Code Analyzer* provided by PMD.
