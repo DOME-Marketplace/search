@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +23,7 @@ import it.eng.dome.search.domain.ProductOffering;
 import it.eng.dome.search.rest.web.util.PaginationUtil;
 import it.eng.dome.search.service.ResultProcessor;
 import it.eng.dome.search.service.SearchProcessor;
+import it.eng.dome.search.service.dto.SearchRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -66,6 +69,29 @@ public class SearchResource {
 		// return ResponseEntity.ok(objList);
 
 	}
+	
+	@PostMapping(value = "/SearchProduct/{query}")
+	public ResponseEntity<List<ProductOffering>> searchProduct(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
+		
+		
+		Page<IndexingObject> page = searchProcessor.search(query, request, pageable);
+		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProduct/" + query);
+		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
+	}
+	
+	
+	
+	@PostMapping(value = "/SearchProductByFilterCategory")
+	public ResponseEntity<List<ProductOffering>> searchProductByFilterCategory(@RequestBody SearchRequest request, Pageable pageable){
+		
+		
+		Page<IndexingObject> page = searchProcessor.search(request, pageable);
+		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProductByFilterCategory");
+		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
+	}
+	
 
 	/*
 	 *

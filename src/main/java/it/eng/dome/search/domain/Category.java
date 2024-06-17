@@ -1,10 +1,18 @@
 package it.eng.dome.search.domain;
 
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 public class Category {
 	
+	@Field(type = FieldType.Keyword)
 	protected String id;
+	
 	private String href;
+	
+	@Field(type = FieldType.Keyword)
 	private String name;
+	
 	private String version;
 	
 	

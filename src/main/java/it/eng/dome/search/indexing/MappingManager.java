@@ -40,6 +40,7 @@ public class MappingManager {
 		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate());
 		objToIndex.setProductOfferingName(product.getName());
 		objToIndex.setProductOfferingNameText(product.getName());
+		objToIndex.setCategories(product.getCategory());
 
 		return objToIndex;
 
