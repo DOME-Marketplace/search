@@ -93,7 +93,6 @@ public class IndexingManager {
 				log.info("null value in ProductSpecification ID");
 			}else {
 				String requestForProductSpecById = restUtil.getTMFProductSpecificationById(productSpec.getId());
-
 				ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById, ProductSpecification.class);
 
 				objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
@@ -113,17 +112,10 @@ public class IndexingManager {
 				}
 			}
 			//}
-		} catch (JsonMappingException e) {
-			log.warn("JsonMappingException - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage());
+		} catch (Exception e) {
+			log.warn("Exception - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			log.warn("JsonProcessingException - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-		}
-
+		} 
 		return objToIndex;
 	}
 

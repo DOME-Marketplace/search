@@ -23,6 +23,7 @@ public class IndexingObject {
 
 	// from ProductOffering
 
+	
 	@Field(type = FieldType.Keyword)
 	private String productOfferingId;
 
@@ -40,8 +41,13 @@ public class IndexingObject {
 
 	@Field(type = FieldType.Boolean)
 	private Boolean productOfferingIsBundle;
+	
+	@Field(type = FieldType.Nested)
+	private Category[] categories;
 
 	// from ProductSpecification
+
+	
 
 	@Field(type = FieldType.Nested)
 	private ProductSpecification productSpecification;
@@ -95,6 +101,14 @@ public class IndexingObject {
 
 	public void setProductOfferingDescription(String productOfferingDescription) {
 		this.productOfferingDescription = productOfferingDescription;
+	}
+	
+	public Category[] getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Category[] categories) {
+		this.categories = categories;
 	}
 
 	public String getProductOfferingName() {

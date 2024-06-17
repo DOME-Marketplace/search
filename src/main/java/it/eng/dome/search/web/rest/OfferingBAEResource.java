@@ -91,10 +91,11 @@ public class OfferingBAEResource {
 	
 	
 	@GetMapping("/offerings/clearRepository")
-	public ResponseEntity clearRepository() {
+	public ResponseEntity<?> clearRepository() {
 		
 		offeringProcessor.clearRepository();
-		return (ResponseEntity) ResponseEntity.ok();
+		//return (ResponseEntity<?>) ResponseEntity.ok();
+		return  ResponseEntity.noContent().build();
 	}
 	
 	

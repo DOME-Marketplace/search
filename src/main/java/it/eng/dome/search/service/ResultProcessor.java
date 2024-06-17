@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,6 +63,10 @@ public class ResultProcessor {
 			return  new PageImpl<>(listProductOffering,pageable,mapProductOffering.size());
 		} catch (JsonProcessingException e) {
 			logger.warn("JsonProcessingException - Error during processResults(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
+			return new PageImpl<>(new ArrayList<>());
+		} catch (HttpServerErrorException e) {
+			logger.warn("HttpServerErrorException - Error during processResults(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 			return new PageImpl<>(new ArrayList<>());
 		}
