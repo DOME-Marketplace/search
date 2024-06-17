@@ -2,6 +2,13 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.1.1</code>
+**Feature**
+* Add background process to index productOffering ever **5** minutes.
+* Add searchByKeywordsAndCategory service and filterByCategory name.
+
+:calendar: 17/06/2024
+
 ### <code>0.1.0</code>
 **Improvement**
 * Upgrade the *Search* with `Elasticsearch` to **8.5.1**.
