@@ -1,6 +1,6 @@
 services:
   search:
-    image: production.eng.it:8433/dome/search:0.1.0
+    image: production.eng.it:8433/dome/search:0.1.1
     container_name: search
     ports:
       - 8080:8080
