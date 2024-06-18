@@ -51,7 +51,6 @@ public class IndexingService {
 
 	@Scheduled(fixedDelay = 300000 )
 	public void indexing() {
-
 		log.info("Indexing is executing ..... ");
 		//invoca endpoint e recupera lista di product offering
 		String listProductOfferings = restUtil.getAllProductOfferings(); //-------> from BAE (change when needed)

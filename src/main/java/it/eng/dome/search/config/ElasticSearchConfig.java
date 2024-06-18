@@ -20,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "it.eng.dome.search.repository")
-// @EnableElasticsearchAuditing(auditorAwareRef = "springSecurityAuditorAware")
 public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
     @Value("${elasticsearch.cluster.name:elasticsearch}")
@@ -56,6 +55,8 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
         ClientConfiguration.MaybeSecureClientConfigurationBuilder builder = ClientConfiguration.builder()
                 .connectedTo(elasticsearchHost + ":" + elasticsearchPort);
 
+        logger.info("Search connected to host {} port {}", elasticsearchHost, elasticsearchPort);
+
         ClientConfiguration.TerminalClientConfigurationBuilder builderWithProtocol;
         if (usingSsl) {
             if (!usingSslVerification) {
@@ -80,9 +81,10 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
         if (elasticsearchUsername != null && elasticsearchPassword != null && !elasticsearchUsername.isBlank()
                 && !elasticsearchPassword.isBlank()) {
-                    System.out.println("--------------------------------------->");
-            logger.info("Set credentials for username {} and password {} ", elasticsearchUsername, elasticsearchPassword );
-            
+
+            logger.debug("Set credentials for username {} and password {} ", elasticsearchUsername,
+                    elasticsearchPassword);
+
             builderWithProtocol = builderWithProtocol.withBasicAuth(elasticsearchUsername, elasticsearchPassword);
         }
 

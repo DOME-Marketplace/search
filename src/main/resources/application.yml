@@ -2,8 +2,8 @@ elasticsearch:
   cluster:
     name: elasticsearch
   address:
-    host: ${ELASTIC_HOST:localhost}
-    port: ${ELASTIC_PORT:9200}
+    host: ${ELASTIC_ADDRESS_HOST:localhost}
+    port: ${ELASTIC_ADDRESS_PORT:9200}
     username: ${ELASTIC_USERNAME:elastic}
     password: ${ELASTIC_PASSWORD:dome_2024!}
     ssl:
@@ -34,14 +34,14 @@ management:
     probes:
       enabled: true
 
+logging:
+  level:
+    it.eng.dome: ${LOG_LEVEL:INFO}
+
 dome:
-  getproductofferingbyid: https://dome-marketplace.org/catalog/productOffering
-  getproductspecificationbyid: https://dome-marketplace.org/catalog/productSpecification
-  getservicespecificationbyid: https://dome-marketplace.org/service/serviceSpecification
-  getresourcespecificationbyid: https://dome-marketplace.org/resource/resourceSpecification
-  getallproductofferings: https://dome-marketplace.org/catalog/productOffering
-  gettmfallproductofferings: https://dome-dev.eng.it/tmf-api/productCatalogManagement/v4/productOffering
-  gettmfproductofferingbyid: https://dome-dev.eng.it/tmf-api/productCatalogManagement/v4/productOffering
-  gettmfproductspecificationbyid: https://dome-dev.eng.it/tmf-api/productCatalogManagement/v4/productSpecification
-  gettmfservicespecificationbyid: https://dome-dev.eng.it/tmf-api/serviceCatalogManagement/v4/serviceSpecification
-  gettmfresourcespecificationbyid: https://dome-dev.eng.it/tmf-api/resourceCatalog/v4/resourceSpecification
+  tmforum:
+    url: ${TMFORUM_URL:https://dome-dev.eng.it/tmf-api}
+
+  # THIS MUST BE REMOVED IN THE FUTURE!!!
+  bae:
+    url: ${BAE_URL:https://dome-marketplace.org} #https://dome-marketplace.org
