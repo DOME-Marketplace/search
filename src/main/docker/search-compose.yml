@@ -5,8 +5,8 @@ services:
     ports:
       - ${SEARCH_PORT}:8080
     environment:
-      - ELASTICSEARCH_ADDRESS_HOST=${ELASTICSEARCH_ADDRESS_HOST}
-      - ELASTICSEARCH_ADDRESS_PORT=${ELASTICSEARCH_ADDRESS_PORT}
+      - ELASTICSEARCH_ADDRESS_HOST=${ELASTIC_ADDRESS_HOST}
+      - ELASTICSEARCH_ADDRESS_PORT=${ELASTIC_ADDRESS_PORT}
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -18,7 +18,7 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data/
     ports:
-      - ${ELASTICSEARCH_ADDRESS_PORT}:9200
+      - ${ELASTIC_ADDRESS_PORT}:9200
     environment:
       - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
       - discovery.type=single-node
@@ -30,7 +30,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -s --user elastic:dome_2024! -X GET http://localhost:9200/_cluster/health?pretty | grep status | grep -q '\\(green\\|yellow\\)'",
+          "curl -s --user ${ELASTIC_USERNAME}:${ELASTIC_PASSWORD} -X GET http://localhost:9200/_cluster/health?pretty | grep status | grep -q '\\(green\\|yellow\\)'",
         ]
       interval: 10s
       timeout: 10s

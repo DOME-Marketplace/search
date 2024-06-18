@@ -7,7 +7,7 @@ services:
         volumes:
           - elasticsearch-data:/usr/share/elasticsearch/data/
         ports:
-          - ${ELASTICSEARCH_ADDRESS_PORT}:9200  
+          - ${ELASTIC_ADDRESS_PORT}:9200  
         environment:
           - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
           - discovery.type=single-node

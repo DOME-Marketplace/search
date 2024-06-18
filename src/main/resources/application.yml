@@ -2,10 +2,10 @@ elasticsearch:
   cluster:
     name: elasticsearch
   address:
-    host: localhost
-    port: 9200
-    username: elastic
-    password: dome_2024!
+    host: ${ELASTIC_HOST:localhost}
+    port: ${ELASTIC_PORT:9200}
+    username: ${ELASTIC_USERNAME:elastic}
+    password: ${ELASTIC_PASSWORD:dome_2024!}
     ssl:
       enabled: false
       verification: false
@@ -33,7 +33,7 @@ management:
   health:
     probes:
       enabled: true
-      
+
 dome:
   getproductofferingbyid: https://dome-marketplace.org/catalog/productOffering
   getproductspecificationbyid: https://dome-marketplace.org/catalog/productSpecification
@@ -45,4 +45,3 @@ dome:
   gettmfproductspecificationbyid: https://dome-dev.eng.it/tmf-api/productCatalogManagement/v4/productSpecification
   gettmfservicespecificationbyid: https://dome-dev.eng.it/tmf-api/serviceCatalogManagement/v4/serviceSpecification
   gettmfresourcespecificationbyid: https://dome-dev.eng.it/tmf-api/resourceCatalog/v4/resourceSpecification
-  

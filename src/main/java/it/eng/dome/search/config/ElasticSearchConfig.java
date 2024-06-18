@@ -80,8 +80,10 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
         if (elasticsearchUsername != null && elasticsearchPassword != null && !elasticsearchUsername.isBlank()
                 && !elasticsearchPassword.isBlank()) {
-            builderWithProtocol = builderWithProtocol
-                    .withBasicAuth(elasticsearchUsername, elasticsearchPassword);
+                    System.out.println("--------------------------------------->");
+            logger.info("Set credentials for username {} and password {} ", elasticsearchUsername, elasticsearchPassword );
+            
+            builderWithProtocol = builderWithProtocol.withBasicAuth(elasticsearchUsername, elasticsearchPassword);
         }
 
         ClientConfiguration clientConfiguration = builderWithProtocol
