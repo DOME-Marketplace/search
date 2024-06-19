@@ -71,7 +71,7 @@ public class RestUtil {
 				String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getProductOfferingById with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -82,7 +82,7 @@ public class RestUtil {
 				.getForEntity(getBaeURL() + "/catalog/productSpecification/" + id, String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getProductSpecificationById with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -92,7 +92,7 @@ public class RestUtil {
 				String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getServiceSpecificationById with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -102,7 +102,7 @@ public class RestUtil {
 				.getForEntity(getBaeURL() + "/resource/resourceSpecification/" + id, String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getResourceSpecificationById with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -112,7 +112,7 @@ public class RestUtil {
 				String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getAllProductOfferings with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -126,7 +126,7 @@ public class RestUtil {
 				getTMForumURL() + "/productCatalogManagement/v4/productSpecification/" + id, String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getTMFProductSpecificationById with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -136,7 +136,7 @@ public class RestUtil {
 				.getForEntity(getTMForumURL() + "/serviceCatalogManagement/v4/serviceSpecification", String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getAllProductOfferingsFromTMForum with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -146,7 +146,7 @@ public class RestUtil {
 				.getForEntity(getTMForumURL() + "/productCatalogManagement/v4/productOffering/" + id, String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getTMFProductOfferingById with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -156,7 +156,7 @@ public class RestUtil {
 				.getForEntity(getTMForumURL() + "/productCatalogManagement/v4/productOffering/" + id, String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getTMFServiceSpecificationById with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
@@ -166,7 +166,7 @@ public class RestUtil {
 				.getForEntity(getTMForumURL() + "/resourceCatalog/v4/resourceSpecification/" + id, String.class);
 
 		String result = response.getBody();
-		log.debug("Response with status code {}", response.getStatusCode().name());
+		log.debug("Response for getTMFResourceSpecificationById with status code {}", response.getStatusCode().name());
 		return result;
 	}
 
