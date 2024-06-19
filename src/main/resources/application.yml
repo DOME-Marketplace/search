@@ -44,4 +44,4 @@ dome:
 
   # THIS MUST BE REMOVED IN THE FUTURE!!!
   bae:
-    url: ${BAE_URL:https://dome-marketplace.org} #https://dome-marketplace.org
+    url: ${BAE_URL:https://dome-marketplace.org}
