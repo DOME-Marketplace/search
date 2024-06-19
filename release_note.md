@@ -2,6 +2,16 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.1.2</code>
+**Feature**
+* Add **envirnment variables** (*ELASTIC_USERNAME*, *ELASTIC_PASSWORD*, *LOG_LEVEL*, *TMFORUM_URL*, etc.).
+* Refactoring of REST APIs, by starting with the **TMFORUM_URL** endpoint.
+
+**Improvement**
+* Add `.env` file within env vars.
+
+:calendar: 19/06/2024
+
 ### <code>0.1.1</code>
 **Feature**
 * Add background process to index productOffering ever **5** minutes.
