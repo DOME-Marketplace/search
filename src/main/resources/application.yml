@@ -36,7 +36,7 @@ management:
 
 logging:
   level:
-    it.eng.dome: ${LOG_LEVEL:INFO}
+    it.eng.dome: ${LOG_LEVEL:DEBUG}
 
 dome:
   tmforum:
@@ -44,4 +44,4 @@ dome:
 
   # THIS MUST BE REMOVED IN THE FUTURE!!!
   bae:
-    url: ${BAE_URL:https://dome-marketplace.org}
+    url: ${BAE_URL:https://dome-marketplace-sbx.org}
