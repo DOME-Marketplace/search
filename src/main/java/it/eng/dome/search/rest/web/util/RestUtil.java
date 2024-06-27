@@ -1,5 +1,13 @@
 package it.eng.dome.search.rest.web.util;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import java.util.Collections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +27,9 @@ public class RestUtil {
 
 	@Value("${dome.bae.url}")
 	private String getBAEUrl;
+	
+//	@Value("${dome.semantic.url}")
+//	private String getSemanticUrl;
 
 	private static final Logger log = LoggerFactory.getLogger(RestUtil.class);
 	private static RestTemplate restTemplate = new RestTemplate();
@@ -133,5 +144,62 @@ public class RestUtil {
 		log.debug("Response for getTMFResourceSpecificationById with status code {}", response.getStatusCode().name());
 		return result;
 	}
+	
+	
+	/*********************
+	 * Semantic Endpoints *
+	 *********************/
+	
+//	public String getClassificationResult(String bodyClassification) {
+//		String url = getSemanticUrl + "/classify";
+//		log.debug("Call getClassificationResult to URL {}", url);
+//		
+//		HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.TEXT_PLAIN);
+//        headers.setAccept(Collections.singletonList(MediaType.ALL));
+//        
+//        // Prepare request entity with text body
+//        HttpEntity<String> requestEntity = new HttpEntity<>(bodyClassification, headers);
+//
+//        log.debug("Sending POST request to URL {}", url);
+//        
+//     // Send POST request
+//        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+//        
+//		log.debug("Response for getClassificationResult with status code {}", response.getStatusCode().name());
+//		if (response.getStatusCode() == HttpStatus.OK) {
+//            return response.getBody();
+//        } else {
+//            throw new RuntimeException("Failed to Classify text: " + response.getStatusCode().name());
+//        }
+//
+//	}
+//	
+//	
+//	public String getAnalyzeResult(String bodyAnalyze) {
+//		String url = getSemanticUrl + "/analyze";
+//		log.debug("Call getAnalyzeResult to URL {}", url);
+//		
+//		HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.TEXT_PLAIN);
+//        headers.setAccept(Collections.singletonList(MediaType.ALL));
+//        
+//        // Prepare request entity with text body
+//        HttpEntity<String> requestEntity = new HttpEntity<>(bodyAnalyze, headers);
+//
+//        log.debug("Sending POST request to URL {}", url);
+//        
+//     // Send POST request
+//        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+//        
+//     // Log response status
+//        log.debug("Response for POST-getAnalyzeResult request with status code {}", response.getStatusCode().name());
+//		
+//		if (response.getStatusCode() == HttpStatus.OK) {
+//            return response.getBody();
+//        } else {
+//            throw new RuntimeException("Failed to Analyze text: " + response.getStatusCode().name());
+//        }
+//	}
 
 }
