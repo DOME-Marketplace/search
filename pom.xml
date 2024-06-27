@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>it.eng.dome</groupId>
 	<artifactId>search</artifactId>
-	<version>0.1.3-SNAPSHOT</version>
+	<version>0.1.4-SNAPSHOT</version>
 	<name>Search and Browsing</name>
 	<description>Demo for DOME Project</description>
 	<properties>
