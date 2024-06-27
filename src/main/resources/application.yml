@@ -40,8 +40,10 @@ logging:
 
 dome:
   tmforum:
-    url: ${TMFORUM_URL:https://dome-dev.eng.it/tmf-api}
+    host: ${TMFORUM_HOST:tm-forum-api-envoy}
+    port: ${TMFORUM_PORT:8080}
 
   # THIS MUST BE REMOVED IN THE FUTURE!!!
   bae:
-    url: ${BAE_URL:https://dome-marketplace-sbx.org}
+    host: ${BAE_HOST:bae-marketplace-biz-ecosystem-charging-backend}
+    port: ${BAE_PORT:8006}

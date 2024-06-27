@@ -2,6 +2,12 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.1.3</code>
+**Improvement**
+* Set **envirnment variables** with **TMFORUM_HOST** and  **TMFORUM_PORT** for the cluster.
+
+:calendar: 27/06/2024
+
 ### <code>0.1.2</code>
 **Feature**
 * Add **envirnment variables** (*ELASTIC_USERNAME*, *ELASTIC_PASSWORD*, *LOG_LEVEL*, *TMFORUM_URL*, etc.).
