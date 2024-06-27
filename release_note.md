@@ -2,9 +2,9 @@
 
 **Release Notes** for the *Search*:
 
-### <code>0.1.3</code>
+### <code>0.1.4</code>
 **Improvement**
-* Set **envirnment variables** with **TMFORUM_HOST** and  **TMFORUM_PORT** for the cluster.
+* Set local **envirnment variables** in the cluster for **TMFORUM_URLs** (service-catalog-url, product-catalog-url, and resource-catalog-url).
 
 :calendar: 27/06/2024
 
