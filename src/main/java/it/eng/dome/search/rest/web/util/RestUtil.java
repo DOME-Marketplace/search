@@ -22,14 +22,19 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class RestUtil {
 
-	@Value("${dome.tmforum.url}")
-	private String getTMForumUrl;
+	@Value("${dome.tmforum.service-catalog-url}")
+	private String getTMForumServiceCatalogUrl;
 
+	@Value("${dome.tmforum.product-catalog-url}")
+	private String getTMForumProductCatalogUrl;
+
+	@Value("${dome.tmforum.resource-catalog-url}")
+	private String getTMForumResourceCatalogUrl;
+	
+	
 	@Value("${dome.bae.url}")
 	private String getBAEUrl;
-	
-//	@Value("${dome.semantic.url}")
-//	private String getSemanticUrl;
+
 
 	private static final Logger log = LoggerFactory.getLogger(RestUtil.class);
 	private static RestTemplate restTemplate = new RestTemplate();
@@ -95,7 +100,7 @@ public class RestUtil {
 	 *********************/
 
 	public String getTMFProductSpecificationById(String id) {
-		String url = getTMForumUrl + "/productCatalogManagement/v4/productSpecification/" + id;
+		String url = getTMForumProductCatalogUrl + "/productSpecification/" + id;
 		log.debug("Call getTMFProductSpecificationById to URL {}", url);
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
@@ -105,7 +110,7 @@ public class RestUtil {
 	}
 
 	public String getAllProductOfferingsFromTMForum() {
-		String url = getTMForumUrl + "/serviceCatalogManagement/v4/serviceSpecification";
+		String url = getTMForumServiceCatalogUrl + "/serviceSpecification";
 		log.debug("Call getAllProductOfferingsFromTMForum to URL {}", url);
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
@@ -116,7 +121,7 @@ public class RestUtil {
 	}
 
 	public String getTMFProductOfferingById(String id) {
-		String url = getTMForumUrl + "/productCatalogManagement/v4/productOffering/" + id;
+		String url = getTMForumProductCatalogUrl + "/productOffering/" + id;
 		log.debug("Call getTMFProductOfferingById to URL {}", url);
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
@@ -126,7 +131,7 @@ public class RestUtil {
 	}
 
 	public String getTMFServiceSpecificationById(String id) {
-		String url = getTMForumUrl + "/productCatalogManagement/v4/productOffering/" + id;
+		String url = getTMForumServiceCatalogUrl + "/serviceSpecification/" + id;
 		log.debug("Call getTMFServiceSpecificationById to URL {}", url);
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
@@ -136,7 +141,7 @@ public class RestUtil {
 	}
 
 	public String getTMFResourceSpecificationById(String id) {
-		String url = getTMForumUrl + "/resourceCatalog/v4/resourceSpecification/" + id;
+		String url = getTMForumResourceCatalogUrl + "/resourceSpecification/" + id;
 		log.debug("Call getTMFServiceSpecificationById to URL {}", url);
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 

@@ -2,6 +2,12 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.1.4</code>
+**Improvement**
+* Set local **envirnment variables** in the cluster for **TMFORUM_URLs** (service-catalog-url, product-catalog-url, and resource-catalog-url).
+
+:calendar: 27/06/2024
+
 ### <code>0.1.2</code>
 **Feature**
 * Add **envirnment variables** (*ELASTIC_USERNAME*, *ELASTIC_PASSWORD*, *LOG_LEVEL*, *TMFORUM_URL*, etc.).
