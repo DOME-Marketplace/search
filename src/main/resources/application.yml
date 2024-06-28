@@ -40,10 +40,10 @@ logging:
 
 dome:
   tmforum:
-    service-catalog-url: ${TMFORUM_SERVICE_CATALOG_URL:http://tm-forum-api-service-catalog.marketplace.svc.cluster.local:8080}
-    product-catalog-url: ${TMFORUM_PRODUCT_CATALOG_URL:http://tm-forum-api-product-catalog.marketplace.svc.cluster.local:8080}
-    resource-catalog-url: ${TMFORUM_RESOURCE_CATALOG_URL:http://tm-forum-api-resource-catalog.marketplace.svc.cluster.local:8080}
+    service-catalog-url: ${TMFORUM_SERVICE_CATALOG_URL:https://dome-dev.eng.it/tmf-api/serviceCatalogManagement/v4}
+    product-catalog-url: ${TMFORUM_PRODUCT_CATALOG_URL:https://dome-dev.eng.it/tmf-api/productCatalogManagement/v4}
+    resource-catalog-url: ${TMFORUM_RESOURCE_CATALOG_URL:https://dome-dev.eng.it/tmf-api/resourceCatalog/v4}
 
   # THIS MUST BE REMOVED IN THE FUTURE!!!
   bae:
-    url: ${BAE_URL:http://bae-marketplace-biz-ecosystem-logic-proxy.marketplace.svc.cluster.local:8004}
+    url: ${BAE_URL:https://dome-marketplace-sbx.org}
