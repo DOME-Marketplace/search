@@ -1,5 +1,6 @@
 # Search REST APIs
 
+### Introduction
 
 > [!CAUTION]
 > It's required to know the **search-engine** endpoint.
@@ -13,16 +14,21 @@ http://SEARCH_ENDPOINT:SEARCH_PORT/swagger-ui/index.html#/
 > The endpoint of **search-engine** in the cluster is `http://dome-search-svc.search-engine.svc.cluster.local:8080`.
  
 
+### REST APIs
+
 Anyway, follow the **Search REST APIs** summary:
 
 <details>
 <summary><code>GET - SearchProductsByKeywords</code></summary>
 
-- *Description*: allow to get products filtereb by keywords
+Allow to get products filtereb by keywords
+
+> $\color{blue}{\textsf{Input}}$
 - *Request type*: <code>GET</code>
 - *Query string*: <code>{keyword}</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{keyword}`
-- *Response body*:
+
+> $\color{green}{\textsf{Response}}$
 ```
    [
     {
@@ -36,10 +42,12 @@ Anyway, follow the **Search REST APIs** summary:
 <details>
 <summary><code>POST - SearchProducts</code></summary>
 
-- *Description*: allow to search productOfferings by put keywords and filter through categories in the BodyRequest (category can be null) - Recommended
+Allow to search productOfferings by put keywords and filter through categories in the BodyRequest (category can be null) - Recommended
+
+> $\color{blue}{\textsf{Input}}$
 - *Request type*: <code>POST</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{query}`
-- *Request payload*
+- *Body:*
 ```
    [
     {
@@ -47,7 +55,8 @@ Anyway, follow the **Search REST APIs** summary:
     }
    ]
 ```
-- *Response body*:
+
+> $\color{green}{\textsf{Response}}$
 ```
    [
     {
@@ -61,10 +70,12 @@ Anyway, follow the **Search REST APIs** summary:
 <details>
 <summary><code>POST - SearchProductByFilterCategory</code></summary>
 
-- *Description*: allow to filter productOfferings through category name in the BodyRequest
+Allow to filter productOfferings through category name in the BodyRequest.
+
+> $\color{blue}{\textsf{Input}}$
 - *Request type*: <code>POST</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductByFilterCategory`
-- *Request payload*
+- *Body:*
 ```
    [
     {
@@ -73,7 +84,7 @@ Anyway, follow the **Search REST APIs** summary:
    ]
 ```
 
-- *Response body*:
+> $\color{green}{\textsf{Response}}$
 ```
    [
     {
