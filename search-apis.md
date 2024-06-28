@@ -65,9 +65,9 @@ Anyway, follow the **Search REST APIs** summary:
 <details>
 <summary><code>POST - SearchProductByFilterCategory</code></summary>
 
-$\color{blue}{\textsf{Allow to filter productOfferings through category name in the BodyRequest.}}$  
+Allow to filter productOfferings through category name in the BodyRequest.
 
-> *Input*:
+> $\color{blue}{\textsf{Input}}$:
 - *Request type*: <code>POST</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductByFilterCategory`
 - *Body:*
