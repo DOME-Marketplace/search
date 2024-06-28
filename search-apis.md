@@ -30,11 +30,6 @@ Allow to get products filtereb by keywords
 
 > $\color{green}{\textsf{Response}}$
 ```
-   [
-    {
-        "category": [ ... ]
-    }
-   ]
 ```
 </details>
 
@@ -51,7 +46,7 @@ Allow to search productOfferings by put keywords and filter through categories i
 ```
    [
     {
-        "category": [ "categoryName" ]
+        "categories": [ "categoryName" ]
     }
    ]
 ```
@@ -60,7 +55,7 @@ Allow to search productOfferings by put keywords and filter through categories i
 ```
    [
     {
-        "category": [ ... ]
+        "categories": [ ... ]
     }
    ]
 ```
@@ -88,7 +83,7 @@ Allow to filter productOfferings through category name in the BodyRequest.
 ```
    [
     {
-        "category": [ ... ]
+        "categories": [ ... ]
     }
    ]
 ```
