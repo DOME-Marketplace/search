@@ -18,11 +18,14 @@ Anyway, follow the **Search REST APIs** summary:
 <details>
 <summary><code>GET - SearchProductsByKeywords</code></summary>
 
-- *Description*: allow to get products filtereb by keywords
+> [!TIP]
+> *Description*: allow to get products filtereb by keywords
+
+> *Parameters*
 - *Request type*: <code>GET</code>
 - *Query string*: <code>{keyword}</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{keyword}`
-- *Response body*:
+> *Response body*:
 ```
    [
     {
