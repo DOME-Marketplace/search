@@ -17,7 +17,7 @@ Anyway, follow the **Search REST APIs** summary:
 
 <details>
 <summary><code>GET - SearchProductsByKeywords</code></summary>
-
+- *Description*: allow to get products filtereb by keywords
 - *Request type*: <code>GET</code>
 - *Query string*: <code>{keyword}</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{keyword}`
@@ -32,42 +32,50 @@ Anyway, follow the **Search REST APIs** summary:
 </details>
 
 
+<details>
+<summary><code>POST - SearchProducts</code></summary>
+- *Description*: allow to search productOfferings by put keywords and filter through categories in the BodyRequest (category can be null) - Recommended
+- *Request type*: <code>POST</code>
+- *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{query}`
+- *Request payload*
+```
+   [
+    {
+        "category": [ "categoryName" ]
+    }
+   ]
+```
+- *Response body*:
+```
+   [
+    {
+        "category": [ ... ]
+    }
+   ]
+```
+</details>
 
 
+<details>
+<summary><code>POST - SearchProductByFilterCategory</code></summary>
+- *Description*: allow to filter productOfferings through category name in the BodyRequest
+- *Request type*: <code>POST</code>
+- *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductByFilterCategory`
+- *Request payload*
+```
+   [
+    {
+        "categories": [ "categoryName" ]
+    }
+   ]
+```
 
-
-
-
-
-
-### <code>0.1.5</code>
-
-
-
-•	Search-engine cluster name: dome-search-svc.search-engine.svc.cluster.local:8080
-
-•	 SearchProductsByKeywords:
-      Request type:   GET
-
-      Endpoint:    dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{keyword}
-
-
-•	SearchProducts: allows to search productOfferings by put keywords and filter through categories in the BodyRequest (category can be null) - Recommended
-      Request type:   POST
-
-      Endpoint:    dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{query}
-
-      Body:         {"categories":["categoryName"]}
-
-
-•	SearchProductByFilterCategory: allows to filter productOfferings through category name in the BodyRequest
-      Request type:   POST
-
-      Endpoint:    dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductByFilterCategory
-
-      Body:         {"categories":["categoryName"]}
-
-
-
-### ${\textbf{\color{red}Search REST APIs}}$
-$\textcolor{red}{\textbf{lorem ipsum}}$
+- *Response body*:
+```
+   [
+    {
+        "category": [ ... ]
+    }
+   ]
+```
+</details>
