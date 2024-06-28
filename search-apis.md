@@ -43,7 +43,7 @@ Anyway, follow the **Search REST APIs** summary:
 > *Input*:
 - *Request type*: <code>POST</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{query}`
-- *Body*
+- *Body:*
 ```
    [
     {
@@ -65,12 +65,12 @@ Anyway, follow the **Search REST APIs** summary:
 <details>
 <summary><code>POST - SearchProductByFilterCategory</code></summary>
 
-> *Description*: allow to filter productOfferings through category name in the BodyRequest
+$\color{blue}{\textsf{Allow to filter productOfferings through category name in the BodyRequest.}}$  
 
 > *Input*:
 - *Request type*: <code>POST</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductByFilterCategory`
-- *Body*
+- *Body:*
 ```
    [
     {
