@@ -2,9 +2,15 @@
 
 **Release Notes** for the *Search*:
 
-### <code>0.1.3</code>
+### <code>0.1.5</code>
+**Bugfixing**
+* Usage of namespaces kubernetes in the **TMFORUM_URLs** to access on other services under `marketplace` namespace.
+
+:calendar: 28/06/2024
+
+### <code>0.1.4</code>
 **Improvement**
-* Set **envirnment variables** with **TMFORUM_HOST** and  **TMFORUM_PORT** for the cluster.
+* Set local **envirnment variables** in the cluster for **TMFORUM_URLs** (service-catalog-url, product-catalog-url, and resource-catalog-url).
 
 :calendar: 27/06/2024
 

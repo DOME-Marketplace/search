@@ -40,10 +40,10 @@ logging:
 
 dome:
   tmforum:
-    host: ${TMFORUM_HOST:tm-forum-api-envoy}
-    port: ${TMFORUM_PORT:8080}
+    service-catalog-url: ${TMFORUM_SERVICE_CATALOG_URL:http://tm-forum-api-service-catalog.marketplace.svc.cluster.local:8080}
+    product-catalog-url: ${TMFORUM_PRODUCT_CATALOG_URL:http://tm-forum-api-product-catalog.marketplace.svc.cluster.local:8080}
+    resource-catalog-url: ${TMFORUM_RESOURCE_CATALOG_URL:http://tm-forum-api-resource-catalog.marketplace.svc.cluster.local:8080}
 
   # THIS MUST BE REMOVED IN THE FUTURE!!!
   bae:
-    host: ${BAE_HOST:bae-marketplace-biz-ecosystem-charging-backend}
-    port: ${BAE_PORT:8006}
+    url: ${BAE_URL:http://bae-marketplace-biz-ecosystem-logic-proxy.marketplace.svc.cluster.local:8004}

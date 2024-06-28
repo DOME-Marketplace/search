@@ -5,6 +5,8 @@ public class ResourceSpecCharacteristic {
 	protected String id;
 	private Boolean configurable;
 	private String name;
+	private String description;
+	
 	private String valueType;
 	private ResourceSpecCharacteristicValue[] resourceSpecCharacteristicValue;
 	
@@ -40,5 +42,11 @@ public class ResourceSpecCharacteristic {
 		this.resourceSpecCharacteristicValue = resourceSpecCharacteristicValue;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 }
