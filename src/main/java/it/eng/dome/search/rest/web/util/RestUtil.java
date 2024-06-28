@@ -110,7 +110,7 @@ public class RestUtil {
 	}
 
 	public String getAllProductOfferingsFromTMForum() {
-		String url = getTMForumServiceCatalogUrl + "/serviceSpecification";
+		String url = getTMForumProductCatalogUrl + "/productOffering";
 		log.debug("Call getAllProductOfferingsFromTMForum to URL {}", url);
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
