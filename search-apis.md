@@ -1,5 +1,6 @@
 # Search REST APIs
 
+### Introduction
 
 > [!CAUTION]
 > It's required to know the **search-engine** endpoint.
@@ -12,6 +13,8 @@ http://SEARCH_ENDPOINT:SEARCH_PORT/swagger-ui/index.html#/
 > [!TIP]
 > The endpoint of **search-engine** in the cluster is `http://dome-search-svc.search-engine.svc.cluster.local:8080`.
  
+
+### REST APIs
 
 Anyway, follow the **Search REST APIs** summary:
 
