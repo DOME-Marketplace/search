@@ -3,7 +3,7 @@
 **Release Notes** for the *Search*:
 
 ### <code>0.1.5</code>
-**Bugfixing**
+**Bug Fixing**
 * Usage of namespaces kubernetes in the **TMFORUM_URLs** to access on other services under `marketplace` namespace.
 
 :calendar: 28/06/2024
