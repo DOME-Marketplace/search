@@ -22,13 +22,8 @@ Anyway, follow the **Search REST APIs** summary:
 - *Request type*: <code>GET</code>
 - *Query string*: <code>{keyword}</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{keyword}`
-- *Response body*:
+- 
 ```
-   [
-    {
-        "category": [ ... ]
-    }
-   ]
 ```
 </details>
 
@@ -43,7 +38,7 @@ Anyway, follow the **Search REST APIs** summary:
 ```
    [
     {
-        "category": [ "categoryName" ]
+        "categories": [ "categoryName" ]
     }
    ]
 ```
@@ -51,7 +46,7 @@ Anyway, follow the **Search REST APIs** summary:
 ```
    [
     {
-        "category": [ ... ]
+        "categories": [ ... ]
     }
    ]
 ```
@@ -77,7 +72,7 @@ Anyway, follow the **Search REST APIs** summary:
 ```
    [
     {
-        "category": [ ... ]
+        "categories": [ ... ]
     }
    ]
 ```
