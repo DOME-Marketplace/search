@@ -18,7 +18,6 @@ Anyway, follow the **Search REST APIs** summary:
 <details>
 <summary><code>GET - SearchProductsByKeywords</code></summary>
 
-> [!TIP]
 > *Description*: allow to get products filtereb by keywords
 
 > *Parameters*
