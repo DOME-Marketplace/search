@@ -17,6 +17,7 @@ Anyway, follow the **Search REST APIs** summary:
 
 <details>
 <summary><code>GET - SearchProductsByKeywords</code></summary>
+
 - *Description*: allow to get products filtereb by keywords
 - *Request type*: <code>GET</code>
 - *Query string*: <code>{keyword}</code>
@@ -34,6 +35,7 @@ Anyway, follow the **Search REST APIs** summary:
 
 <details>
 <summary><code>POST - SearchProducts</code></summary>
+
 - *Description*: allow to search productOfferings by put keywords and filter through categories in the BodyRequest (category can be null) - Recommended
 - *Request type*: <code>POST</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductsByKeywords/{query}`
@@ -58,6 +60,7 @@ Anyway, follow the **Search REST APIs** summary:
 
 <details>
 <summary><code>POST - SearchProductByFilterCategory</code></summary>
+
 - *Description*: allow to filter productOfferings through category name in the BodyRequest
 - *Request type*: <code>POST</code>
 - *Endpoint*: `dome-search-svc.search-engine.svc.cluster.local:8080/api/SearchProductByFilterCategory`
