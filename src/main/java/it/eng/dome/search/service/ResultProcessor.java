@@ -40,6 +40,7 @@ public class ResultProcessor {
 			for(IndexingObject indexingObj : listIdexingObject) {
 
 				if(indexingObj.getProductOfferingId()!= null) {
+					if(indexingObj.getProductOfferingLifecycleStatus().contains("Launched") == true) {
 
 					if(mapProductOffering.containsKey(indexingObj.getProductOfferingId())== false) {
 						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
@@ -48,7 +49,7 @@ public class ResultProcessor {
 						mapProductOffering.put(indexingObj.getProductOfferingId(), productOfferingDetails);
 					}
 
-
+				}
 				}
 
 			}
