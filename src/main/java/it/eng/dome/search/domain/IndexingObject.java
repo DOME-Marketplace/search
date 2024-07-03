@@ -35,6 +35,11 @@ public class IndexingObject {
 
 	@Field(type = FieldType.Text)
 	private String productOfferingNameText;
+	
+	@Field(type = FieldType.Text)
+	private String productOfferingLifecycleStatus;
+
+
 
 	@Field(type = FieldType.Text)
 	private String productOfferingLastUpdate;
@@ -125,6 +130,14 @@ public class IndexingObject {
 
 	public void setProductOfferingNameText(String productOfferingNameText) {
 		this.productOfferingNameText = productOfferingNameText;
+	}
+	
+	public String getProductOfferingLifecycleStatus() {
+		return productOfferingLifecycleStatus;
+	}
+
+	public void setProductOfferingLifecycleStatus(String productOfferingLifecycleStatus) {
+		this.productOfferingLifecycleStatus = productOfferingLifecycleStatus;
 	}
 
 	public String getProductOfferingLastUpdate() {

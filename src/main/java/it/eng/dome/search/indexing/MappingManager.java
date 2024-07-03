@@ -38,6 +38,7 @@ public class MappingManager {
 		objToIndex.setProductOfferingId(product.getId());
 		objToIndex.setProductOfferingIsBundle(product.getIsBundle());
 		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate());
+		objToIndex.setProductOfferingLifecycleStatus(product.getLifecycleStatus());
 		objToIndex.setProductOfferingName(product.getName());
 		objToIndex.setProductOfferingNameText(product.getName());
 		objToIndex.setCategories(product.getCategory());
