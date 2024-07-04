@@ -86,7 +86,7 @@ public class RestUtil {
 	}
 
 	public String getAllProductOfferings() {		
-		String url = getBAEUrl + "/catalog/productOffering";
+		String url = getBAEUrl + "/catalog/productOffering?limit=200";
 		log.debug("Call getAllProductOfferings to URL {}", url); 
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
