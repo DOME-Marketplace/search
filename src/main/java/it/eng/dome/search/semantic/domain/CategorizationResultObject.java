@@ -4,7 +4,7 @@ public class CategorizationResultObject {
 
 	public String input_text;
 	public String language;
-	public String[] ipct_categories;
+	public String[] iptc_categories;
 	public String[] geo_categories;
 	
 	
@@ -22,10 +22,10 @@ public class CategorizationResultObject {
 		this.language = language;
 	}
 	public String[] getIpct_categories() {
-		return ipct_categories;
+		return iptc_categories;
 	}
-	public void setIpct_categories(String[] ipct_categories) {
-		this.ipct_categories = ipct_categories;
+	public void setIpct_categories(String[] iptc_categories) {
+		this.iptc_categories = iptc_categories;
 	}
 	public String[] getGeo_categories() {
 		return geo_categories;

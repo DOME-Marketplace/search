@@ -14,6 +14,7 @@ import it.eng.dome.search.domain.ProductOffering;
 import it.eng.dome.search.domain.ProductSpecification;
 import it.eng.dome.search.domain.ResourceSpecification;
 import it.eng.dome.search.domain.ServiceSpecification;
+import it.eng.dome.search.rest.web.util.RestSemanticUtil;
 import it.eng.dome.search.rest.web.util.RestUtil;
 
 @Service
@@ -58,6 +59,15 @@ public class IndexingManager {
 					log.info("---Mapping Resources associated---");
 					objToIndex = mappingManager.prepareResourceSpecMetadata(resourceList,objToIndex);
 				}
+
+				//Reactivate for Semantic services
+				/*
+				 * if(objToIndex.getProductOfferingDescription() == null)
+				 * log.info("null value for description in product: "+product.getId()); else {
+				 * if(objToIndex.getProductOfferingLifecycleStatus().contains("Launched")==true)
+				 * objToIndex = mappingManager.prepareClassify(objToIndex); }
+				 */
+
 			}
 
 		} catch (JsonMappingException e) {

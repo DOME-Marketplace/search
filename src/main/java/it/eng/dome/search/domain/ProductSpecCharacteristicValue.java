@@ -5,6 +5,7 @@ public class ProductSpecCharacteristicValue {
 	private Boolean isDefault;
 	private Boolean configurable;
 	private String value;
+	private String unitOfMeasure;
 
 	public Boolean getIsDefault() {
 		return isDefault;
@@ -28,6 +29,14 @@ public class ProductSpecCharacteristicValue {
 
 	public void setConfigurable(Boolean configurable) {
 		this.configurable = configurable;
+	}
+
+	public String getUnitOfMeasure() {
+		return unitOfMeasure;
+	}
+
+	public void setUnitOfMeasure(String unitOfMeasure) {
+		this.unitOfMeasure = unitOfMeasure;
 	}
 
 }

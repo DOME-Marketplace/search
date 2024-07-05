@@ -35,6 +35,11 @@ public class IndexingObject {
 
 	@Field(type = FieldType.Text)
 	private String productOfferingNameText;
+	
+	@Field(type = FieldType.Text)
+	private String productOfferingLifecycleStatus;
+
+
 
 	@Field(type = FieldType.Text)
 	private String productOfferingLastUpdate;
@@ -78,7 +83,14 @@ public class IndexingObject {
 
 	// from Categorization and Entities Extraction //put here fields for semantic
 	// services ----
+	@Field(type = FieldType.Text)
+	private String[] classifyResult;
 
+	@Field(type = FieldType.Text)
+	private String analyzeResult;
+
+	//---------------------
+	
 	public String getId() {
 		return id;
 	}
@@ -126,6 +138,14 @@ public class IndexingObject {
 	public void setProductOfferingNameText(String productOfferingNameText) {
 		this.productOfferingNameText = productOfferingNameText;
 	}
+	
+	public String getProductOfferingLifecycleStatus() {
+		return productOfferingLifecycleStatus;
+	}
+
+	public void setProductOfferingLifecycleStatus(String productOfferingLifecycleStatus) {
+		this.productOfferingLifecycleStatus = productOfferingLifecycleStatus;
+	}
 
 	public String getProductOfferingLastUpdate() {
 		return productOfferingLastUpdate;
@@ -142,6 +162,8 @@ public class IndexingObject {
 	public void setProductOfferingIsBundle(Boolean productOfferingIsBundle) {
 		this.productOfferingIsBundle = productOfferingIsBundle;
 	}
+
+
 
 	public String getProductSpecificationId() {
 		return productSpecificationId;
@@ -213,6 +235,23 @@ public class IndexingObject {
 
 	public void setProductSpecification(ProductSpecification productSpecification) {
 		this.productSpecification = productSpecification;
+	}
+	
+	
+	public String[] getClassifyResult() {
+		return classifyResult;
+	}
+
+	public void setClassifyResult(String[] classifyResult) {
+		this.classifyResult = classifyResult;
+	}
+	
+	public String getAnalyzeResult() {
+		return analyzeResult;
+	}
+
+	public void setAnalyzeResult(String analyzeResult) {
+		this.analyzeResult = analyzeResult;
 	}
 
 }

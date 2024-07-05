@@ -6,7 +6,8 @@ public class ProductSpecCharacteristic {
 	private Boolean configurable;
 	private String name;
 	private String valueType;
-	private ProductSpecCharacteristicValue[] productSpecCharacteristicValue;
+	private String description;
+		private ProductSpecCharacteristicValue[] productSpecCharacteristicValue;
 
 	public void setProductSpecCharacteristicValue(ProductSpecCharacteristicValue[] productSpecCharacteristicValue) {
 		this.productSpecCharacteristicValue = productSpecCharacteristicValue;
@@ -46,6 +47,14 @@ public class ProductSpecCharacteristic {
 
 	public void setValueType(String valueType) {
 		this.valueType = valueType;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

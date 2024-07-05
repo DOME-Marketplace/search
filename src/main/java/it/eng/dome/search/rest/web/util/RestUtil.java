@@ -1,11 +1,14 @@
 package it.eng.dome.search.rest.web.util;
 
+import java.util.Collections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
 
 /**
  * @author mardetom
@@ -22,6 +25,13 @@ public class RestUtil {
 
 	private static final Logger log = LoggerFactory.getLogger(RestUtil.class);
 	private static RestTemplate restTemplate = new RestTemplate();
+
+	/*
+	 * private final String classifyUrl =
+	 * "https://deployenv6.expertcustomers.ai:8086/services/dome/classify"; //to
+	 * change private final String analyzeUrl =
+	 * "https://deployenv6.expertcustomers.ai:8086/services/dome/analyze";
+	 */
 
 	/*****************
 	 * BAE Endpoints *
@@ -70,7 +80,7 @@ public class RestUtil {
 	}
 
 	public String getAllProductOfferings() {		
-		String url = getBAEUrl + "/catalog/productOffering";
+		String url = getBAEUrl + "/catalog/productOffering?limit=200";
 		log.debug("Call getAllProductOfferings to URL {}", url); 
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
@@ -133,5 +143,49 @@ public class RestUtil {
 		log.debug("Response for getTMFResourceSpecificationById with status code {}", response.getStatusCode().name());
 		return result;
 	}
+
+
+	/*******************************
+	 * Semantic services Endpoints *
+	 *******************************/
+
+	/*
+	 * public String classifyText(String contentToClassify) {
+	 * 
+	 * String url = classifyUrl; log.info("Call classifyText to URL {}", url);
+	 * 
+	 * // Crea le intestazioni della richiesta HttpHeaders headers = new
+	 * HttpHeaders(); headers.setContentType(MediaType.TEXT_PLAIN);
+	 * headers.setAccept(Collections.singletonList(MediaType.ALL));
+	 * 
+	 * // Crea il corpo della richiesta HttpEntity<String> entity = new
+	 * HttpEntity<>(contentToClassify, headers);
+	 * 
+	 * // Invia la richiesta POST ResponseEntity<String> response =
+	 * restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+	 * 
+	 * // Ottieni il corpo della risposta String result = response.getBody();
+	 * log.info("Response for classifyText with status code {}",
+	 * response.getStatusCode().name()); return result; }
+	 * 
+	 * 
+	 * public String analyzeText(String contentToAnalyze) {
+	 * 
+	 * String url = analyzeUrl; log.info("Call analyzeText to URL {}", url);
+	 * 
+	 * // Crea le intestazioni della richiesta HttpHeaders headers = new
+	 * HttpHeaders(); headers.setContentType(MediaType.TEXT_PLAIN);
+	 * headers.setAccept(Collections.singletonList(MediaType.ALL));
+	 * 
+	 * // Crea il corpo della richiesta HttpEntity<String> entity = new
+	 * HttpEntity<>(contentToAnalyze, headers);
+	 * 
+	 * // Invia la richiesta POST ResponseEntity<String> response =
+	 * restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+	 * 
+	 * // Ottieni il corpo della risposta String result = response.getBody();
+	 * log.info("Response for analyzeText with status code {}",
+	 * response.getStatusCode().name()); return result; }
+	 */
 
 }
