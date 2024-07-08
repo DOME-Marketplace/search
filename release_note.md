@@ -2,9 +2,14 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.1.7</code>
+**Improvement**
+* Updates of domain entities involved in indexing process.
+* Improvement of indexing process.
+
 ### <code>0.1.6</code>
 **Improvement**
-* Add check to return ProductOfferings with lifecycleStatus "Lanched".
+* Add check to filter ProductOfferings with lifecycleStatus **Lanched**.
 
 :calendar: 03/07/2024
 
