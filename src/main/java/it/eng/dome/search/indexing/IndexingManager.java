@@ -49,13 +49,13 @@ public class IndexingManager {
 
 				if(serviceList != null) {
 
-					log.info("---Mapping Services associated---");
+					log.info("---Mapping Services associated: "+serviceList.length);
 					objToIndex = mappingManager.prepareServiceSpecMetadata(serviceList,objToIndex);
 				}
 
 				ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
 				if(resourceList != null) {
-					log.info("---Mapping Resources associated---");
+					log.info("---Mapping Resources associated: "+resourceList.length);
 					objToIndex = mappingManager.prepareResourceSpecMetadata(resourceList,objToIndex);
 				}
 			}
