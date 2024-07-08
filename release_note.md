@@ -9,7 +9,7 @@
 
 ### <code>0.1.6</code>
 **Improvement**
-* Add check to return ProductOfferings with lifecycleStatus "Lanched".
+* Add check to filter ProductOfferings with lifecycleStatus **Lanched**.
 
 :calendar: 03/07/2024
 
