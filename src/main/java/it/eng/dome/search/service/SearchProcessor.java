@@ -125,7 +125,7 @@ public class SearchProcessor {
             nestedBoolQuery.must(QueryBuilders.termsQuery("categories.name", request.getCategories()));
 
             // Create nested query
-            boolQueryBuilder.filter(QueryBuilders.nestedQuery("categories", nestedBoolQuery, org.apache.lucene.search.join.ScoreMode.None));
+            boolQueryBuilder  = boolQueryBuilder.filter(QueryBuilders.nestedQuery("categories", nestedBoolQuery, org.apache.lucene.search.join.ScoreMode.None));
 		} else {
 			logger.info("No categories specified for filtering.");
 		}
