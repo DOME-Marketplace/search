@@ -6,6 +6,7 @@
 **Improvement**
 * Updates of domain entities involved in indexing process.
 * Improvement of indexing process.
+* Improvement of pagination.
 
 ### <code>0.1.6</code>
 **Improvement**
