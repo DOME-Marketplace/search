@@ -30,39 +30,38 @@ public class ResultProcessor {
 	@Autowired
 	private RestUtil restTemplate;
 
-	public Page<ProductOffering> processResults(Page<IndexingObject> page, Pageable pageable){
+	public Page<ProductOffering> processResults(Page<IndexingObject> page, Pageable pageable) {
 
-		HashMap<String,ProductOffering> mapProductOffering = new HashMap<String,ProductOffering>();
+		HashMap<String, ProductOffering> mapProductOffering = new HashMap<String, ProductOffering>();
 		List<ProductOffering> listProductOffering = new ArrayList<ProductOffering>();
 
 		try {
-			log.info("number of totale Elements "+page.getTotalElements());
-			
+			log.info("Total number of Elements " + page.getTotalElements());
+
 			List<IndexingObject> listIdexingObject = page.getContent();
-			for(IndexingObject indexingObj : listIdexingObject) {
+			for (IndexingObject indexingObj : listIdexingObject) {
 
-				if(indexingObj.getProductOfferingId()!= null) {
+				if (indexingObj.getProductOfferingId() != null) {
 
-					if(mapProductOffering.containsKey(indexingObj.getProductOfferingId())== false) {
-						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
-						ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId, ProductOffering.class);
+					if (mapProductOffering.containsKey(indexingObj.getProductOfferingId()) == false) {
+						String requestForProductOfferingId = restTemplate
+								.getProductOfferingById(indexingObj.getProductOfferingId());
+						ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,
+								ProductOffering.class);
 
 						mapProductOffering.put(indexingObj.getProductOfferingId(), productOfferingDetails);
 					}
-
-				
 				}
-
 			}
 
-			if(mapProductOffering.isEmpty() == false) {
-				for(Entry<String,ProductOffering> entry : mapProductOffering.entrySet()) {
+			if (mapProductOffering.isEmpty() == false) {
+				for (Entry<String, ProductOffering> entry : mapProductOffering.entrySet()) {
 
 					listProductOffering.add(entry.getValue());
 				}
 			}
 
-			return  new PageImpl<>(listProductOffering,pageable,page.getTotalElements());
+			return new PageImpl<>(listProductOffering, pageable, page.getTotalElements());
 		} catch (JsonProcessingException e) {
 			log.warn("JsonProcessingException - Error during processResults(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
@@ -72,8 +71,6 @@ public class ResultProcessor {
 			e.printStackTrace();
 			return new PageImpl<>(new ArrayList<>());
 		}
-
 	}
 
 }
-
