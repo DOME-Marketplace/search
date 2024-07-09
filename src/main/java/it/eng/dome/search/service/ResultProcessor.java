@@ -24,7 +24,7 @@ import it.eng.dome.search.rest.web.util.RestUtil;
 @Service
 public class ResultProcessor {
 
-	private static final Logger logger = LoggerFactory.getLogger(ResultProcessor.class);
+	private static final Logger log = LoggerFactory.getLogger(ResultProcessor.class);
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Autowired
@@ -36,11 +36,12 @@ public class ResultProcessor {
 		List<ProductOffering> listProductOffering = new ArrayList<ProductOffering>();
 
 		try {
+			log.info("number of totale Elements "+page.getTotalElements());
+			
 			List<IndexingObject> listIdexingObject = page.getContent();
 			for(IndexingObject indexingObj : listIdexingObject) {
 
 				if(indexingObj.getProductOfferingId()!= null) {
-					if(indexingObj.getProductOfferingLifecycleStatus().contains("Launched") == true) {
 
 					if(mapProductOffering.containsKey(indexingObj.getProductOfferingId())== false) {
 						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
@@ -49,7 +50,7 @@ public class ResultProcessor {
 						mapProductOffering.put(indexingObj.getProductOfferingId(), productOfferingDetails);
 					}
 
-				}
+				
 				}
 
 			}
@@ -61,13 +62,13 @@ public class ResultProcessor {
 				}
 			}
 
-			return  new PageImpl<>(listProductOffering,pageable,mapProductOffering.size());
+			return  new PageImpl<>(listProductOffering,pageable,page.getTotalElements());
 		} catch (JsonProcessingException e) {
-			logger.warn("JsonProcessingException - Error during processResults(). Skipped: {}", e.getMessage());
+			log.warn("JsonProcessingException - Error during processResults(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 			return new PageImpl<>(new ArrayList<>());
 		} catch (HttpServerErrorException e) {
-			logger.warn("HttpServerErrorException - Error during processResults(). Skipped: {}", e.getMessage());
+			log.warn("HttpServerErrorException - Error during processResults(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 			return new PageImpl<>(new ArrayList<>());
 		}

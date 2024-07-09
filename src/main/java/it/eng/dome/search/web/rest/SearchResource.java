@@ -81,6 +81,17 @@ public class SearchResource {
 	}
 	
 	
+//	@PostMapping(value = "/SearchProductTest/{query}")
+//	public ResponseEntity<List<ProductOffering>> searchProductTest(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
+//		
+//		
+//		Page<IndexingObject> page = searchProcessor.searchTest(query, request, pageable);
+//		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
+//		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProductTest/" + query);
+//		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
+//	}
+	
+	
 	
 	@PostMapping(value = "/SearchProductByFilterCategory")
 	public ResponseEntity<List<ProductOffering>> searchProductByFilterCategory(@RequestBody SearchRequest request, Pageable pageable){
