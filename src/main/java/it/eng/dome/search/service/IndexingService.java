@@ -56,7 +56,7 @@ public class IndexingService {
 		String listProductOfferings = restUtil.getAllProductOfferings(); //-------> from BAE (change when needed)
 		try {
 			ProductOffering[] productList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
-		
+			log.info("***Tot of ProductOfferings =  ..... "+productList.length);
 		//ArrayList<ProductOffering> productList = new ArrayList();
 
 		for(ProductOffering product : productList) {

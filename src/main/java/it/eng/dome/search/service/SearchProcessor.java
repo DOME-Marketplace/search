@@ -9,6 +9,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.query.TermsQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,49 @@ public class SearchProcessor {
 
 
 	//search request con filtraggio su nome categorie
+//	public Page<IndexingObject> search(String q, SearchRequest request, Pageable pageable){
+//
+//		// Main query
+//		QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(q);
+//
+//		// Create a BoolQueryBuilder to combine the main query and the category filter
+//		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(queryBuilder);
+//
+//		// Add category filter if categories are specified in the searchRequest
+//		if (request.getCategories() != null && ! request.getCategories().isEmpty()) {
+//			logger.error("Adding category filter for categories: {}", request.getCategories());
+//			//boolQueryBuilder.filter(QueryBuilders.termsQuery("categories.name", request.getCategories()));
+//			TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("categories.name", request.getCategories());
+//			boolQueryBuilder.filter(termsQueryBuilder);
+//		} else {
+//			logger.debug("No categories specified for filtering.");
+//		}
+//
+//		//		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable);
+//		//
+//		//		Query elasticQuery = nativeSearchQueryBuilder.build();
+//
+//		// Build the search query using SearchSourceBuilder
+//		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+//		searchSourceBuilder.query(boolQueryBuilder);
+//		searchSourceBuilder.from((int) pageable.getOffset());
+//		searchSourceBuilder.size(pageable.getPageSize());
+//
+//		// Create the NativeSearchQuery
+//		Query elasticQuery = new NativeSearchQuery(queryBuilder);
+//
+//		try { 
+//			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
+//			List<IndexingObject> resultPage = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+//			return new PageImpl<>(resultPage,pageable,searchHits.getTotalHits()); 
+//
+//		} catch (Exception e) { 
+//			logger.warn("Error during search. Skipped: {}", e.getMessage()); 
+//			return new PageImpl<>(new ArrayList<>()); 
+//		}
+//
+//	}
+	
 	public Page<IndexingObject> search(String q, SearchRequest request, Pageable pageable){
 
 		// Main query
@@ -76,26 +120,26 @@ public class SearchProcessor {
 
 		// Add category filter if categories are specified in the searchRequest
 		if (request.getCategories() != null && ! request.getCategories().isEmpty()) {
-			logger.error("Adding category filter for categories: {}", request.getCategories());
-			//boolQueryBuilder.filter(QueryBuilders.termsQuery("categories.name", request.getCategories()));
-			TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("categories.name", request.getCategories());
-			boolQueryBuilder.filter(termsQueryBuilder);
+			logger.info("Adding category filter for categories: {}", request.getCategories());
+			BoolQueryBuilder nestedBoolQuery = QueryBuilders.boolQuery();
+            nestedBoolQuery.must(QueryBuilders.termsQuery("categories.name", request.getCategories()));
+
+            // Create nested query
+            boolQueryBuilder  = boolQueryBuilder.filter(QueryBuilders.nestedQuery("categories", nestedBoolQuery, org.apache.lucene.search.join.ScoreMode.None));
 		} else {
-			logger.debug("No categories specified for filtering.");
+			logger.info("No categories specified for filtering.");
 		}
+		
+		TermQueryBuilder termQueryBuilderStatus = QueryBuilders.termQuery("productOfferingLifecycleStatus", "launched");
+		boolQueryBuilder= boolQueryBuilder.filter(termQueryBuilderStatus);
+		
 
-		//		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder).withPageable(pageable);
-		//
-		//		Query elasticQuery = nativeSearchQueryBuilder.build();
 
-		// Build the search query using SearchSourceBuilder
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		searchSourceBuilder.query(boolQueryBuilder);
-		searchSourceBuilder.from((int) pageable.getOffset());
-		searchSourceBuilder.size(pageable.getPageSize());
+		NativeSearchQueryBuilder nativeSearchQueryBuilder = new
+				NativeSearchQueryBuilder() .withQuery(boolQueryBuilder) .withPageable(pageable);
 
-		// Create the NativeSearchQuery
-		Query elasticQuery = new NativeSearchQuery(queryBuilder);
+		Query elasticQuery = nativeSearchQueryBuilder.build();
+		
 
 		try { 
 			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
