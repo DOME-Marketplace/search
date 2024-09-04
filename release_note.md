@@ -5,14 +5,12 @@
 ### <code>0.1.7</code>
 **Improvement**
 * Updates of domain entities involved in indexing process.
-<<<<<<< HEAD
 * Improvement of indexing process.
 * Improvement of pagination.
-=======
 * Improvement of indexing process and pagination.
 
 :calendar: 09/07/2024
->>>>>>> 10cd60a2cb10bb7b1937c9138fd06b73e563b3c6
+
 
 ### <code>0.1.6</code>
 **Improvement**
