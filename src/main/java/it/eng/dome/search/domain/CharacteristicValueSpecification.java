@@ -5,7 +5,8 @@ public class CharacteristicValueSpecification {
 	private Boolean isDefault;
 	private String value;
 	private String unitOfMeasure;
-	private String valueFrom;
+	private int valueFrom;
+	private int valueTo;
 	
 	public String getUnitOfMeasure() {
 		return unitOfMeasure;
@@ -25,10 +26,17 @@ public class CharacteristicValueSpecification {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	public String getValueFrom() {
+
+	public int getValueTo() {
+		return valueTo;
+	}
+	public void setValueTo(int valueTo) {
+		this.valueTo = valueTo;
+	}
+	public int getValueFrom() {
 		return valueFrom;
 	}
-	public void setValueFrom(String valueFrom) {
+	public void setValueFrom(int valueFrom) {
 		this.valueFrom = valueFrom;
 	}
 }

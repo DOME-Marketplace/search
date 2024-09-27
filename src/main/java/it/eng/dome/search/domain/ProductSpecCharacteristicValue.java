@@ -6,6 +6,16 @@ public class ProductSpecCharacteristicValue {
 	private Boolean configurable;
 	private String value;
 	private String unitOfMeasure;
+	private int valueFrom;
+	private int valueTo;
+
+	public int getValueTo() {
+		return valueTo;
+	}
+
+	public void setValueTo(int valueTo) {
+		this.valueTo = valueTo;
+	}
 
 	public String getUnitOfMeasure() {
 		return unitOfMeasure;
@@ -39,5 +49,12 @@ public class ProductSpecCharacteristicValue {
 		this.configurable = configurable;
 	}
 
-}
+	public int getValueFrom() {
+		return valueFrom;
+	}
 
+	public void setValueFrom(int valueFrom) {
+		this.valueFrom = valueFrom;
+	}
+
+}
