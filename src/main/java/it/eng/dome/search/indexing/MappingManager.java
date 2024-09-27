@@ -86,9 +86,15 @@ public class MappingManager {
 			for(ServiceSpecification s : serviceList) {
 
 				String requestForServiceSpecificationId = restTemplate.getServiceSpecificationById(s.getId());
-				ServiceSpecification serviceSpecDetails = objectMapper.readValue(requestForServiceSpecificationId, ServiceSpecification.class);
 
-				listServiceDetails.add(serviceSpecDetails);
+				if (requestForServiceSpecificationId == null) {
+					log.info("getServiceSpecificationById {} cannot found", s.getId());
+				} else {
+
+					ServiceSpecification serviceSpecDetails = objectMapper.readValue(requestForServiceSpecificationId, ServiceSpecification.class);
+
+					listServiceDetails.add(serviceSpecDetails);
+				}
 			}	
 
 		} catch (JsonProcessingException e) {
@@ -115,9 +121,14 @@ public class MappingManager {
 			for(ResourceSpecification r : resourceList) {
 
 				String requestForResourceSpecificationId = restTemplate.getResourceSpecificationById(r.getId());
-				ResourceSpecification resourceSpecDetails = objectMapper.readValue(requestForResourceSpecificationId, ResourceSpecification.class);
 
-				listResourceDetails.add(resourceSpecDetails);
+				if (requestForResourceSpecificationId == null) {
+					log.info("getResourceSpecificationById {} cannot found", r.getId());
+				} else {
+					ResourceSpecification resourceSpecDetails = objectMapper.readValue(requestForResourceSpecificationId, ResourceSpecification.class);
+
+					listResourceDetails.add(resourceSpecDetails);
+				}
 			}	
 
 		} catch (JsonProcessingException e) {
@@ -143,9 +154,15 @@ public class MappingManager {
 			for(ServiceSpecification s : serviceList) {
 
 				String requestForServiceSpecificationId = restTemplate.getTMFServiceSpecificationById(s.getId());
-				ServiceSpecification serviceSpecDetails = objectMapper.readValue(requestForServiceSpecificationId, ServiceSpecification.class);
 
-				listServiceDetails.add(serviceSpecDetails);
+				if (requestForServiceSpecificationId == null) {
+					log.info("getTMFServiceSpecificationById {} cannot found", s.getId());
+				} else {
+
+					ServiceSpecification serviceSpecDetails = objectMapper.readValue(requestForServiceSpecificationId, ServiceSpecification.class);
+
+					listServiceDetails.add(serviceSpecDetails);
+				}
 			}	
 
 		} catch (JsonProcessingException e) {
@@ -172,9 +189,14 @@ public class MappingManager {
 			for(ResourceSpecification r : resourceList) {
 
 				String requestForResourceSpecificationId = restTemplate.getTMFResourceSpecificationById(r.getId());
-				ResourceSpecification resourceSpecDetails = objectMapper.readValue(requestForResourceSpecificationId, ResourceSpecification.class);
 
-				listResourceDetails.add(resourceSpecDetails);
+				if (requestForResourceSpecificationId == null) {
+					log.info("getTMFResourceSpecificationById {} cannot found", r.getId());
+				} else {
+					ResourceSpecification resourceSpecDetails = objectMapper.readValue(requestForResourceSpecificationId, ResourceSpecification.class);
+
+					listResourceDetails.add(resourceSpecDetails);
+				}
 			}	
 
 		} catch (JsonProcessingException e) {

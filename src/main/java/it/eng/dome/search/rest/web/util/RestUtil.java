@@ -32,16 +32,9 @@ public class RestUtil {
 
 	@Value("${dome.tmforum.resource-catalog-url}")
 	private String getTMForumResourceCatalogUrl;
-	
-	
+		
 	@Value("${dome.bae.url}")
 	private String getBAEUrl;
-
-	@Value("${dome.classify.url}")
-	private String classifyUrl;
-
-	@Value("${dome.analyze.url}")
-	private String analyzeUrl;
 
 	private static final Logger log = LoggerFactory.getLogger(RestUtil.class);
 	private static RestTemplate restTemplate = new RestTemplate();
@@ -55,11 +48,16 @@ public class RestUtil {
 		String url = getBAEUrl + "/catalog/productOffering/" + id;
 		log.debug("Call getProductOfferingById to URL {}", url);
 
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getProductOfferingById with status code {}", response.getStatusCode().name());
-		return result;
+			String result = response.getBody();
+			log.debug("Response for getProductOfferingById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getProductOfferingById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	public String getProductSpecificationById(String id) {
@@ -81,31 +79,49 @@ public class RestUtil {
 	public String getServiceSpecificationById(String id) {
 		String url = getBAEUrl + "/service/serviceSpecification/" + id;
 		log.debug("Call getServiceSpecificationById to URL {}", url);
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getServiceSpecificationById with status code {}", response.getStatusCode().name());
-		return result;
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+			String result = response.getBody();
+			log.debug("Response for getServiceSpecificationById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getServiceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	public String getResourceSpecificationById(String id) {
 		String url = getBAEUrl + "/resource/resourceSpecification/" + id;
 		log.debug("Call getResourceSpecificationById to URL {}", url);
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getResourceSpecificationById with status code {}", response.getStatusCode().name());
-		return result;
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+			String result = response.getBody();
+			log.debug("Response for getResourceSpecificationById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getResourceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	public String getAllProductOfferings() {		
 		String url = getBAEUrl + "/catalog/productOffering?limit=1000";
 		log.debug("Call getAllProductOfferings to URL {}", url); 
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getAllProductOfferings with status code {}", response.getStatusCode().name());
-		return result;
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+			String result = response.getBody();
+			log.debug("Response for getAllProductOfferings with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getAllProductOfferings with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	/*********************
@@ -115,153 +131,81 @@ public class RestUtil {
 	public String getTMFProductSpecificationById(String id) {
 		String url = getTMForumProductCatalogUrl + "/productSpecification/" + id;
 		log.debug("Call getTMFProductSpecificationById to URL {}", url);
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getTMFProductSpecificationById with status code {}", response.getStatusCode().name());
-		return result;
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+			String result = response.getBody();
+			log.debug("Response for getTMFProductSpecificationById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getTMFProductSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	public String getAllProductOfferingsFromTMForum() {
 		String url = getTMForumProductCatalogUrl + "/productOffering";
 		log.debug("Call getAllProductOfferingsFromTMForum to URL {}", url);
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getAllProductOfferingsFromTMForum with status code {}",
-				response.getStatusCode().name());
-		return result;
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+			String result = response.getBody();
+			log.debug("Response for getAllProductOfferingsFromTMForum with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getAllProductOfferingsFromTMForum with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	public String getTMFProductOfferingById(String id) {
 		String url = getTMForumProductCatalogUrl + "/productOffering/" + id;
 		log.debug("Call getTMFProductOfferingById to URL {}", url);
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getTMFProductOfferingById with status code {}", response.getStatusCode().name());
-		return result;
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+			String result = response.getBody();
+			log.debug("Response for getTMFProductOfferingById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getTMFProductOfferingById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	public String getTMFServiceSpecificationById(String id) {
 		String url = getTMForumServiceCatalogUrl + "/serviceSpecification/" + id;
 		log.debug("Call getTMFServiceSpecificationById to URL {}", url);
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getTMFServiceSpecificationById with status code {}", response.getStatusCode().name());
-		return result;
+			String result = response.getBody();
+			log.debug("Response for getTMFProductOfferingById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getTMFProductOfferingById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	public String getTMFResourceSpecificationById(String id) {
 		String url = getTMForumResourceCatalogUrl + "/resourceSpecification/" + id;
 		log.debug("Call getTMFServiceSpecificationById to URL {}", url);
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getTMFResourceSpecificationById with status code {}", response.getStatusCode().name());
-		return result;
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+			String result = response.getBody();
+			log.debug("Response for getTMFResourceSpecificationById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getTMFResourceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
-	
-	
-	/*********************
-	 * Semantic Endpoints *
-	 *********************/
-	
-//	public String getClassificationResult(String bodyClassification) {
-//		String url = getSemanticUrl + "/classify";
-//		log.debug("Call getClassificationResult to URL {}", url);
-//		
-//		HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.TEXT_PLAIN);
-//        headers.setAccept(Collections.singletonList(MediaType.ALL));
-//        
-//        // Prepare request entity with text body
-//        HttpEntity<String> requestEntity = new HttpEntity<>(bodyClassification, headers);
-//
-//        log.debug("Sending POST request to URL {}", url);
-//        
-//     // Send POST request
-//        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-//        
-//		log.debug("Response for getClassificationResult with status code {}", response.getStatusCode().name());
-//		if (response.getStatusCode() == HttpStatus.OK) {
-//            return response.getBody();
-//        } else {
-//            throw new RuntimeException("Failed to Classify text: " + response.getStatusCode().name());
-//        }
-//
-//	}
-//	
-//	
-//	public String getAnalyzeResult(String bodyAnalyze) {
-//		String url = getSemanticUrl + "/analyze";
-//		log.debug("Call getAnalyzeResult to URL {}", url);
-//		
-//		HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.TEXT_PLAIN);
-//        headers.setAccept(Collections.singletonList(MediaType.ALL));
-//        
-//        // Prepare request entity with text body
-//        HttpEntity<String> requestEntity = new HttpEntity<>(bodyAnalyze, headers);
-//
-//        log.debug("Sending POST request to URL {}", url);
-//        
-//     // Send POST request
-//        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-//        
-//     // Log response status
-//        log.debug("Response for POST-getAnalyzeResult request with status code {}", response.getStatusCode().name());
-//		
-//		if (response.getStatusCode() == HttpStatus.OK) {
-//            return response.getBody();
-//        } else {
-//            throw new RuntimeException("Failed to Analyze text: " + response.getStatusCode().name());
-//        }
-//	}
-
-
-	/*******************************
-	 * Semantic services Endpoints *
-	 *******************************/
-
-	/*
-	 * public String classifyText(String contentToClassify) {
-	 * 
-	 * String url = classifyUrl; log.info("Call classifyText to URL {}", url);
-	 * 
-	 * // Crea le intestazioni della richiesta HttpHeaders headers = new
-	 * HttpHeaders(); headers.setContentType(MediaType.TEXT_PLAIN);
-	 * headers.setAccept(Collections.singletonList(MediaType.ALL));
-	 * 
-	 * // Crea il corpo della richiesta HttpEntity<String> entity = new
-	 * HttpEntity<>(contentToClassify, headers);
-	 * 
-	 * // Invia la richiesta POST ResponseEntity<String> response =
-	 * restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-	 * 
-	 * // Ottieni il corpo della risposta String result = response.getBody();
-	 * log.info("Response for classifyText with status code {}",
-	 * response.getStatusCode().name()); return result; }
-	 * 
-	 * 
-	 * public String analyzeText(String contentToAnalyze) {
-	 * 
-	 * String url = analyzeUrl; log.info("Call analyzeText to URL {}", url);
-	 * 
-	 * // Crea le intestazioni della richiesta HttpHeaders headers = new
-	 * HttpHeaders(); headers.setContentType(MediaType.TEXT_PLAIN);
-	 * headers.setAccept(Collections.singletonList(MediaType.ALL));
-	 * 
-	 * // Crea il corpo della richiesta HttpEntity<String> entity = new
-	 * HttpEntity<>(contentToAnalyze, headers);
-	 * 
-	 * // Invia la richiesta POST ResponseEntity<String> response =
-	 * restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-	 * 
-	 * // Ottieni il corpo della risposta String result = response.getBody();
-	 * log.info("Response for analyzeText with status code {}",
-	 * response.getStatusCode().name()); return result; }
-	 */
 
 }

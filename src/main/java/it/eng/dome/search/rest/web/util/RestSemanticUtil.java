@@ -8,6 +8,7 @@ import org.apache.http.ssl.SSLContextBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,11 +28,14 @@ import javax.net.ssl.SSLContext;
 @Component
 public class RestSemanticUtil {
 
+	@Value("${dome.classify.url}")
+	private String classifyUrl;
+
+	@Value("${dome.analyze.url}")
+	private String analyzeUrl;
+
 	private static final Logger log = LoggerFactory.getLogger(RestSemanticUtil.class);
 	private static RestTemplate restTemplate = new RestTemplate();
-
-	private final String classifyUrl = "https://deployenv6.expertcustomers.ai:8086/services/dome/classify"; //to change
-	private final String analyzeUrl = "https://deployenv6.expertcustomers.ai:8086/services/dome/analyze";
 
 
 	public RestSemanticUtil() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {

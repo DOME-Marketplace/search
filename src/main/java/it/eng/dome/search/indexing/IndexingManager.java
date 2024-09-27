@@ -43,7 +43,7 @@ public class IndexingManager {
 				String requestForProductSpecById = restUtil.getProductSpecificationById(productSpec.getId());
 
 				if (requestForProductSpecById == null) {
-					log.info("ProductSpecification {} cannot found", productSpec.getId());
+					log.info("getProductSpecificationById {} cannot found", productSpec.getId());
 				} else {
 					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
 							ProductSpecification.class);
@@ -109,22 +109,27 @@ public class IndexingManager {
 				log.info("null value in ProductSpecification ID");
 			} else {
 				String requestForProductSpecById = restUtil.getTMFProductSpecificationById(productSpec.getId());
-				ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
-						ProductSpecification.class);
 
-				objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
+				if (requestForProductSpecById == null) {
+					log.info("getTMFProductSpecificationById {} cannot found", productSpec.getId());
+				} else {
+					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
+							ProductSpecification.class);
 
-				ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
+					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
 
-				if (serviceList != null) {
-					log.info("ProcessOffering TMForum => Mapping Services associated: " + serviceList.length);
-					objToIndex = mappingManager.prepareTMFServiceSpecMetadata(serviceList, objToIndex);
-				}
+					ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
 
-				ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
-				if (resourceList != null) {
-					log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.length);
-					objToIndex = mappingManager.prepareTMFResourceSpecMetadata(resourceList, objToIndex);
+					if (serviceList != null) {
+						log.info("ProcessOffering TMForum => Mapping Services associated: " + serviceList.length);
+						objToIndex = mappingManager.prepareTMFServiceSpecMetadata(serviceList, objToIndex);
+					}
+
+					ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
+					if (resourceList != null) {
+						log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.length);
+						objToIndex = mappingManager.prepareTMFResourceSpecMetadata(resourceList, objToIndex);
+					}
 				}
 			}
 			// }

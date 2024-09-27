@@ -44,12 +44,17 @@ public class ResultProcessor {
 				if (indexingObj.getProductOfferingId() != null) {
 
 					if (mapProductOffering.containsKey(indexingObj.getProductOfferingId()) == false) {
-						String requestForProductOfferingId = restTemplate
-								.getProductOfferingById(indexingObj.getProductOfferingId());
-						ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,
-								ProductOffering.class);
+						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
 
-						mapProductOffering.put(indexingObj.getProductOfferingId(), productOfferingDetails);
+						if (requestForProductOfferingId == null) {
+							log.info("getProductOfferingById {} cannot found", indexingObj.getProductOfferingId());
+						} else {
+
+							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,
+									ProductOffering.class);
+
+							mapProductOffering.put(indexingObj.getProductOfferingId(), productOfferingDetails);
+						}
 					}
 				}
 			}
