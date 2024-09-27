@@ -83,7 +83,14 @@ public class IndexingObject {
 
 	// from Categorization and Entities Extraction //put here fields for semantic
 	// services ----
+	@Field(type = FieldType.Text)
+	private String[] classifyResult;
 
+	@Field(type = FieldType.Text)
+	private String analyzeResult;
+
+	//---------------------
+	
 	public String getId() {
 		return id;
 	}
@@ -156,6 +163,8 @@ public class IndexingObject {
 		this.productOfferingIsBundle = productOfferingIsBundle;
 	}
 
+
+
 	public String getProductSpecificationId() {
 		return productSpecificationId;
 	}
@@ -226,6 +235,23 @@ public class IndexingObject {
 
 	public void setProductSpecification(ProductSpecification productSpecification) {
 		this.productSpecification = productSpecification;
+	}
+	
+	
+	public String[] getClassifyResult() {
+		return classifyResult;
+	}
+
+	public void setClassifyResult(String[] classifyResult) {
+		this.classifyResult = classifyResult;
+	}
+	
+	public String getAnalyzeResult() {
+		return analyzeResult;
+	}
+
+	public void setAnalyzeResult(String analyzeResult) {
+		this.analyzeResult = analyzeResult;
 	}
 
 }
