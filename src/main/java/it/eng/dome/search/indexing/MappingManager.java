@@ -240,9 +240,8 @@ public class MappingManager {
     public IndexingObject prepareAnalyze(IndexingObject objToIndex) {
 
         try {
-            String contentToAnalyze = null;
             if (objToIndex.getProductOfferingDescription() != null){
-                contentToAnalyze = objToIndex.getProductOfferingDescription();
+                String contentToAnalyze = objToIndex.getProductOfferingDescription();
                 contentToAnalyze = contentToAnalyze.replace("\\", " ");
                 contentToAnalyze = Jsoup.parse(contentToAnalyze).text();
                 if (!contentToAnalyze.isEmpty()) {
