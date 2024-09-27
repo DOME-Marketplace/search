@@ -4,7 +4,7 @@ public class ProductOfferingTerm {
 	
 	private String name;
 	private String description;
-
+	
 	public String getName() {
 		return name;
 	}
@@ -21,6 +21,4 @@ public class ProductOfferingTerm {
 		this.description = description;
 	}
 	
-	
-
 }

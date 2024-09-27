@@ -5,6 +5,15 @@ public class ResourceSpecCharacteristicValue {
 	private Boolean isDefault;
 	private Boolean configurable;
 	private String value;
+	private String unitOfMeasure;
+
+	public String getUnitOfMeasure() {
+		return unitOfMeasure;
+	}
+
+	public void setUnitOfMeasure(String unitOfMeasure) {
+		this.unitOfMeasure = unitOfMeasure;
+	}
 
 	public Boolean getIsDefault() {
 		return isDefault;
