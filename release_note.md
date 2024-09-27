@@ -2,6 +2,12 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.1.8</code>
+**Feature**
+* Add classification and analysis services.
+
+:calendar: 27/09/2024
+
 ### <code>0.1.7</code>
 **Improvement**
 * Updates of domain entities involved in indexing process.
