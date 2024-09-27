@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -36,15 +37,14 @@ public class RestUtil {
 	@Value("${dome.bae.url}")
 	private String getBAEUrl;
 
+	@Value("${dome.classify.url}")
+	private String classifyUrl;
+
+	@Value("${dome.analyze.url}")
+	private String analyzeUrl;
 
 	private static final Logger log = LoggerFactory.getLogger(RestUtil.class);
 	private static RestTemplate restTemplate = new RestTemplate();
-
-
-	private final String classifyUrl =
-			"https://deployenv6.expertcustomers.ai:8086/services/dome/classify"; //to change
-	private final String analyzeUrl =
-			"https://deployenv6.expertcustomers.ai:8086/services/dome/analyze";
 
 
 	/*****************
@@ -66,11 +66,16 @@ public class RestUtil {
 		String url = getBAEUrl + "/catalog/productSpecification/" + id;
 		log.debug("Call getProductSpecificationById to URL {}", url);
 
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		String result = response.getBody();
-		log.debug("Response for getProductSpecificationById with status code {}", response.getStatusCode().name());
-		return result;
+			String result = response.getBody();
+			log.debug("Response for getProductSpecificationById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getProductSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
 
 	public String getServiceSpecificationById(String id) {
