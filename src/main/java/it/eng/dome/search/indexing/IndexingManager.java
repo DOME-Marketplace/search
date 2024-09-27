@@ -61,13 +61,14 @@ public class IndexingManager {
 				}
 
 				//Reactivate for Semantic services
-				/*
-				 * if(objToIndex.getProductOfferingDescription() == null)
-				 * log.info("null value for description in product: "+product.getId()); else {
-				 * if(objToIndex.getProductOfferingLifecycleStatus().contains("Launched")==true)
-				 * objToIndex = mappingManager.prepareClassify(objToIndex); }
-				 */
-
+				if (objToIndex.getProductOfferingDescription() == null)
+					log.info("null value for description in product: " + product.getId());
+				else {
+					if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched") == true){
+						objToIndex = mappingManager.prepareClassify(objToIndex);
+						objToIndex = mappingManager.prepareAnalyze(objToIndex);
+					}
+				}
 			}
 
 		} catch (JsonMappingException e) {

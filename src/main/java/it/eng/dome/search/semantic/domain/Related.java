@@ -1,5 +1,7 @@
 package it.eng.dome.search.semantic.domain;
 
+import java.util.List;
+
 public class Related {
 	
 	public String relation;
@@ -10,8 +12,10 @@ public class Related {
 	public String type;
 	public int phrase;
 	public int relevance;
+	public List<Related> related;
 
-	
+	public List<Related> getRelated() { return related; }
+	public void setRelated(List<Related> related) {	this.related = related;	}
 	public String getRelation() {
 		return relation;
 	}

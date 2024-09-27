@@ -8,7 +8,10 @@ public class Verb {
 	public int phrase;
 	public String type;
 	public int relevance;
-	
+	public String lemma;
+
+	public String getLemma() { return lemma; }
+	public void setLemma(String lemma) { this.lemma = lemma; }
 	public String getText() {
 		return text;
 	}

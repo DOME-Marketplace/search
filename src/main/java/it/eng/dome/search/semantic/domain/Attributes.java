@@ -6,7 +6,14 @@ public class Attributes {
 	public String lemma;
 	public int syncon;
 	public String type;
-	
+	public Attributes[] attributes;
+
+	public Attributes[] getAttributes() {
+		return attributes;
+	}
+	public void setAttributes(Attributes[] attributes) {
+		this.attributes = attributes;
+	}
 	public String getAttribute() {
 		return attribute;
 	}

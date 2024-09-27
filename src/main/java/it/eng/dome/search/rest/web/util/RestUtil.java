@@ -5,7 +5,7 @@ import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,12 +26,12 @@ public class RestUtil {
 	private static final Logger log = LoggerFactory.getLogger(RestUtil.class);
 	private static RestTemplate restTemplate = new RestTemplate();
 
-	/*
-	 * private final String classifyUrl =
-	 * "https://deployenv6.expertcustomers.ai:8086/services/dome/classify"; //to
-	 * change private final String analyzeUrl =
-	 * "https://deployenv6.expertcustomers.ai:8086/services/dome/analyze";
-	 */
+
+	private final String classifyUrl =
+			"https://deployenv6.expertcustomers.ai:8086/services/dome/classify"; //to change
+	private final String analyzeUrl =
+			"https://deployenv6.expertcustomers.ai:8086/services/dome/analyze";
+
 
 	/*****************
 	 * BAE Endpoints *
