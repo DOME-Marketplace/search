@@ -67,7 +67,7 @@ public class OfferingProcessor {
 		String listProductOfferings = restUtil.getAllProductOfferings();
 
 		if (listProductOfferings == null) {
-			log.info("listProductOfferings cannot be null");
+			log.warn("listProductOfferings cannot be null");
 		} else {
 
 			try {
@@ -164,7 +164,7 @@ public class OfferingProcessor {
 		String listProductOfferings = restUtil.getAllProductOfferingsFromTMForum();
 
 		if (listProductOfferings == null) {
-			log.info("listProductOfferings TMForum cannot be null");
+			log.warn("listProductOfferings TMForum cannot be null");
 		} else {
 		
 			try {

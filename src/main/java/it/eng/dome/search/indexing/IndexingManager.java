@@ -37,13 +37,13 @@ public class IndexingManager {
 
 			ProductSpecification productSpec = product.getProductSpecification();
 			if (productSpec.getId() == null) {
-				log.info("null value in ProductSpecification ID");
+				log.warn("null value in ProductSpecification ID");
 			} else {
 				
 				String requestForProductSpecById = restUtil.getProductSpecificationById(productSpec.getId());
 
 				if (requestForProductSpecById == null) {
-					log.info("getProductSpecificationById {} cannot found", productSpec.getId());
+					log.warn("getProductSpecificationById {} cannot found", productSpec.getId());
 				} else {
 					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
 							ProductSpecification.class);
@@ -66,7 +66,7 @@ public class IndexingManager {
 
 					// Reactivate for Semantic services
 					if (objToIndex.getProductOfferingDescription() == null)
-						log.info("null value for description in product: " + product.getId());
+						log.warn("null value for description in product: " + product.getId());
 					else {
 						if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched") == true) {
 							objToIndex = mappingManager.prepareClassify(objToIndex);
@@ -94,24 +94,16 @@ public class IndexingManager {
 	public IndexingObject processOfferingFromTMForum(ProductOffering product, IndexingObject objToIndex) {
 		try {
 
-			// if(product.getName() == null) {
-			// log.info("null value in name");
-			// }
-			//
-			// if(product.getDescription() == null) {
-			// log.info("null value in description");
-			//
-			// }else{
 			objToIndex = mappingManager.prepareOfferingMetadata(product, objToIndex);
 
 			ProductSpecification productSpec = product.getProductSpecification();
 			if (productSpec.getId() == null) {
-				log.info("null value in ProductSpecification ID");
+				log.warn("null value in ProductSpecification ID");
 			} else {
 				String requestForProductSpecById = restUtil.getTMFProductSpecificationById(productSpec.getId());
 
 				if (requestForProductSpecById == null) {
-					log.info("getTMFProductSpecificationById {} cannot found", productSpec.getId());
+					log.warn("getTMFProductSpecificationById {} cannot found", productSpec.getId());
 				} else {
 					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
 							ProductSpecification.class);

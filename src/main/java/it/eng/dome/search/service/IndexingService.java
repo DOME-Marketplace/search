@@ -56,7 +56,7 @@ public class IndexingService {
 		String listProductOfferings = restUtil.getAllProductOfferings(); //-------> from BAE (change when needed)
 
 		if (listProductOfferings == null) {
-			log.info("listProductOfferings cannot be null");
+			log.warn("listProductOfferings cannot be null");
 		} else {
 
 			try {

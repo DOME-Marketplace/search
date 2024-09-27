@@ -47,7 +47,7 @@ public class ResultProcessor {
 						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
 
 						if (requestForProductOfferingId == null) {
-							log.info("getProductOfferingById {} cannot found", indexingObj.getProductOfferingId());
+							log.warn("getProductOfferingById {} cannot found", indexingObj.getProductOfferingId());
 						} else {
 
 							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,

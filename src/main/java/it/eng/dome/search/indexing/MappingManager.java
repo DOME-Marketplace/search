@@ -88,7 +88,7 @@ public class MappingManager {
 				String requestForServiceSpecificationId = restTemplate.getServiceSpecificationById(s.getId());
 
 				if (requestForServiceSpecificationId == null) {
-					log.info("getServiceSpecificationById {} cannot found", s.getId());
+					log.warn("getServiceSpecificationById {} cannot found", s.getId());
 				} else {
 
 					ServiceSpecification serviceSpecDetails = objectMapper.readValue(requestForServiceSpecificationId, ServiceSpecification.class);
@@ -123,7 +123,7 @@ public class MappingManager {
 				String requestForResourceSpecificationId = restTemplate.getResourceSpecificationById(r.getId());
 
 				if (requestForResourceSpecificationId == null) {
-					log.info("getResourceSpecificationById {} cannot found", r.getId());
+					log.warn("getResourceSpecificationById {} cannot found", r.getId());
 				} else {
 					ResourceSpecification resourceSpecDetails = objectMapper.readValue(requestForResourceSpecificationId, ResourceSpecification.class);
 
@@ -156,7 +156,7 @@ public class MappingManager {
 				String requestForServiceSpecificationId = restTemplate.getTMFServiceSpecificationById(s.getId());
 
 				if (requestForServiceSpecificationId == null) {
-					log.info("getTMFServiceSpecificationById {} cannot found", s.getId());
+					log.warn("getTMFServiceSpecificationById {} cannot found", s.getId());
 				} else {
 
 					ServiceSpecification serviceSpecDetails = objectMapper.readValue(requestForServiceSpecificationId, ServiceSpecification.class);
@@ -191,7 +191,7 @@ public class MappingManager {
 				String requestForResourceSpecificationId = restTemplate.getTMFResourceSpecificationById(r.getId());
 
 				if (requestForResourceSpecificationId == null) {
-					log.info("getTMFResourceSpecificationById {} cannot found", r.getId());
+					log.warn("getTMFResourceSpecificationById {} cannot found", r.getId());
 				} else {
 					ResourceSpecification resourceSpecDetails = objectMapper.readValue(requestForResourceSpecificationId, ResourceSpecification.class);
 
