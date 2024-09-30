@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.security.KeyManagementException;
@@ -105,12 +106,15 @@ public class RestSemanticUtil {
 		HttpEntity<String> entity = new HttpEntity<>(contentToAnalyze, headers);
 
 		// Invia la richiesta POST
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-		// Ottieni il corpo della risposta
-		String result = response.getBody();
-		log.info("Response for analyzeText with status code {}", response.getStatusCode().name());
-		return result;
+		try {
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+			// Ottieni il corpo della risposta
+			String result = response.getBody();
+			log.debug("Response for analyzeText with status code {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		}catch (HttpStatusCodeException exception) {
+			log.error("Error for analyzeText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
 	}
-
 }
