@@ -54,7 +54,7 @@ public class RestSemanticUtil {
 
 		// Configura RestTemplate per utilizzare il client HTTP personalizzato
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
-		this.restTemplate = new RestTemplate(factory);
+		restTemplate = new RestTemplate(factory);
 	}
 
 
@@ -81,7 +81,7 @@ public class RestSemanticUtil {
 
 			// Ottieni il corpo della risposta
 			String result = response.getBody();
-			log.debug("Response for classifyText with status code {}", response.getStatusCode().name());
+			log.info("Response for classifyText with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
 			log.debug("Response body: {}", result);
 			return result;
 		} catch (HttpStatusCodeException exception) {
@@ -106,11 +106,13 @@ public class RestSemanticUtil {
 		HttpEntity<String> entity = new HttpEntity<>(contentToAnalyze, headers);
 
 		// Invia la richiesta POST
-		try {
+		try {	
 			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 			// Ottieni il corpo della risposta
+			
 			String result = response.getBody();
-			log.debug("Response for analyzeText with status code {}", response.getStatusCode().value(), response.getStatusCode().name());
+			log.info("Response for analyzeText with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			log.debug("Response body: {}", result);
 			return result;
 		}catch (HttpStatusCodeException exception) {
 			log.error("Error for analyzeText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());

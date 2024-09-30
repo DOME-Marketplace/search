@@ -231,28 +231,19 @@ public class MappingManager {
 
         try {
             String contentToClassify = null;
-            if (objToIndex.getProductOfferingDescription() != null)
-                contentToClassify = objToIndex.getProductOfferingDescription();
-            /*
-             * if(objToIndex.getProductOfferingName()!= null) contentToClassify =
-             * contentToClassify+", "+objToIndex.getProductOfferingName();
-             */
-            /*
-             * if(objToIndex.getProductSpecificationName()!=null) contentToClassify =
-             * contentToClassify+", "+objToIndex.getProductSpecificationName();
-             */
-            /*
-             * if(objToIndex.getProductSpecificationDescription()!=null) contentToClassify =
-             * contentToClassify+", "+objToIndex.getProductSpecificationDescription();
-             */
+            if (objToIndex.getProductOfferingDescription() != null){
+				contentToClassify = objToIndex.getProductOfferingDescription();
+			}
+
+			//log.debug("Content to Classify {}", contentToClassify);
 
 			if (contentToClassify != null) {
 				contentToClassify = Jsoup.parse(contentToClassify).text();
-				log.info("Product Offering ID){}", objToIndex.getProductOfferingId());
+				log.info("Product Offering ID {}", objToIndex.getProductOfferingId());
 				try {
 					String requestForClassifyObject = restSemanticUtil.classifyText(contentToClassify);
 					if (requestForClassifyObject == null) {
-						log.warn("classifyText {} cannot found", contentToClassify);
+						log.warn("ClassifyText: product offering ID {} cannot found", objToIndex.getProductOfferingId());
 					} else {
 						CategorizationResultObject categorizationResultObj = objectMapper.readValue(requestForClassifyObject, CategorizationResultObject.class);
 						String[] cat = categorizationResultObj.getIpct_categories();

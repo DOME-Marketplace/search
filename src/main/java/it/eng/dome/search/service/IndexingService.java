@@ -1,6 +1,5 @@
 package it.eng.dome.search.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
