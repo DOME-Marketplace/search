@@ -84,9 +84,9 @@ public class RestSemanticUtil {
 			log.debug("Response for classifyText with status code {}", response.getStatusCode().name());
 			log.debug("Response body: {}", result);
 			return result;
-		} catch (Exception e) {
-			log.error("Error during classifyText request", e);
-			throw e;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for classifyText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
 		}
 	}
 
