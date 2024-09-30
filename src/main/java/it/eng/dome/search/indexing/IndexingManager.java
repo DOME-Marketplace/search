@@ -14,7 +14,6 @@ import it.eng.dome.search.domain.ProductOffering;
 import it.eng.dome.search.domain.ProductSpecification;
 import it.eng.dome.search.domain.ResourceSpecification;
 import it.eng.dome.search.domain.ServiceSpecification;
-import it.eng.dome.search.rest.web.util.RestSemanticUtil;
 import it.eng.dome.search.rest.web.util.RestUtil;
 
 @Service
@@ -38,36 +37,41 @@ public class IndexingManager {
 
 			ProductSpecification productSpec = product.getProductSpecification();
 			if (productSpec.getId() == null) {
-				log.info("null value in ProductSpecification ID");
+				log.warn("null value in ProductSpecification ID");
 			} else {
+				
 				String requestForProductSpecById = restUtil.getProductSpecificationById(productSpec.getId());
 
-				ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
-						ProductSpecification.class);
+				if (requestForProductSpecById == null) {
+					log.warn("getProductSpecificationById {} cannot found", productSpec.getId());
+				} else {
+					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
+							ProductSpecification.class);
 
-				objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
+					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
 
-				ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
+					ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
 
-				if (serviceList != null) {
+					if (serviceList != null) {
 
-					log.info("ProcessOffering BAE => Mapping Services associated: " + serviceList.length);
-					objToIndex = mappingManager.prepareServiceSpecMetadata(serviceList, objToIndex);
-				}
+						log.info("ProcessOffering BAE => Mapping Services associated: " + serviceList.length);
+						objToIndex = mappingManager.prepareServiceSpecMetadata(serviceList, objToIndex);
+					}
 
-				ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
-				if (resourceList != null) {
-					log.info("ProcessOffering BAE => Mapping Resources associated: " + resourceList.length);
-					objToIndex = mappingManager.prepareResourceSpecMetadata(resourceList, objToIndex);
-				}
+					ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
+					if (resourceList != null) {
+						log.info("ProcessOffering BAE => Mapping Resources associated: " + resourceList.length);
+						objToIndex = mappingManager.prepareResourceSpecMetadata(resourceList, objToIndex);
+					}
 
-				//Reactivate for Semantic services
-				if (objToIndex.getProductOfferingDescription() == null)
-					log.info("null value for description in product: " + product.getId());
-				else {
-					if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched") == true){
-						objToIndex = mappingManager.prepareClassify(objToIndex);
-						objToIndex = mappingManager.prepareAnalyze(objToIndex);
+					// Reactivate for Semantic services
+					if (objToIndex.getProductOfferingDescription() == null)
+						log.warn("null value for description in product: " + product.getId());
+					else {
+						if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched") == true) {
+							objToIndex = mappingManager.prepareClassify(objToIndex);
+							objToIndex = mappingManager.prepareAnalyze(objToIndex);
+						}
 					}
 				}
 			}
@@ -90,37 +94,34 @@ public class IndexingManager {
 	public IndexingObject processOfferingFromTMForum(ProductOffering product, IndexingObject objToIndex) {
 		try {
 
-			// if(product.getName() == null) {
-			// log.info("null value in name");
-			// }
-			//
-			// if(product.getDescription() == null) {
-			// log.info("null value in description");
-			//
-			// }else{
 			objToIndex = mappingManager.prepareOfferingMetadata(product, objToIndex);
 
 			ProductSpecification productSpec = product.getProductSpecification();
 			if (productSpec.getId() == null) {
-				log.info("null value in ProductSpecification ID");
+				log.warn("null value in ProductSpecification ID");
 			} else {
 				String requestForProductSpecById = restUtil.getTMFProductSpecificationById(productSpec.getId());
-				ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
-						ProductSpecification.class);
 
-				objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
+				if (requestForProductSpecById == null) {
+					log.warn("getTMFProductSpecificationById {} cannot found", productSpec.getId());
+				} else {
+					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
+							ProductSpecification.class);
 
-				ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
+					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
 
-				if (serviceList != null) {
-					log.info("ProcessOffering TMForum => Mapping Services associated: " + serviceList.length);
-					objToIndex = mappingManager.prepareTMFServiceSpecMetadata(serviceList, objToIndex);
-				}
+					ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
 
-				ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
-				if (resourceList != null) {
-					log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.length);
-					objToIndex = mappingManager.prepareTMFResourceSpecMetadata(resourceList, objToIndex);
+					if (serviceList != null) {
+						log.info("ProcessOffering TMForum => Mapping Services associated: " + serviceList.length);
+						objToIndex = mappingManager.prepareTMFServiceSpecMetadata(serviceList, objToIndex);
+					}
+
+					ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
+					if (resourceList != null) {
+						log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.length);
+						objToIndex = mappingManager.prepareTMFResourceSpecMetadata(resourceList, objToIndex);
+					}
 				}
 			}
 			// }

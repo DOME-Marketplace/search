@@ -61,45 +61,36 @@ public class OfferingProcessor {
 	}
 
 
-	/** */ //---->to complete
-	/*
-	 * public IndexingObject processProductOfferingById(String productOfferingId) {
-	 * log.info("Prepare for mapping: " + productOfferingId);
-	 * 
-	 * String productOfferingRequest =
-	 * restUtil.getProductOfferingById(productOfferingId);
-	 * 
-	 * return null;
-	 * 
-	 * }
-	 */
-
-
 	public List<IndexingObject> processListProductOffering() {
 
 		List<IndexingObject> indexingToRet = new ArrayList<IndexingObject>();
 		String listProductOfferings = restUtil.getAllProductOfferings();
 
-		try {
-			ProductOffering[] productOffList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
+		if (listProductOfferings == null) {
+			log.warn("listProductOfferings cannot be null");
+		} else {
 
-			for(ProductOffering product : productOffList) {
+			try {
+				ProductOffering[] productOffList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
 
-				IndexingObject objToIndex = new IndexingObject();
-				objToIndex = indexingManager.processOffering(product,objToIndex);
+				for(ProductOffering product : productOffList) {
 
-				objToIndex = save(objToIndex);
-				indexingToRet.add(objToIndex);
+					IndexingObject objToIndex = new IndexingObject();
+					objToIndex = indexingManager.processOffering(product,objToIndex);
+
+					objToIndex = save(objToIndex);
+					indexingToRet.add(objToIndex);
+				}
+
+			} catch (JsonMappingException e) {
+				log.warn("JsonMappingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
+
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				log.warn("JsonProcessingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
+
+				e.printStackTrace();
 			}
-
-		} catch (JsonMappingException e) {
-			log.warn("JsonMappingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
-
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
-
-			e.printStackTrace();
 		}
 
 		return indexingToRet;
@@ -172,26 +163,31 @@ public class OfferingProcessor {
 		List<IndexingObject> toRet = new ArrayList<IndexingObject>();
 		String listProductOfferings = restUtil.getAllProductOfferingsFromTMForum();
 
-		try {
-			ProductOffering[] productOffList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
+		if (listProductOfferings == null) {
+			log.warn("listProductOfferings TMForum cannot be null");
+		} else {
+		
+			try {
+				ProductOffering[] productOffList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
 
-			for(ProductOffering product : productOffList) {
+				for(ProductOffering product : productOffList) {
 
-				IndexingObject objToIndex = new IndexingObject();
-				objToIndex = indexingManager.processOfferingFromTMForum(product,objToIndex);
+					IndexingObject objToIndex = new IndexingObject();
+					objToIndex = indexingManager.processOfferingFromTMForum(product,objToIndex);
 
-				objToIndex = save(objToIndex);
-				toRet.add(objToIndex);
+					objToIndex = save(objToIndex);
+					toRet.add(objToIndex);
+				}
+
+			} catch (JsonMappingException e) {
+				log.warn("JsonMappingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
+
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				log.warn("JsonProcessingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
+
+				e.printStackTrace();
 			}
-
-		} catch (JsonMappingException e) {
-			log.warn("JsonMappingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
-
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
-
-			e.printStackTrace();
 		}
 
 		return toRet;
