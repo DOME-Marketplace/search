@@ -72,9 +72,9 @@ public class RestSemanticUtil {
 		HttpEntity<String> entity = new HttpEntity<>(contentToClassify, headers);
 
 		// Aggiungi log per il corpo della richiesta
-		log.info("Request body: {}", contentToClassify);
 		log.info("Request headers: {}", headers);
-
+		log.debug("Request body: {}", contentToClassify);
+		
 		try {
 			// Invia la richiesta POST
 			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);

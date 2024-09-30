@@ -26,33 +26,32 @@ public class IndexingService {
 
 	@Autowired
 	IndexingManager indexingManager;
-	
+
 	@Autowired
 	private RestUtil restUtil;
-	
+
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	private static final Logger log = LoggerFactory.getLogger(IndexingService.class);
-	
-//	@Scheduled(fixedDelay = 3000)
-//	private void test() {
-//
-//	    System.out.println("test -> " + new Date());
-//
-//	    try {
-//	        Thread.sleep(2000);
-//	    }
-//	    catch (Exception e) {
-//	        System.out.println("error");
-//	    }
-//	}
-	
 
-	@Scheduled(fixedDelay = 300000 )
+	// @Scheduled(fixedDelay = 3000)
+	// private void test() {
+	//
+	// System.out.println("test -> " + new Date());
+	//
+	// try {
+	// Thread.sleep(2000);
+	// }
+	// catch (Exception e) {
+	// System.out.println("error");
+	// }
+	// }
+
+	@Scheduled(fixedDelay = 300000)
 	public void indexing() {
 		log.info("Indexing is executing ..... ");
-		//invoca endpoint e recupera lista di product offering
-		String listProductOfferings = restUtil.getAllProductOfferings(); //-------> from BAE (change when needed)
+		// invoca endpoint e recupera lista di product offering
+		String listProductOfferings = restUtil.getAllProductOfferings(); // -------> from BAE (change when needed)
 
 		if (listProductOfferings == null) {
 			log.warn("listProductOfferings cannot be null");
@@ -60,32 +59,36 @@ public class IndexingService {
 
 			try {
 				ProductOffering[] productList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
-				log.info("***Tot of ProductOfferings =  ..... "+productList.length);
-			//ArrayList<ProductOffering> productList = new ArrayList();
+				log.info("Total of ProductOfferings found: {}", productList.length);
 
-			for(ProductOffering product : productList) {
+				for (ProductOffering product : productList) {
 
-				String idProduct = product.getId();
-				List<IndexingObject> listFromRepo = offeringRepo.findByProductOfferingId(idProduct);
-				if(listFromRepo.isEmpty()) {
-					IndexingObject indexingObjEmpty = new IndexingObject();
-					//fare il mapping da productOffering a index
-					indexingObjEmpty = indexingManager.processOffering(product, indexingObjEmpty);
-					offeringRepo.save(indexingObjEmpty);
-				}else {
+					String idProduct = product.getId();
+					log.debug("Id product: {} ", idProduct);
 
-					for(IndexingObject obj : listFromRepo) {
-
+					List<IndexingObject> listFromRepo = offeringRepo.findByProductOfferingId(idProduct);
+					
+					if (listFromRepo.isEmpty()) {
+						log.debug("ProductOffering listFromRepo empty");
 						IndexingObject indexingObjEmpty = new IndexingObject();
-						//fare il mapping da productOffering a indx
+						// fare il mapping da productOffering a index
 						indexingObjEmpty = indexingManager.processOffering(product, indexingObjEmpty);
-						indexingObjEmpty.setId(obj.getId());
-
+						log.debug("************** {}", indexingObjEmpty);
 						offeringRepo.save(indexingObjEmpty);
+					} else {
+						log.debug("ProductOffering listFromRepo size: {}", listFromRepo.size());
+						for (IndexingObject obj : listFromRepo) {
 
+							log.debug("Working on ObjId: {}",obj.getId());
+							IndexingObject indexingObjEmpty = new IndexingObject();
+							// fare il mapping da productOffering a indx
+							indexingObjEmpty.setId(obj.getId());
+							indexingObjEmpty = indexingManager.processOffering(product, indexingObjEmpty);				
+							
+							offeringRepo.save(indexingObjEmpty);
+						}
 					}
 				}
-			}
 			} catch (JsonMappingException e) {
 				log.info("Error JsonMappingException in Indexing() ");
 				e.printStackTrace();
