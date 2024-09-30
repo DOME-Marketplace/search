@@ -73,7 +73,6 @@ public class IndexingService {
 						IndexingObject indexingObjEmpty = new IndexingObject();
 						// fare il mapping da productOffering a index
 						indexingObjEmpty = indexingManager.processOffering(product, indexingObjEmpty);
-						log.debug("************** {}", indexingObjEmpty);
 						offeringRepo.save(indexingObjEmpty);
 					} else {
 						log.debug("ProductOffering listFromRepo size: {}", listFromRepo.size());

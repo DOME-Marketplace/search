@@ -242,9 +242,9 @@ public class MappingManager {
 				log.info("Classify for Product Offering ID {}", objToIndex.getProductOfferingId());
 				try {
 					String requestForClassifyObject = restSemanticUtil.classifyText(contentToClassify);
+
 					if (requestForClassifyObject == null) {
 						log.warn("ClassifyText: product offering ID {} cannot found", objToIndex.getProductOfferingId());
-						
 					} else {
 						CategorizationResultObject categorizationResultObj = objectMapper.readValue(requestForClassifyObject, CategorizationResultObject.class);
 						String[] cat = categorizationResultObj.getIpct_categories();
