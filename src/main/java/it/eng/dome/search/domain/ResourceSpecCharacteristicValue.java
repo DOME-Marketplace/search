@@ -6,6 +6,8 @@ public class ResourceSpecCharacteristicValue {
 	private Boolean configurable;
 	private String value;
 	private String unitOfMeasure;
+	private int valueFrom;
+	private int valueTo;
 
 	public String getUnitOfMeasure() {
 		return unitOfMeasure;
@@ -39,4 +41,17 @@ public class ResourceSpecCharacteristicValue {
 		this.configurable = configurable;
 	}
 
+	public int getValueFrom() {
+		return valueFrom;
+	}
+	public void setValueFrom(int valueFrom) {
+		this.valueFrom = valueFrom;
+	}
+
+	public int getValueTo() {
+		return valueTo;
+	}
+	public void setValueTo(int valueTo) {
+		this.valueTo = valueTo;
+	}
 }
