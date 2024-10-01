@@ -24,6 +24,7 @@ import it.eng.dome.search.rest.web.util.RestSemanticUtil;
 import it.eng.dome.search.rest.web.util.RestUtil;
 import it.eng.dome.search.semantic.domain.CategorizationResultObject;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 
 @Component
 public class MappingManager {
@@ -98,11 +99,17 @@ public class MappingManager {
 					}
 				} catch (HttpStatusCodeException exception) {
 					log.error("Error for getServiceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				} catch (ResourceAccessException e) {
+					log.error("Error for getServiceSpecificationById. Caught ResourceAccessException: {}", e.getMessage());
+					e.printStackTrace();
 				}
 			}	
 
 		} catch (JsonProcessingException e) {
 			log.warn("JsonProcessingException - Error during prepareServiceSpecMetadata(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.warn("Exception - Error during prepareServiceSpecMetadata(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -135,11 +142,17 @@ public class MappingManager {
 					}
 				} catch (HttpStatusCodeException exception) {
 					log.error("Error for getResourceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				} catch (ResourceAccessException e) {
+					log.error("Error for getResourceSpecificationById. Caught ResourceAccessException: {}", e.getMessage());
+					e.printStackTrace();
 				}
 			}	
 
 		} catch (JsonProcessingException e) {
 			log.warn("JsonProcessingException - Error during prepareResourceSpecMetadata(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.warn("Exception - Error during prepareResourceSpecMetadata(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -173,11 +186,17 @@ public class MappingManager {
 					}
 				} catch (HttpStatusCodeException exception) {
 					log.error("Error for getTMFServiceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				} catch (ResourceAccessException e) {
+					log.error("Error for prepareTMFServiceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage());
+					e.printStackTrace();
 				}
 			}	
 
 		} catch (JsonProcessingException e) {
 			log.warn("JsonProcessingException - Error during prepareServiceSpecMetadata(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
+ 		} catch (Exception e) {
+			log.warn("Exception - Error during prepareServiceSpecMetadata(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -210,11 +229,17 @@ public class MappingManager {
 					}
 				} catch (HttpStatusCodeException exception) {
 					log.error("Error for getTMFResourceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				} catch (ResourceAccessException e) {
+					log.error("Error for prepareTMFResourceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage());
+					e.printStackTrace();
 				}
 			}
 
 		} catch (JsonProcessingException e) {
 			log.warn("JsonProcessingException - Error during prepareResourceSpecMetadata(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.warn("Exception - Error during prepareResourceSpecMetadata(). Skipped: {}", e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -268,10 +293,17 @@ public class MappingManager {
 
 				} catch (HttpStatusCodeException exception) {
 					log.error("Error for classifyText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				} catch (ResourceAccessException e) {
+					log.error("Error for classifyText. Caught ResourceAccessException: {}", e.getMessage());
+					e.printStackTrace();
 				}
 			}
 		} catch (JsonProcessingException e) {
 			log.warn("JsonProcessingException - Error during prepareClassify(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.warn("Exception - Error during prepareClassify(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
 		}
 
         return objToIndex;
@@ -304,13 +336,20 @@ public class MappingManager {
 						}
 					} catch (HttpStatusCodeException exception) {
 						log.error("Error for analyzeText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+					} catch (ResourceAccessException e) {
+						log.error("Error for analyzeText. Caught ResourceAccessException: {}", e.getMessage());
+						e.printStackTrace();
 					}
                 }
             }
 
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+			log.warn("JsonProcessingException - Error during prepareAnalyze(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
+        } catch (Exception e) {
+			log.warn("Exception - Error during prepareAnalyze(). Skipped: {}", e.getMessage());
+			e.printStackTrace();
+		}
         return objToIndex;
     }
 }

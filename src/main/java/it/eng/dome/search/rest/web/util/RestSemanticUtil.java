@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.security.KeyManagementException;
@@ -87,6 +88,12 @@ public class RestSemanticUtil {
 		} catch (HttpStatusCodeException exception) {
 			log.error("Error for classifyText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
 			return null;
+		} catch (ResourceAccessException e) {
+			log.error("Error for classifyText. Caught ResourceAccessException: {}", e.getMessage());
+			return null;
+		} catch (Exception e) {
+			log.error("Error for classifyText. Caught general exception: {}", e.getMessage());
+			return null;
 		}
 	}
 
@@ -114,6 +121,12 @@ public class RestSemanticUtil {
 			return result;
 		}catch (HttpStatusCodeException exception) {
 			log.error("Error for analyzeText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		} catch (ResourceAccessException e) {
+			log.error("Caught ResourceAccessException: {}", e.getMessage());
+			return null;
+		} catch (Exception e) {
+			log.error("Caught general exception: {}", e.getMessage());
 			return null;
 		}
 	}
