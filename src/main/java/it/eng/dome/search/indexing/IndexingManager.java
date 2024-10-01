@@ -56,14 +56,12 @@ public class IndexingManager {
 					ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
 
 					if (serviceList != null) {
-						log.debug("serviceList length: {}", serviceList.length);
 						log.info("ProcessOffering BAE => Mapping Services associated: " + serviceList.length);
 						objToIndex = mappingManager.prepareServiceSpecMetadata(serviceList, objToIndex);
 					}
 
 					ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
 					if (resourceList != null) {
-						log.debug("resourceList length: {}", resourceList.length);
 						log.info("ProcessOffering BAE => Mapping Resources associated: " + resourceList.length);
 						objToIndex = mappingManager.prepareResourceSpecMetadata(resourceList, objToIndex);
 					}
@@ -74,11 +72,8 @@ public class IndexingManager {
 					else {
 
 						if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched") == true) {
-							// if (objToIndex.getId() != null) {
-							log.debug("Product offering processing: {}", objToIndex.getId());
-							//objToIndex = mappingManager.prepareClassify(objToIndex);
-							//objToIndex = mappingManager.prepareAnalyze(objToIndex);
-							// }
+							objToIndex = mappingManager.prepareClassify(objToIndex);
+							objToIndex = mappingManager.prepareAnalyze(objToIndex);
 						}
 					}
 				}

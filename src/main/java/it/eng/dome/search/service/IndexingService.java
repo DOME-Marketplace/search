@@ -78,7 +78,6 @@ public class IndexingService {
 						log.debug("ProductOffering listFromRepo size: {}", listFromRepo.size());
 						for (IndexingObject obj : listFromRepo) {
 
-							log.debug("Working on ObjId: {}",obj.getId());
 							IndexingObject indexingObjEmpty = new IndexingObject();
 							// fare il mapping da productOffering a indx
 							indexingObjEmpty.setId(obj.getId());

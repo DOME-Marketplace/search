@@ -273,7 +273,7 @@ public class MappingManager {
 					} else {
 						CategorizationResultObject categorizationResultObj = objectMapper.readValue(requestForClassifyObject, CategorizationResultObject.class);
 						String[] cat = categorizationResultObj.getIpct_categories();
-//                log.info("CategorizationResultObject: {}", cat);
+
 						if (cat.length != 0) {
 							objToIndex.setClassifyResult(cat);
 						}
@@ -312,7 +312,7 @@ public class MappingManager {
 					try {
 						String requestForAnalyzeObject = restSemanticUtil.analyzeText(contentToAnalyze);
 						if (requestForAnalyzeObject == null) {
-							log.warn("analyzeText {} cannot found", contentToAnalyze);
+							log.warn("Request for analyzeText cannot found");
 						} else{
 							AnalyzeResultObject analyzeResultObject = objectMapper.readValue(requestForAnalyzeObject, AnalyzeResultObject.class);
 
