@@ -33,27 +33,29 @@ public class IndexingManager {
 
 		try {
 
+			log.info("ProcessOffering objToIndex {}", objToIndex.getId());
 			objToIndex = mappingManager.prepareOfferingMetadata(product, objToIndex);
 
 			ProductSpecification productSpec = product.getProductSpecification();
 			if (productSpec.getId() == null) {
 				log.warn("null value in ProductSpecification ID");
 			} else {
-				
+
 				String requestForProductSpecById = restUtil.getProductSpecificationById(productSpec.getId());
+				// log.debug("ProductSpecification object: {}", requestForProductSpecById);
 
 				if (requestForProductSpecById == null) {
 					log.warn("getProductSpecificationById {} cannot found", productSpec.getId());
 				} else {
+
 					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
 							ProductSpecification.class);
-
+					log.debug("ProductSpecDetails Id: {}", productSpecDetails.getId());
 					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
 
 					ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
 
 					if (serviceList != null) {
-
 						log.info("ProcessOffering BAE => Mapping Services associated: " + serviceList.length);
 						objToIndex = mappingManager.prepareServiceSpecMetadata(serviceList, objToIndex);
 					}
@@ -68,6 +70,7 @@ public class IndexingManager {
 					if (objToIndex.getProductOfferingDescription() == null)
 						log.warn("null value for description in product: " + product.getId());
 					else {
+
 						if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched") == true) {
 							objToIndex = mappingManager.prepareClassify(objToIndex);
 							objToIndex = mappingManager.prepareAnalyze(objToIndex);
