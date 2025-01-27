@@ -12,12 +12,24 @@ public class ServiceSpecification {
 	@Id
 	protected String id;
 	private String href;
+	private String description;
 	private Boolean isBundle;
 	private String lastUpdate;
 	private String lifecycleStatus;
 	private String name;
+	//private String Version;
+
+	//private Attachment[] attachment;
+	//private ConstraintRef[] constraint;
+	//private EntitySpecRelationship[] entitySpecRelationship;
+	//private FeatureSpecification featureSpecification;
 	private RelatedParty[] relatedParty;
-	private SpecCharacteristic[] specCharacteristic;
+	//private ResourceSpecificationRef[] resourceSpecification;
+	//private ServiceLevelSpecificationRef[] serviceLevelSpecification;
+	//private ServiceSpecRelationship serviceSpecRelationship;
+	private SpecCharacteristic[] specCharacteristic; //CharacteristicSpecification
+	//private TargetEntitySchema targetEntitySchema;
+	//private ValidFor validFor;
 	
 	public String getId() {
 		return id;
@@ -68,4 +80,11 @@ public class ServiceSpecification {
 		this.specCharacteristic = specCharacteristic;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

@@ -2,6 +2,12 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.1.9</code>
+**Improvement**
+* Refactoring of code.
+
+:calendar: 27/01/2025
+
 ### <code>0.1.8</code>
 **Feature**
 * Add classification and analysis services.

@@ -6,10 +6,16 @@ public class ResourceSpecCharacteristic {
 	private Boolean configurable;
 	private String name;
 	private String description;
-	
+	//private Boolean extensible;
+	//private Boolean isUnique;
+	//private int maxCardinality;
+	//private int minCardinality;
+	//private String regex;
 	private String valueType;
+
+	//private ResourceSpecCharRelationship[] resourceSpecCharRelationship;
 	private ResourceSpecCharacteristicValue[] resourceSpecCharacteristicValue;
-	
+	//private ValidFor[] validFor;
 	
 	public String getId() {
 		return id;

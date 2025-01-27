@@ -67,9 +67,9 @@ public class IndexingManager {
 					}
 
 					// Reactivate for Semantic services
-					if (objToIndex.getProductOfferingDescription() == null)
+					if ((objToIndex.getProductOfferingDescription() == null) || (objToIndex.getProductOfferingDescription() == "")) {
 						log.warn("null value for description in product: " + product.getId());
-					else {
+					} else {
 
 						if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched") == true) {
 							objToIndex = mappingManager.prepareClassify(objToIndex);

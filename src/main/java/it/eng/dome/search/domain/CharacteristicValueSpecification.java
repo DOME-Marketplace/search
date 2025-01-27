@@ -7,7 +7,12 @@ public class CharacteristicValueSpecification {
 	private String unitOfMeasure;
 	private int valueFrom;
 	private int valueTo;
-	
+
+	private String rangeInterval;
+	private String regex;
+	private ValidFor validFor;
+	private String valueType;
+
 	public String getUnitOfMeasure() {
 		return unitOfMeasure;
 	}
@@ -38,5 +43,30 @@ public class CharacteristicValueSpecification {
 	}
 	public void setValueFrom(int valueFrom) {
 		this.valueFrom = valueFrom;
+	}
+
+	public String getRangeInterval() {
+		return rangeInterval;
+	}
+	public void setRangeInterval(String rangeInterval) {
+		this.rangeInterval = rangeInterval;
+	}
+	public String getRegex() {
+		return regex;
+	}
+	public void setRegex(String regex) {
+		this.regex = regex;
+	}
+	public ValidFor getValidFor() {
+		return validFor;
+	}
+	public void setValidFor(ValidFor validFor) {
+		this.validFor = validFor;
+	}
+	public String getValueType() {
+		return valueType;
+	}
+	public void setValueType(String valueType) {
+		this.valueType = valueType;
 	}
 }
