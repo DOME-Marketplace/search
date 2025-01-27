@@ -1,13 +1,18 @@
 package it.eng.dome.search.domain;
 
-public class ResourceSpecCharacteristicValue {
+public class ResourceSpecCharacteristicValue /*CharacteristicValueSpecification*/ {
 	
 	private Boolean isDefault;
+	//private String rangeInterval;
+	//private String regex;
 	private Boolean configurable;
 	private String value;
 	private String unitOfMeasure;
 	private int valueFrom;
 	private int valueTo;
+	//private String valueType;
+	//private ValidFor validfor;
+	//private Any value;
 
 	public String getUnitOfMeasure() {
 		return unitOfMeasure;

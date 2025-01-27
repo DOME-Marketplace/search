@@ -21,8 +21,22 @@ public class ProductOffering {
 	private ProductOfferingPrice[] productOfferingPrice;
 	private ValidFor validFor;
 	private Category[] category;
-	
-	
+	// private boolean isSellable;
+	// private String statusReason;
+	// private Agreement[] agreement; (bisogna creare anche classe Agreement)
+	// private Attachment[] attachment; (da controllare tipo se AttachmentRefOrValue o Attachment)
+	// private BundledProductOffering[] bundledProductOffering; (bisogna creare anche classe BundledProductOffering)
+	// private Channel[] channel; (bisogna creare anche classe Channel)
+	// private MarketSegment[] marketSegment; (bisogna creare anche classe MarketSegment)
+	// private Place[] place; (bisogna creare anche classe Place)
+	// private ProdSpecCharValue[] prodSpecCharValueUse;
+	// private ProductOfferingRelationship[] productOfferingRelationship; (aggiungere anche classe ProductOfferingRelationship)
+	// private ResourceCandidate resourceCandidate; (aggiungere anche la classe ResourceCandidate)
+	// private ServiceCandidate serviceCandidate; (aggiungere anche la classe ServiceCandidate)
+	// private SLA serviceLevelAgreement; (aggiungere anche la classe SLA)
+
+
+
 	public String getId() {
 		return id;
 	}

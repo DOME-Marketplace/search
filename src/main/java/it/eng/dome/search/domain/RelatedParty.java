@@ -9,6 +9,7 @@ public class RelatedParty {
 
 	protected String id;
 	private String href;
+	//private String name;
 	private String role;
 	private String referredType;
 	

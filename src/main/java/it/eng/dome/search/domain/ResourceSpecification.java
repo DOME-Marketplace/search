@@ -4,14 +4,21 @@ public class ResourceSpecification {
 	
 	protected String id;
 	private String href;
+	//private String category;
 	private String description;
 	private Boolean isBundle;
 	private String lastUpdate;
 	private String lifecycleStatus;
 	private String name;
+	//private String version;
+	//private Attachment[] attachment;
+	//private FeatureSpecification[] featureSpecification;
 	private RelatedParty[] relatedParty;
 	private ResourceSpecCharacteristic[] resourceSpecCharacteristic;
-	
+	//private ResourceSpecRelationship[] resourceSpecRelationship;
+	//private TargetResourceSchema[] targetResourceSchema;
+	//private ValidFor validFor;
+
 	public String getDescription() {
 		return description;
 	}

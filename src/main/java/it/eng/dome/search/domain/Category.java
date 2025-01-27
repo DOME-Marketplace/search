@@ -14,6 +14,16 @@ public class Category {
 	private String name;
 	
 	private String version;
+
+	private boolean isRoot;
+	private String lastUpdate;
+	private String lifecycleStatus;
+	private String parentId;
+	private ValidFor validFor;
+	//private String description;
+	//ProductOffering[] productOffering;
+	//In caso serva la subCategory bisogna controllare la tipologia se CategoryRef o Category
+	//CategoryRef subCategory;
 	
 	
 	public String getId() {
@@ -41,4 +51,34 @@ public class Category {
 		this.version = version;
 	}
 
+	public ValidFor getValidFor() {
+		return validFor;
+	}
+	public void setValidFor(ValidFor validFor) {
+		this.validFor = validFor;
+	}
+	public String getParentId() {
+		return parentId;
+	}
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+	public String getLifecycleStatus() {
+		return lifecycleStatus;
+	}
+	public void setLifecycleStatus(String lifecycleStatus) {
+		this.lifecycleStatus = lifecycleStatus;
+	}
+	public String getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(String lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+	public boolean isRoot() {
+		return isRoot;
+	}
+	public void setRoot(boolean root) {
+		isRoot = root;
+	}
 }

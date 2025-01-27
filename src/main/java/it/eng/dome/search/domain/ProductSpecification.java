@@ -19,13 +19,18 @@ public class ProductSpecification {
 	private String lastUpdate;
 	private String lifecycleStatus;
 	private String name;
+	private String productNumber;
 	private String version;
 
 	private Attachment[] attachment;
+	//private BundledProductSpecification[] bundledProductSpecification;
 	private ProductSpecCharacteristic[] productSpecCharacteristic;
+	private ProductSpecificationRelationship[] productSpecificationRelationship;
 	private RelatedParty[] relatedParty;
 	private ResourceSpecification[] resourceSpecification;
 	private ServiceSpecification[] serviceSpecification;
+	//private TargetProductSchema[] targetProductSchema;
+	private ValidFor validFor;
 
 	public String getId() {
 		return id;
@@ -139,4 +144,27 @@ public class ProductSpecification {
 		this.serviceSpecification = serviceSpecification;
 	}
 
+	public String getProductNumber() {
+		return productNumber;
+	}
+
+	public void setProductNumber(String productNumber) {
+		this.productNumber = productNumber;
+	}
+
+	public ValidFor getValidFor() {
+		return validFor;
+	}
+
+	public void setValidFor(ValidFor validFor) {
+		this.validFor = validFor;
+	}
+
+	public ProductSpecificationRelationship[] getProductSpecificationRelationship() {
+		return productSpecificationRelationship;
+	}
+
+	public void setProductSpecificationRelationship(ProductSpecificationRelationship[] productSpecificationRelationship) {
+		this.productSpecificationRelationship = productSpecificationRelationship;
+	}
 }

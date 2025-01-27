@@ -1,14 +1,21 @@
 package it.eng.dome.search.domain;
 
-public class SpecCharacteristic {
+public class SpecCharacteristic /*CharacteristicSpecification*/{
 	
 	protected String id;
     private Boolean configurable;
     private String description;
+	//private Boolean extensible;
+	//private Boolean isUnique;
+	//private int maxCardinality;
+	//private int minCardinality;
+	//private String regex;
     private String name;
     private String valueType;
+
+	//private CharacteristicSpecificationRelationship[] charSpecRelationship;
     private CharacteristicValueSpecification[] characteristicValueSpecification;
-	
+	//private ValidFor validFor;
     
     public String getId() {
 		return id;
