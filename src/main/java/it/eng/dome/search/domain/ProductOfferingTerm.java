@@ -5,6 +5,8 @@ public class ProductOfferingTerm {
 	private String name;
 	private String description;
 	private ValidFor validFor;
+
+	private Duration duration;
 	
 	public void setValidFor(ValidFor validFor) {
 		this.validFor = validFor;
@@ -29,5 +31,11 @@ public class ProductOfferingTerm {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
+	public Duration getDuration() {
+		return duration;
+	}
+	public void setDuration(Duration duration) {
+		this.duration = duration;
+	}
 }

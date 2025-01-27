@@ -9,6 +9,11 @@ public class ProductSpecCharacteristicValue {
 	private int valueFrom;
 	private int valueTo;
 
+	private ValidFor validFor;
+	//	private String rangeInterval;
+	//	private String regex;
+	//	private String valueType;
+
 	public int getValueTo() {
 		return valueTo;
 	}
@@ -57,4 +62,10 @@ public class ProductSpecCharacteristicValue {
 		this.valueFrom = valueFrom;
 	}
 
+	public ValidFor getValidFor() {
+		return validFor;
+	}
+	public void setValidFor(ValidFor validFor) {
+		this.validFor = validFor;
+	}
 }

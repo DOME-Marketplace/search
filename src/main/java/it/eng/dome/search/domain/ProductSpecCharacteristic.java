@@ -9,6 +9,14 @@ public class ProductSpecCharacteristic {
 	private String description;
 	private ProductSpecCharacteristicValue[] productSpecCharacteristicValue;
 
+	private ValidFor validFor;
+	//	private Boolean extensible;
+	//	private Boolean isUnique;
+	//	private int maxCardinality;
+	//	private int minCardinality;
+	//	private String regex;
+	//	private ProductSpecCharacteristicRelationship[] productSpecCharRelationship; (eventualmente, creare classe ProductSpecCharacteristicRelationship)
+
 	public void setProductSpecCharacteristicValue(ProductSpecCharacteristicValue[] productSpecCharacteristicValue) {
 		this.productSpecCharacteristicValue = productSpecCharacteristicValue;
 	}
@@ -57,4 +65,10 @@ public class ProductSpecCharacteristic {
 		this.description = description;
 	}
 
+	public ValidFor getValidFor() {
+		return validFor;
+	}
+	public void setValidFor(ValidFor validFor) {
+		this.validFor = validFor;
+	}
 }
