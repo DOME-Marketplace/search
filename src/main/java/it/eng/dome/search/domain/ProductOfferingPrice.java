@@ -26,7 +26,7 @@ public class ProductOfferingPrice {
 	//	private PricingLogicAlgorithm[] pricingLogicAlgorithm; (eventualmente, creare classe PricingLogicAlgorithm)
 	//	private ProductSpecCharacteristicValue[] prodSpecCharValueUse;
 	//	private ProductOfferingTerm[] productOfferingTerm;
-	//	private TaxItem[] Tax;
+	//	private TaxItem[] tax;
 	//	private Quantity unitOfMeasure;
 
 	public String getId() {
