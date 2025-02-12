@@ -90,12 +90,12 @@ public class SearchResource {
 //		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
 //	}
 
-	@PostMapping(value = "/searchForOwner/{query}")
-	public ResponseEntity<List<ProductOffering>> searchOwnerTest(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
+	@PostMapping(value = "/searchAllFields/{query}")
+	public ResponseEntity<List<ProductOffering>> searchAllFields(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
 
 		Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage = searchProcessor.searchAllFields(query, request, pageable);
 		Page<ProductOffering> pageProduct = resultProcessor.processResultsWithScore(resultPage, pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/searchOwnerTest/" + query);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/searchAllFields/" + query);
 		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
 	}
 	
