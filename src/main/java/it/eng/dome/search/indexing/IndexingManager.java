@@ -1,5 +1,6 @@
 package it.eng.dome.search.indexing;
 
+import it.eng.dome.search.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.ProductOffering;
-import it.eng.dome.search.domain.ProductSpecification;
-import it.eng.dome.search.domain.ResourceSpecification;
-import it.eng.dome.search.domain.ServiceSpecification;
 import it.eng.dome.search.rest.web.util.RestUtil;
 
 @Service
@@ -52,6 +48,28 @@ public class IndexingManager {
 							ProductSpecification.class);
 					log.debug("ProductSpecDetails Id: {}", productSpecDetails.getId());
 					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
+
+					// Retrieve the owner from the RelatedParty list
+					if (productSpecDetails.getRelatedParty() != null) {
+						for (RelatedParty party : productSpecDetails.getRelatedParty()) {
+							if ("Owner".equalsIgnoreCase(party.getRole())) { // Check if the role is "Owner"
+								String ownerId = party.getId();
+								if (ownerId != null) {
+									String requestForOrganizationById = restUtil.getOrganizationById(ownerId);
+									if (requestForOrganizationById == null) {
+										log.warn("getOrganizationById {} cannot found", productSpecDetails.getId());
+									} else {
+										Organization organizationDetails = objectMapper.readValue(requestForOrganizationById, Organization.class);
+										String ownerName = organizationDetails.getTradingName();
+										if (ownerName != null && !ownerName.isEmpty()) {
+											objToIndex.setProductSpecificationOwner(ownerName); // Set the owner's name
+										}
+									}
+								}
+								break; // Stop after finding the first owner
+							}
+						}
+					}
 
 					ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
 

@@ -2,6 +2,22 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.2.0</code>
+
+**Improvements on Search feature**
+* In addition to exact matches, the search process considers results with terms containing the searched keyword and also allows searching for terms with small typos or variations.
+* Added the Ranking of results.
+
+**Improvement**
+* Improved search with the following fields: productSpecificationOwner, productOfferingBrand, productSpecificationName and productSpecificationDescription.
+* Added owner in IndexingObject.
+* Added getOrganizationById in RestUtil.
+* Included sentences in the search.
+* Included ranking in the search.
+* Added Organization model and related classes.
+
+:calendar: 12/02/2025
+
 ### <code>0.1.9</code>
 **Improvement**
 * Refactoring of code.

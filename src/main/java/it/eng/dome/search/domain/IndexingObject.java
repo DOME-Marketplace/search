@@ -22,7 +22,6 @@ public class IndexingObject {
 	private ProductOffering productOffering;
 
 	// from ProductOffering
-
 	
 	@Field(type = FieldType.Keyword)
 	private String productOfferingId;
@@ -39,8 +38,6 @@ public class IndexingObject {
 	@Field(type = FieldType.Text)
 	private String productOfferingLifecycleStatus;
 
-
-
 	@Field(type = FieldType.Text)
 	private String productOfferingLastUpdate;
 
@@ -51,8 +48,6 @@ public class IndexingObject {
 	private Category[] categories;
 
 	// from ProductSpecification
-
-	
 
 	@Field(type = FieldType.Nested)
 	private ProductSpecification productSpecification;
@@ -68,6 +63,9 @@ public class IndexingObject {
 
 	@Field(type = FieldType.Text)
 	private String productSpecificationDescription;
+
+	@Field(type = FieldType.Text)
+	private String productSpecificationOwner;
 
 	// from RelatedParty
 	@Field(type = FieldType.Keyword)
@@ -237,7 +235,6 @@ public class IndexingObject {
 		this.productSpecification = productSpecification;
 	}
 	
-	
 	public String[] getClassifyResult() {
 		return classifyResult;
 	}
@@ -254,4 +251,11 @@ public class IndexingObject {
 		this.analyzeResult = analyzeResult;
 	}
 
+	public String getProductSpecificationOwner () {
+		return productSpecificationOwner;
+	}
+
+	public void setProductSpecificationOwner (String productSpecificationOwner) {
+		this.productSpecificationOwner = productSpecificationOwner;
+	}
 }

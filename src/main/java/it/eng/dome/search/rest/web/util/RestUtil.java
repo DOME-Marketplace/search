@@ -208,4 +208,21 @@ public class RestUtil {
 		}
 	}
 
+	public String getOrganizationById(String id) {
+		String url = getBAEUrl + "/party/organization/" + id;
+		log.debug("Call getOrganizationById to URL {}", url);
+
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+			String result = response.getBody();
+			log.debug("Response for getOrganizationById with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			return result;
+		} catch (HttpStatusCodeException exception) {
+			log.error("Error for getOrganizationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+			return null;
+		}
+	}
+
+
 }

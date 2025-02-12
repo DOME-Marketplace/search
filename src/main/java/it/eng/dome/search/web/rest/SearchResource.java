@@ -1,6 +1,7 @@
 package it.eng.dome.search.web.rest;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -79,19 +80,24 @@ public class SearchResource {
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProduct/" + query);
 		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
 	}
-	
-	
-//	@PostMapping(value = "/SearchProductTest/{query}")
-//	public ResponseEntity<List<ProductOffering>> searchProductTest(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
-//		
-//		
-//		Page<IndexingObject> page = searchProcessor.searchTest(query, request, pageable);
-//		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
-//		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProductTest/" + query);
+
+//	@PostMapping(value = "/SearchImprovedWithScoreAndSentences/{query}")
+//	public ResponseEntity<List<ProductOffering>> searchProductToFixWithScoreAndSentences(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
+//
+//		Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage = searchProcessor.searchWithScoreAndSentences(query, request, pageable);
+//		Page<ProductOffering> pageProduct = resultProcessor.processResultsWithScore(resultPage, pageable);
+//		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchImprovedWithScoreAndSentences/" + query);
 //		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
 //	}
-	
-	
+
+	@PostMapping(value = "/searchAllFields/{query}")
+	public ResponseEntity<List<ProductOffering>> searchAllFields(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
+
+		Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage = searchProcessor.searchAllFields(query, request, pageable);
+		Page<ProductOffering> pageProduct = resultProcessor.processResultsWithScore(resultPage, pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/searchAllFields/" + query);
+		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
+	}
 	
 	@PostMapping(value = "/SearchProductByFilterCategory")
 	public ResponseEntity<List<ProductOffering>> searchProductByFilterCategory(@RequestBody SearchRequest request, Pageable pageable){
