@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.elasticsearch.common.unit.Fuzziness;
@@ -338,7 +339,7 @@ public class SearchProcessor {
 			//logger.info("Generated score map with {} entries", resultScoreMap.size());
 
 			// Create a paginated result set
-			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new HashMap<>();
+			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new ConcurrentHashMap<>();
 			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
 
 			// Store the paginated results along with their scores

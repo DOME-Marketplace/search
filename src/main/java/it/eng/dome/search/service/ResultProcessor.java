@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +86,7 @@ public class ResultProcessor {
 		HashMap<String, ProductOffering> mapProductOffering = new HashMap<>();
 		List<ProductOffering> listProductOffering = new ArrayList<>();
 		Page<IndexingObject> page = null;
-		Map<IndexingObject, Float> scoreMap = new HashMap<>();
+		Map<IndexingObject, Float> scoreMap = new ConcurrentHashMap<>();
 
 		// Extract the first entry from resultPage to get the indexed objects and their scores
 		if (!resultPage.isEmpty()) {
@@ -102,7 +103,7 @@ public class ResultProcessor {
 			log.info("Total number of elements: {}", page.getTotalElements());
 
 			List<IndexingObject> listIndexingObject = page.getContent();
-			Map<ProductOffering, Float> productScoreMap = new HashMap<>();
+			Map<ProductOffering, Float> productScoreMap = new ConcurrentHashMap<>();
 
 			for (IndexingObject indexingObj : listIndexingObject) {
 				if (indexingObj.getProductOfferingId() != null) {
