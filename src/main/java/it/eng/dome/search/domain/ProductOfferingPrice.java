@@ -13,12 +13,12 @@ public class ProductOfferingPrice {
 	private String priceType;
 	private Money price;
 	private ValidFor validFor;
+	private String version;
 
 	//	private boolean isBundle;
 	//	private float percentage;
 	//	private int recurringChargePeriodLength;
 	//	private String recurringChargePeriodType;
-	//	private String version;
 	//	private BundledProductOfferingPriceRelationship[] bundledPopRelationship; (eventualmente, creare classe BundledProductOfferingPriceRelationship)
 	//	private Constraint[] constraint; (eventualmente, creare classe Constraint)
 	//	private Place[] place; (eventualmente, creare classe Place)
@@ -83,5 +83,11 @@ public class ProductOfferingPrice {
 	}
 	public void setValidFor(ValidFor validFor) {
 		this.validFor = validFor;
+	}
+	public String getVersion () {
+		return version;
+	}
+	public void setVersion (String version) {
+		this.version = version;
 	}
 }
