@@ -21,7 +21,6 @@ public class ProductSpecification {
 	private String name;
 	private String productNumber;
 	private String version;
-
 	private Attachment[] attachment;
 	//private BundledProductSpecification[] bundledProductSpecification;
 	private ProductSpecCharacteristic[] productSpecCharacteristic;
@@ -35,135 +34,102 @@ public class ProductSpecification {
 	public String getId() {
 		return id;
 	}
-
 	public void setId(String id) {
 		this.id = id;
 	}
-
 	public String getHref() {
 		return href;
 	}
-
 	public void setHref(String href) {
 		this.href = href;
 	}
-
 	public String getBrand() {
 		return brand;
 	}
-
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-
 	public String getDescription() {
 		return description;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 	public Boolean getIsBundle() {
 		return isBundle;
 	}
-
 	public void setIsBundle(Boolean isBundle) {
 		this.isBundle = isBundle;
 	}
-
 	public String getLastUpdate() {
 		return lastUpdate;
 	}
-
 	public void setLastUpdate(String lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
-
 	public String getLifecycleStatus() {
 		return lifecycleStatus;
 	}
-
 	public void setLifecycleStatus(String lifecycleStatus) {
 		this.lifecycleStatus = lifecycleStatus;
 	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getVersion() {
 		return version;
 	}
-
 	public void setVersion(String version) {
 		this.version = version;
 	}
-
 	public void setAttachment(Attachment[] attachment) {
 		this.attachment = attachment;
 	}
-
 	public Attachment[] getAttachment() {
 		return attachment;
 	}
-
 	public ProductSpecCharacteristic[] getProductSpecCharacteristic() {
 		return productSpecCharacteristic;
 	}
-
 	public void setProductSpecCharacteristic(ProductSpecCharacteristic[] productSpecCharacteristic) {
 		this.productSpecCharacteristic = productSpecCharacteristic;
 	}
-
 	public RelatedParty[] getRelatedParty() {
 		return relatedParty;
 	}
-
 	public void setRelatedParty(RelatedParty[] relatedParty) {
 		this.relatedParty = relatedParty;
 	}
-
 	public ResourceSpecification[] getResourceSpecification() {
 		return resourceSpecification;
 	}
-
 	public void setResourceSpecification(ResourceSpecification[] resourceSpecification) {
 		this.resourceSpecification = resourceSpecification;
 	}
-
 	public ServiceSpecification[] getServiceSpecification() {
 		return serviceSpecification;
 	}
-
 	public void setServiceSpecification(ServiceSpecification[] serviceSpecification) {
 		this.serviceSpecification = serviceSpecification;
 	}
-
 	public String getProductNumber() {
 		return productNumber;
 	}
-
 	public void setProductNumber(String productNumber) {
 		this.productNumber = productNumber;
 	}
-
 	public ValidFor getValidFor() {
 		return validFor;
 	}
-
 	public void setValidFor(ValidFor validFor) {
 		this.validFor = validFor;
 	}
-
 	public ProductSpecificationRelationship[] getProductSpecificationRelationship() {
 		return productSpecificationRelationship;
 	}
-
 	public void setProductSpecificationRelationship(ProductSpecificationRelationship[] productSpecificationRelationship) {
 		this.productSpecificationRelationship = productSpecificationRelationship;
 	}

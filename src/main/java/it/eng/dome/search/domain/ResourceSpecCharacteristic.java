@@ -12,7 +12,8 @@ public class ResourceSpecCharacteristic {
 	//private int minCardinality;
 	//private String regex;
 	private String valueType;
-
+	private String lastUpdate;
+	private String version;
 	//private ResourceSpecCharRelationship[] resourceSpecCharRelationship;
 	private ResourceSpecCharacteristicValue[] resourceSpecCharacteristicValue;
 	//private ValidFor[] validFor;
@@ -47,12 +48,22 @@ public class ResourceSpecCharacteristic {
 	public void setResourceSpecCharacteristicValue(ResourceSpecCharacteristicValue[] resourceSpecCharacteristicValue) {
 		this.resourceSpecCharacteristicValue = resourceSpecCharacteristicValue;
 	}
-	
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	public String getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(String lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
 }

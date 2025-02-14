@@ -12,6 +12,8 @@ public class RelatedParty {
 	//private String name;
 	private String role;
 	private String referredType;
+	private String lastUpdate;
+	private String version;
 	
 	
 	public String getId() {
@@ -38,5 +40,16 @@ public class RelatedParty {
 	public void setReferredType(String referredType) {
 		this.referredType = referredType;
 	}
-	
+	public String getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(String lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
 }
