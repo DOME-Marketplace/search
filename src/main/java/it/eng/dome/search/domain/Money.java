@@ -5,6 +5,9 @@ public class Money {
     private String unit;
     private float value;
 
+    private String lastUpdate;
+    private String version;
+
     public float getValue() {
         return value;
     }
@@ -18,4 +21,16 @@ public class Money {
         this.unit = unit;
     }
 
+    public String getLasUpdate () {
+        return lastUpdate;
+    }
+    public void setLastUpdate (String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+    public String getVersion () {
+        return version;
+    }
+    public void setVersion (String version) {
+        this.version = version;
+    }
 }
