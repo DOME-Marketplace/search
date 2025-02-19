@@ -43,6 +43,7 @@ public class SearchProcessor {
 		this.elasticsearchOperations = elasticsearchOperations;
 	}
 
+	// search 0.1 - get
 	public Page<IndexingObject> search(String q, Pageable pageable){
 
 		// QueryBuilder queryBuilder = QueryBuilders.simpleQueryStringQuery(q);
@@ -59,8 +60,8 @@ public class SearchProcessor {
 				searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 		return new PageImpl<>(resultPage,pageable,searchHits.getTotalHits()); } catch
 		(Exception e) { logger.warn("Error during search. Skipped: {}",
-				e.getMessage()); return new PageImpl<>(new ArrayList<>()); } }
-
+				e.getMessage()); return new PageImpl<>(new ArrayList<>()); }
+	}
 
 
 	//search request con filtraggio su nome categorie
@@ -106,52 +107,53 @@ public class SearchProcessor {
 //		}
 //
 //	}
-	
-	public Page<IndexingObject> search(String q, SearchRequest request, Pageable pageable){
 
-		// Main query
-		QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(q);
+	//search 1.0
+//	public Page<IndexingObject> search(String q, SearchRequest request, Pageable pageable){
+//
+//		// Main query
+//		QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(q);
+//
+//		// Create a BoolQueryBuilder to combine the main query and the category filter
+//		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(queryBuilder);
+//
+//		// Add category filter if categories are specified in the searchRequest
+//		if (request.getCategories() != null && ! request.getCategories().isEmpty()) {
+//			logger.info("Adding category filter for categories: {}", request.getCategories());
+//			BoolQueryBuilder nestedBoolQuery = QueryBuilders.boolQuery();
+//            nestedBoolQuery.must(QueryBuilders.termsQuery("categories.name", request.getCategories()));
+//
+//            // Create nested query
+//            boolQueryBuilder  = boolQueryBuilder.filter(QueryBuilders.nestedQuery("categories", nestedBoolQuery, org.apache.lucene.search.join.ScoreMode.None));
+//		} else {
+//			logger.info("No categories specified for filtering.");
+//		}
+//
+//		TermQueryBuilder termQueryBuilderStatus = QueryBuilders.termQuery("productOfferingLifecycleStatus", "launched");
+//		boolQueryBuilder= boolQueryBuilder.filter(termQueryBuilderStatus);
+//
+//
+//
+//		NativeSearchQueryBuilder nativeSearchQueryBuilder = new
+//				NativeSearchQueryBuilder() .withQuery(boolQueryBuilder) .withPageable(pageable);
+//
+//		Query elasticQuery = nativeSearchQueryBuilder.build();
+//
+//
+//		try {
+//			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
+//			List<IndexingObject> resultPage = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+//			return new PageImpl<>(resultPage,pageable,searchHits.getTotalHits());
+//
+//		} catch (Exception e) {
+//			logger.warn("Error during search. Skipped: {}", e.getMessage());
+//			return new PageImpl<>(new ArrayList<>());
+//		}
+//
+//	}
 
-		// Create a BoolQueryBuilder to combine the main query and the category filter
-		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(queryBuilder);
 
-		// Add category filter if categories are specified in the searchRequest
-		if (request.getCategories() != null && ! request.getCategories().isEmpty()) {
-			logger.info("Adding category filter for categories: {}", request.getCategories());
-			BoolQueryBuilder nestedBoolQuery = QueryBuilders.boolQuery();
-            nestedBoolQuery.must(QueryBuilders.termsQuery("categories.name", request.getCategories()));
-
-            // Create nested query
-            boolQueryBuilder  = boolQueryBuilder.filter(QueryBuilders.nestedQuery("categories", nestedBoolQuery, org.apache.lucene.search.join.ScoreMode.None));
-		} else {
-			logger.info("No categories specified for filtering.");
-		}
-		
-		TermQueryBuilder termQueryBuilderStatus = QueryBuilders.termQuery("productOfferingLifecycleStatus", "launched");
-		boolQueryBuilder= boolQueryBuilder.filter(termQueryBuilderStatus);
-		
-
-
-		NativeSearchQueryBuilder nativeSearchQueryBuilder = new
-				NativeSearchQueryBuilder() .withQuery(boolQueryBuilder) .withPageable(pageable);
-
-		Query elasticQuery = nativeSearchQueryBuilder.build();
-		
-
-		try { 
-			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
-			List<IndexingObject> resultPage = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-			return new PageImpl<>(resultPage,pageable,searchHits.getTotalHits()); 
-
-		} catch (Exception e) { 
-			logger.warn("Error during search. Skipped: {}", e.getMessage()); 
-			return new PageImpl<>(new ArrayList<>()); 
-		}
-
-	}
-
-
-	//filtra per categorie
+	//Filter by category
 	public Page<IndexingObject> search(SearchRequest request, Pageable pageable) {
 
 		// Create a BoolQueryBuilder to combine the category filters
@@ -352,106 +354,4 @@ public class SearchProcessor {
 			return new HashMap<>();
 		}
 	}
-
-//	public Map<Page<IndexingObject>, Map<IndexingObject, Float>> searchWithScoreAndSentences(String q, SearchRequest request, Pageable pageable) {
-//
-//		// Split the query into individual words
-//		String[] words = q.split("\\s+");
-//
-//		// Create a bool query to collect all conditions
-//		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery()
-//				// Exact Match
-//				.should(QueryBuilders.matchQuery("productOfferingName", q).boost(150))
-//				.should(QueryBuilders.matchQuery("productSpecificationBrand", q).boost(120))
-//				.should(QueryBuilders.matchQuery("productOfferingNameText", q).boost(125))
-//
-//				// Phrase Match
-//				.should(QueryBuilders.matchPhraseQuery("productOfferingNameText", q).boost(110))
-//				.should(QueryBuilders.matchPhraseQuery("productSpecificationBrand", q).boost(90))
-//				.should(QueryBuilders.matchPhraseQuery("productOfferingDescription", q).boost(10))
-//
-//				// Multi-Match Exact (for individual words)
-//				.should(QueryBuilders.multiMatchQuery(q)
-//						.field("productOfferingNameText", 105)
-//						.field("productSpecificationBrand", 85)
-//						.field("productOfferingDescription", 9)
-//						.operator(Operator.OR));
-//
-//		// Wildcard and Fuzzy for each word
-//		for (String word : words) {
-//			// Add wildcard for each word
-//			boolQuery
-//					.should(QueryBuilders.wildcardQuery("productOfferingNameText", "*" + word + "*").boost(100))
-//					.should(QueryBuilders.wildcardQuery("productSpecificationBrand", "*" + word + "*").boost(80))
-//					.should(QueryBuilders.wildcardQuery("productOfferingDescription", "*" + word + "*").boost(8));
-//
-//			// Add fuzzy search for each word
-//			boolQuery
-//					.should(QueryBuilders.fuzzyQuery("productOfferingNameText", word).fuzziness(Fuzziness.AUTO).boost(90))
-//					.should(QueryBuilders.fuzzyQuery("productSpecificationBrand", word).fuzziness(Fuzziness.AUTO).boost(70))
-//					.should(QueryBuilders.fuzzyQuery("productOfferingDescription", word).fuzziness(Fuzziness.AUTO).boost(5));
-//		}
-//
-//		// Maintain the original score
-//		QueryBuilder queryBuilder = QueryBuilders.functionScoreQuery(boolQuery, ScoreFunctionBuilders.weightFactorFunction(1));
-//
-//		// Create a BoolQueryBuilder to combine the main query and the category filter
-//		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(queryBuilder);
-//
-//		// Add category filter if categories are specified in the searchRequest
-//		if (request.getCategories() != null && !request.getCategories().isEmpty()) {
-//			logger.info("Adding category filter for categories: {}", request.getCategories());
-//			BoolQueryBuilder nestedBoolQuery = QueryBuilders.boolQuery();
-//			nestedBoolQuery.must(QueryBuilders.termsQuery("categories.name", request.getCategories()));
-//
-//			// Create a nested query to filter by categories
-//			boolQueryBuilder = boolQueryBuilder.filter(QueryBuilders.nestedQuery("categories", nestedBoolQuery, org.apache.lucene.search.join.ScoreMode.None));
-//		} else {
-//			logger.info("No categories specified for filtering.");
-//		}
-//
-//		// Add a filter to include only products with status "launched"
-//		TermQueryBuilder termQueryBuilderStatus = QueryBuilders.termQuery("productOfferingLifecycleStatus", "launched");
-//		boolQueryBuilder = boolQueryBuilder.filter(termQueryBuilderStatus);
-//
-//		// Build the Elasticsearch query
-//		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()
-//				.withQuery(boolQueryBuilder)
-//				.withPageable(pageable)
-//				.withTrackScores(true); // Enable score tracking
-//
-//		Query elasticQuery = nativeSearchQueryBuilder.build();
-//
-//		try {
-//			// Execute the search query
-//			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
-//			//logger.info("Found {} results", searchHits.getTotalHits());
-//
-//			// Create a map to associate each IndexingObject with its score
-//			Map<IndexingObject, Float> resultScoreMap = searchHits.stream()
-//					.collect(Collectors.toMap(SearchHit::getContent, SearchHit::getScore));
-//
-//			// Convert search results into a list of IndexingObjects
-//			List<IndexingObject> resultPage = searchHits.stream()
-//					.peek(hit -> logger.info("Product: {} | Score: {}",
-//							hit.getContent().getProductOfferingName(), // Product name
-//							hit.getScore())) // Result score
-//					.map(SearchHit::getContent)
-//					.collect(Collectors.toList());
-//			//logger.info("Generated score map with {} entries", resultScoreMap.size());
-//
-//			// Create a paginated result set
-//			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new HashMap<>();
-//			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
-//
-//			// Store the paginated results along with their scores
-//			resultPageMap.put(p, resultScoreMap);
-//
-//			return resultPageMap;
-//
-//		} catch (Exception e) {
-//			logger.warn("Error during search. Skipped: {}", e.getMessage());
-//			return new HashMap<>();
-//		}
-//	}
 }
