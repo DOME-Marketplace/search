@@ -2,6 +2,16 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.2.1</code>
+
+**Bug Fixing**
+* Search rest call fixed.
+
+**Improvement**
+* Refactoring of code: added lastUpdate and version attributes.
+
+:calendar: 21/02/2025
+
 ### <code>0.2.0</code>
 
 **Improvements on Search feature**
