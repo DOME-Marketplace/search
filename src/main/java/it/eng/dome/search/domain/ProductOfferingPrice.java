@@ -11,9 +11,9 @@ public class ProductOfferingPrice {
 	private String lastUpdate;
 	private String lifecycleStatus;
 	private String priceType;
+	private String version;
 	private Money price;
 	private ValidFor validFor;
-	private String version;
 
 	//	private boolean isBundle;
 	//	private float percentage;
@@ -47,7 +47,6 @@ public class ProductOfferingPrice {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getDescription() {
 		return description;
 	}

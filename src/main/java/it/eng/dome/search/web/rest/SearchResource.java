@@ -52,8 +52,8 @@ public class SearchResource {
 //		// return ResponseEntity.ok(objList);
 //
 //	}
-	
-	
+
+	//search 0.1 - PoC March 2024
 	@GetMapping(value = "/SearchProductsByKeywords/{query}")
 	public ResponseEntity<List<ProductOffering>> searchProductOfferings(@PathVariable String query,
 			/*
@@ -70,32 +70,25 @@ public class SearchResource {
 		// return ResponseEntity.ok(objList);
 
 	}
-	
-	@PostMapping(value = "/SearchProduct/{query}")
-	public ResponseEntity<List<ProductOffering>> searchProduct(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
-		
-		
-		Page<IndexingObject> page = searchProcessor.search(query, request, pageable);
-		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProduct/" + query);
-		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
-	}
 
-//	@PostMapping(value = "/SearchImprovedWithScoreAndSentences/{query}")
-//	public ResponseEntity<List<ProductOffering>> searchProductToFixWithScoreAndSentences(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
+	//search 1.0 - First Review July 2024
+//	@PostMapping(value = "/SearchProduct/{query}")
+//	public ResponseEntity<List<ProductOffering>> searchProduct(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
 //
-//		Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage = searchProcessor.searchWithScoreAndSentences(query, request, pageable);
-//		Page<ProductOffering> pageProduct = resultProcessor.processResultsWithScore(resultPage, pageable);
-//		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchImprovedWithScoreAndSentences/" + query);
+//
+//		Page<IndexingObject> page = searchProcessor.search(query, request, pageable);
+//		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
+//		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProduct/" + query);
 //		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
 //	}
 
-	@PostMapping(value = "/searchAllFields/{query}")
-	public ResponseEntity<List<ProductOffering>> searchAllFields(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
+	//search 2.0 - Improvement Feb 2025
+	@PostMapping(value = "/SearchProduct/{query}")
+	public ResponseEntity<List<ProductOffering>> searchProduct (@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
 
 		Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage = searchProcessor.searchAllFields(query, request, pageable);
 		Page<ProductOffering> pageProduct = resultProcessor.processResultsWithScore(resultPage, pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/searchAllFields/" + query);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProduct/" + query);
 		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
 	}
 	

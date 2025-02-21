@@ -5,6 +5,9 @@ public class Duration {
     private int amount;
     private String units;
 
+    private String lastUpdate;
+    private String version;
+
     public int getAmount() {
         return amount;
     }
@@ -16,5 +19,18 @@ public class Duration {
     }
     public void setUnits(String units) {
         this.units = units;
+    }
+
+    public String getLastUpdate () {
+        return lastUpdate;
+    }
+    public void setLastUpdate (String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+    public String getVersion () {
+        return version;
+    }
+    public void setVersion (String version) {
+        this.version = version;
     }
 }

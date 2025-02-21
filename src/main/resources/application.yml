@@ -37,6 +37,7 @@ management:
 logging:
   level:
     it.eng.dome: ${LOG_LEVEL:DEBUG}
+    org.apache.coyote.http11: ERROR
 
 dome:
   tmforum:
