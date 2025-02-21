@@ -12,7 +12,8 @@ public class SpecCharacteristic /*CharacteristicSpecification*/{
 	//private String regex;
     private String name;
     private String valueType;
-
+	private String lastUpdate;
+	private String version;
 	//private CharacteristicSpecificationRelationship[] charSpecRelationship;
     private CharacteristicValueSpecification[] characteristicValueSpecification;
 	//private ValidFor validFor;
@@ -53,5 +54,16 @@ public class SpecCharacteristic /*CharacteristicSpecification*/{
 	public void setCharacteristicValueSpecification(CharacteristicValueSpecification[] characteristicValueSpecification) {
 		this.characteristicValueSpecification = characteristicValueSpecification;
 	}
-        
+	public String getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(String lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
 }

@@ -13,6 +13,9 @@ public class CharacteristicValueSpecification {
 	private ValidFor validFor;
 	private String valueType;
 
+	private String lastUpdate;
+	private String version;
+
 	public String getUnitOfMeasure() {
 		return unitOfMeasure;
 	}
@@ -68,5 +71,18 @@ public class CharacteristicValueSpecification {
 	}
 	public void setValueType(String valueType) {
 		this.valueType = valueType;
+	}
+
+	public String getLastUpdate () {
+		return lastUpdate;
+	}
+	public void setLastUpdate (String lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+	public String getVersion () {
+		return version;
+	}
+	public void setVersion (String version) {
+		this.version = version;
 	}
 }

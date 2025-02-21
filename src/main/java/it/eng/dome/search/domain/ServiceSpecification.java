@@ -17,8 +17,7 @@ public class ServiceSpecification {
 	private String lastUpdate;
 	private String lifecycleStatus;
 	private String name;
-	//private String Version;
-
+	private String version;
 	//private Attachment[] attachment;
 	//private ConstraintRef[] constraint;
 	//private EntitySpecRelationship[] entitySpecRelationship;
@@ -79,12 +78,16 @@ public class ServiceSpecification {
 	public void setSpecCharacteristic(SpecCharacteristic[] specCharacteristic) {
 		this.specCharacteristic = specCharacteristic;
 	}
-
 	public String getDescription() {
 		return description;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }

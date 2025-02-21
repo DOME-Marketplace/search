@@ -4,29 +4,39 @@ public class Characteristic {
 
     private String name;
     private String valueType;
-    private Any value;  // da controllare classe Any perchè vuota
+    private Any value;
 
-    public String getName() {
+    private String lastUpdate;
+    private String version;
+
+    public String getName () {
         return name;
     }
-
-    public void setName(String name) {
+    public void setName (String name) {
         this.name = name;
     }
-
-    public String getValueType() {
+    public String getValueType () {
         return valueType;
     }
-
-    public void setValueType(String valueType) {
+    public void setValueType (String valueType) {
         this.valueType = valueType;
     }
-
-    public Any getValue() {
+    public Any getValue () {
         return value;
     }
-
-    public void setValue(Any value) {
+    public void setValue (Any value) {
         this.value = value;
+    }
+    public String getLastUpdate () {
+        return lastUpdate;
+    }
+    public void setLastUpdate (String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+    public String getVersion () {
+        return version;
+    }
+    public void setVersion (String version) {
+        this.version = version;
     }
 }

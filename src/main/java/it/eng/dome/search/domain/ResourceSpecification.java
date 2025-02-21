@@ -10,7 +10,7 @@ public class ResourceSpecification {
 	private String lastUpdate;
 	private String lifecycleStatus;
 	private String name;
-	//private String version;
+	private String version;
 	//private Attachment[] attachment;
 	//private FeatureSpecification[] featureSpecification;
 	private RelatedParty[] relatedParty;
@@ -61,7 +61,6 @@ public class ResourceSpecification {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
 	public String getHref() {
 		return href;
 	}
@@ -74,5 +73,10 @@ public class ResourceSpecification {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
 }

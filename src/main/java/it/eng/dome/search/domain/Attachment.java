@@ -16,6 +16,9 @@ public class Attachment {
 	private Size size;
 	private ValidFor validFor;
 
+	private String lastUpdate;
+	private String version;
+
 	
 	
 	public String getId() {
@@ -78,7 +81,16 @@ public class Attachment {
 	public void setValidFor(ValidFor validFor) {
 		this.validFor = validFor;
 	}
-	
-	
-
+	public String getLastUpdate () {
+		return lastUpdate;
+	}
+	public void setLastUpdate (String lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+	public String getVersion () {
+		return version;
+	}
+	public void setVersion (String version) {
+		this.version = version;
+	}
 }

@@ -7,11 +7,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class ProductOffering {
 	
 	protected String id;
-
     private String href;
     private String description;
 	private Boolean isBundle;
-    
 	private String lastUpdate;
     private String lifecycleStatus;
     private String name;
@@ -91,16 +89,12 @@ public class ProductOffering {
 	public void setProductSpecification(ProductSpecification productSpecification) {
 		this.productSpecification = productSpecification;
 	}
-
-	
 	public ProductOfferingPrice[] getProductOfferingPrice() {
 		return productOfferingPrice;
 	}
 	public void setProductOfferingPrice(ProductOfferingPrice[] productOfferingPrice) {
 		this.productOfferingPrice = productOfferingPrice;
 	}
-	
-
 	public ProductOfferingTerm[] getProductOfferingTerm() {
 		return productOfferingTerm;
 	}
@@ -110,16 +104,13 @@ public class ProductOffering {
 	public ValidFor getValidFor() {
 		return validFor;
 	}
-	
 	public void setValidFor(ValidFor validFor) {
 		this.validFor = validFor;
 	}
-	
 	public Category[] getCategory() {
 		return category;
 	}
 	public void setCategory(Category[] category) {
 		this.category = category;
 	}
-	
 }
