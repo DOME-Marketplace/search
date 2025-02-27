@@ -242,7 +242,7 @@ public class SearchProcessor {
 
 	public Map<Page<IndexingObject>, Map<IndexingObject, Float>> searchAllFields (String q, SearchRequest request, Pageable pageable) {
 
-		q= q.toLowerCase();
+		q = q.toLowerCase();
 		// Split the query into individual words
 		String[] words = q.split("\\s+");
 
@@ -333,9 +333,9 @@ public class SearchProcessor {
 
 			// Convert search results into a list of IndexingObjects
 			List<IndexingObject> resultPage = searchHits.stream()
-					.peek(hit -> logger.info("Product: {} | Score: {}",
-							hit.getContent().getProductOfferingName(), // Product name
-							hit.getScore())) // Result score
+//					.peek(hit -> logger.info("Product: {} | Score: {}",
+//							hit.getContent().getProductOfferingName(), // Product name
+//							hit.getScore())) // Result score
 					.map(SearchHit::getContent)
 					.collect(Collectors.toList());
 			//logger.info("Generated score map with {} entries", resultScoreMap.size());
