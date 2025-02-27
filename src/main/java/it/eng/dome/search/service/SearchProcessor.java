@@ -242,54 +242,54 @@ public class SearchProcessor {
 
 	public Map<Page<IndexingObject>, Map<IndexingObject, Float>> searchAllFields (String q, SearchRequest request, Pageable pageable) {
 
+		q= q.toLowerCase();
 		// Split the query into individual words
 		String[] words = q.split("\\s+");
 
 		// Create a bool query to collect all conditions
 		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery()
 				// Exact Match
-				.should(QueryBuilders.matchQuery("productOfferingName", q).boost(150))
-				.should(QueryBuilders.matchQuery("productOfferingNameText", q).boost(130))
-				.should(QueryBuilders.matchQuery("productSpecificationName", q).boost(125))
-				.should(QueryBuilders.matchQuery("productSpecificationBrand", q).boost(120))
-				.should(QueryBuilders.matchQuery("productSpecificationOwner", q).boost(120))
+				.should(QueryBuilders.matchQuery("productOfferingName", q).boost(290))
+				.should(QueryBuilders.matchQuery("productOfferingNameText", q).boost(270))
+				.should(QueryBuilders.matchQuery("productSpecificationName", q).boost(70))
+				.should(QueryBuilders.matchQuery("productSpecificationBrand", q).boost(65))
+				.should(QueryBuilders.matchQuery("productSpecificationOwner", q).boost(65))
 
 				// Phrase Match
-				.should(QueryBuilders.matchPhraseQuery("productOfferingNameText", q).boost(110))
-				.should(QueryBuilders.matchPhraseQuery("productSpecificationName", q).boost(100))
-				.should(QueryBuilders.matchPhraseQuery("productSpecificationBrand", q).boost(90))
-				.should(QueryBuilders.matchPhraseQuery("productSpecificationOwner", q).boost(90))
-//				.should(QueryBuilders.matchPhraseQuery("productOfferingDescription", q).boost(10))
+				.should(QueryBuilders.matchPhraseQuery("productOfferingNameText", q).boost(240))
+				.should(QueryBuilders.matchPhraseQuery("productSpecificationName", q).boost(45))
+				.should(QueryBuilders.matchPhraseQuery("productSpecificationBrand", q).boost(25))
+				.should(QueryBuilders.matchPhraseQuery("productSpecificationOwner", q).boost(25))
 
 				// Multi-Match Exact (for individual words)
 				.should(QueryBuilders.multiMatchQuery(q)
-						.field("productOfferingNameText", 105)
-						.field("productSpecificationName", 100)
-						.field("productSpecificationBrand", 85)
-						.field("productSpecificationOwner", 85)
-						.field("productOfferingDescription", 10)
-						.field("productSpecificationDescription", 8)
+						.field("productOfferingNameText", 220)
+						.field("productSpecificationName", 35)
+						.field("productSpecificationBrand", 20)
+						.field("productSpecificationOwner", 20)
+						.field("productOfferingDescription", 8)
+						.field("productSpecificationDescription", 4)
 						.operator(Operator.OR));
 
 		// Wildcard and Fuzzy for each word
 		for (String word : words) {
 			// Add wildcard for each word
 			boolQuery
-					.should(QueryBuilders.wildcardQuery("productOfferingNameText", "*" + word + "*").boost(100))
-					.should(QueryBuilders.wildcardQuery("productSpecificationName", "*" + word + "*").boost(90))
-					.should(QueryBuilders.wildcardQuery("productSpecificationBrand", "*" + word + "*").boost(80))
-					.should(QueryBuilders.wildcardQuery("productSpecificationOwner", "*" + word + "*").boost(80))
-					.should(QueryBuilders.wildcardQuery("productOfferingDescription", "*" + word + "*").boost(8))
-					.should(QueryBuilders.wildcardQuery("productSpecificationDescription", "*" + word + "*").boost(7));
+					.should(QueryBuilders.wildcardQuery("productOfferingNameText", "*" + word ).boost(200))
+					.should(QueryBuilders.wildcardQuery("productSpecificationName", "*" + word ).boost(25))
+					.should(QueryBuilders.wildcardQuery("productSpecificationBrand", "*" + word ).boost(15))
+					.should(QueryBuilders.wildcardQuery("productSpecificationOwner", "*" + word ).boost(15))
+					.should(QueryBuilders.wildcardQuery("productOfferingDescription", "*" + word ).boost(4))
+					.should(QueryBuilders.wildcardQuery("productSpecificationDescription", "*" + word ).boost(3));
 
 			// Add fuzzy search for each word
 			boolQuery
-					.should(QueryBuilders.fuzzyQuery("productOfferingNameText", word).fuzziness(Fuzziness.AUTO).boost(90))
-					.should(QueryBuilders.fuzzyQuery("productSpecificationName", word).fuzziness(Fuzziness.AUTO).boost(80))
-					.should(QueryBuilders.fuzzyQuery("productSpecificationBrand", word).fuzziness(Fuzziness.AUTO).boost(70))
-					.should(QueryBuilders.fuzzyQuery("productSpecificationOwner", word).fuzziness(Fuzziness.AUTO).boost(70))
-					.should(QueryBuilders.fuzzyQuery("productOfferingDescription", word).fuzziness(Fuzziness.AUTO).boost(5))
-					.should(QueryBuilders.fuzzyQuery("productSpecificationDescription", word).fuzziness(Fuzziness.AUTO).boost(4));
+					.should(QueryBuilders.fuzzyQuery("productOfferingNameText", word).fuzziness(Fuzziness.AUTO).boost(60))
+					.should(QueryBuilders.fuzzyQuery("productSpecificationName", word).fuzziness(Fuzziness.AUTO).boost(15))
+					.should(QueryBuilders.fuzzyQuery("productSpecificationBrand", word).fuzziness(Fuzziness.AUTO).boost(10))
+					.should(QueryBuilders.fuzzyQuery("productSpecificationOwner", word).fuzziness(Fuzziness.AUTO).boost(10))
+					.should(QueryBuilders.fuzzyQuery("productOfferingDescription", word).fuzziness(Fuzziness.AUTO).boost(2))
+					.should(QueryBuilders.fuzzyQuery("productSpecificationDescription", word).fuzziness(Fuzziness.AUTO).boost(1));
 		}
 
 		// Maintain the original score
@@ -333,9 +333,9 @@ public class SearchProcessor {
 
 			// Convert search results into a list of IndexingObjects
 			List<IndexingObject> resultPage = searchHits.stream()
-//					.peek(hit -> logger.info("Product: {} | Score: {}",
-//							hit.getContent().getProductOfferingName(), // Product name
-//							hit.getScore())) // Result score
+					.peek(hit -> logger.info("Product: {} | Score: {}",
+							hit.getContent().getProductOfferingName(), // Product name
+							hit.getScore())) // Result score
 					.map(SearchHit::getContent)
 					.collect(Collectors.toList());
 			//logger.info("Generated score map with {} entries", resultScoreMap.size());

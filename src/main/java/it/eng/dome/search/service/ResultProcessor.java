@@ -136,6 +136,11 @@ public class ResultProcessor {
 			// Sort the list based on scores in descending order
 			listProductOffering.sort((p1, p2) -> Float.compare(productScoreMap.get(p2), productScoreMap.get(p1)));
 
+//			log.info("Sorted ProductOfferings:");
+//			for (ProductOffering productOffering : listProductOffering) {
+//				log.info("ProductOffering: {} with score: {}", productOffering.getId(), productScoreMap.get(productOffering));
+//			}
+
 			return new PageImpl<>(listProductOffering, pageable, page.getTotalElements());
 
 		} catch (JsonProcessingException e) {
