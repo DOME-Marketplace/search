@@ -82,7 +82,7 @@ public class BrowsingProcessor {
 
     public Page<ProductOffering> getAllRandomizedProductOfferings(Pageable pageable) {
 
-        String responseJson = restUtil.getAllProductOfferings();
+        String responseJson = restUtil.getAllProductOfferingsPaginated();
 
         if (responseJson == null) {
             return Page.empty(pageable); // return empty page
