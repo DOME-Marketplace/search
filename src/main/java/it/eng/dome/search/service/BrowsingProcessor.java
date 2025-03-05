@@ -1,6 +1,11 @@
 package it.eng.dome.search.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.domain.ProductOffering;
+import it.eng.dome.search.rest.web.util.RestUtil;
+import it.eng.dome.search.service.dto.SearchRequest;
 import org.elasticsearch.index.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +30,12 @@ public class BrowsingProcessor {
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;
 
+    @Autowired
+    private RestUtil restUtil;
+
     private static final Logger logger = LoggerFactory.getLogger(BrowsingProcessor.class);
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public BrowsingProcessor (ElasticsearchOperations elasticsearchOperations) {
         this.elasticsearchOperations = elasticsearchOperations;
@@ -69,5 +79,85 @@ public class BrowsingProcessor {
             return Page.empty(pageable); // Restituire una pagina vuota in caso di errore
         }
     }
+
+    public Page<ProductOffering> getAllRandomizedProductOfferings(Pageable pageable) {
+
+        String responseJson = restUtil.getAllProductOfferings();
+
+        if (responseJson == null) {
+            return Page.empty(pageable); // return empty page
+        }
+
+        try {
+            // JSON to ProductOffering list
+            List<ProductOffering> productOfferings = objectMapper.readValue(
+                    responseJson,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, ProductOffering.class)
+            );
+
+            // filter ProductOffering with lifecycleStatus = "launched"**
+            List<ProductOffering> launchedProducts = productOfferings.stream()
+                    .filter(product -> "launched".equalsIgnoreCase(product.getLifecycleStatus()))
+                    .collect(Collectors.toList());
+
+            // random order
+            Collections.shuffle(launchedProducts);
+
+            // pagination
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), launchedProducts.size());
+
+            List<ProductOffering> paginatedList = launchedProducts.subList(start, end);
+
+            return new PageImpl<>(paginatedList, pageable, launchedProducts.size());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return Page.empty(pageable); // if there is an errore, return empty page
+        }
+    }
+
+    public Page<ProductOffering> getAllRandomizedProductOfferings(SearchRequest filter, Pageable pageable) {
+        String responseJson = restUtil.getAllProductOfferingsPaginated();
+
+        if (responseJson == null) {
+            return Page.empty(pageable); // return empty page
+        }
+
+        try {
+            // JSON to ProductOffering list
+            List<ProductOffering> productOfferings = objectMapper.readValue(
+                    responseJson,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, ProductOffering.class)
+            );
+
+            // filter product offerings with lifecycleStatus "launched"
+            List<ProductOffering> filteredOfferings = productOfferings.stream()
+                    .filter(po -> "launched".equalsIgnoreCase(po.getLifecycleStatus()))
+                    .collect(Collectors.toList());
+
+            // if request body contains categories, apply the filter
+            if (filter != null && filter.getCategories() != null && !filter.getCategories().isEmpty()) {
+                logger.info("Adding category filter for categories: {}", filter.getCategories());
+                filteredOfferings = filteredOfferings.stream()
+                        .filter(po -> filter.getCategories().contains(po.getCategory())) // Supponiamo che esista getCategory()
+                        .collect(Collectors.toList());
+            }
+
+            // random order
+            Collections.shuffle(filteredOfferings);
+
+            // pagination
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), filteredOfferings.size());
+            List<ProductOffering> paginatedList = filteredOfferings.subList(start, end);
+
+            return new PageImpl<>(paginatedList, pageable, filteredOfferings.size());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return Page.empty(pageable); // if there is an errore, return empty page
+        }
+    }
+
+
 
 }

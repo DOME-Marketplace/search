@@ -5,6 +5,8 @@ import it.eng.dome.search.domain.ProductOffering;
 import it.eng.dome.search.rest.web.util.PaginationUtil;
 import it.eng.dome.search.service.BrowsingProcessor;
 import it.eng.dome.search.service.ResultProcessor;
+import it.eng.dome.search.service.SearchProcessor;
+import it.eng.dome.search.service.dto.SearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,4 +37,20 @@ public class BrowsingResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProductOffering, "/api/RandomizedProducts");
         return new ResponseEntity<>(pageProductOffering.getContent(), headers, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/RandomizedProductOfferings")
+    public ResponseEntity<List<ProductOffering>> getRandomizedProductOfferings(Pageable pageable) {
+        Page<ProductOffering> page = browsingProcessor.getAllRandomizedProductOfferings(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/RandomizedProductOfferings");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/RandomizedProductOfferings")
+    public ResponseEntity<List<ProductOffering>> postRandomizedProductOfferings(@RequestBody(required = false) SearchRequest filterRequest, Pageable pageable) {
+        Page<ProductOffering> page = browsingProcessor.getAllRandomizedProductOfferings(filterRequest, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/RandomizedProductOfferings");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+
 }
