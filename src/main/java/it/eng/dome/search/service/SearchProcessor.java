@@ -275,12 +275,12 @@ public class SearchProcessor {
 		for (String word : words) {
 			// Add wildcard for each word
 			boolQuery
-					.should(QueryBuilders.wildcardQuery("productOfferingNameText", "*" + word ).boost(200))
-					.should(QueryBuilders.wildcardQuery("productSpecificationName", "*" + word ).boost(25))
-					.should(QueryBuilders.wildcardQuery("productSpecificationBrand", "*" + word ).boost(15))
-					.should(QueryBuilders.wildcardQuery("productSpecificationOwner", "*" + word ).boost(15))
-					.should(QueryBuilders.wildcardQuery("productOfferingDescription", "*" + word ).boost(4))
-					.should(QueryBuilders.wildcardQuery("productSpecificationDescription", "*" + word ).boost(3));
+					.should(QueryBuilders.wildcardQuery("productOfferingNameText", word + "*" ).boost(200))
+					.should(QueryBuilders.wildcardQuery("productSpecificationName", word + "*" ).boost(25))
+					.should(QueryBuilders.wildcardQuery("productSpecificationBrand", word + "*" ).boost(15))
+					.should(QueryBuilders.wildcardQuery("productSpecificationOwner", word + "*" ).boost(15))
+					.should(QueryBuilders.wildcardQuery("productOfferingDescription", word + "*" ).boost(4))
+					.should(QueryBuilders.wildcardQuery("productSpecificationDescription", word + "*" ).boost(3));
 
 			// Add fuzzy search for each word
 			boolQuery
