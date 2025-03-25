@@ -47,7 +47,7 @@ dome:
 
   # THIS MUST BE REMOVED IN THE FUTURE!!!
   bae:
-    url: ${BAE_URL:https://dome-marketplace-prd.org}
+    url: ${BAE_URL:https://dome-marketplace-dev2.org}
 
   classify:
     url: ${CLASSIFY_URL:https://deployenv6.expertcustomers.ai:8086/services/dome/classify}

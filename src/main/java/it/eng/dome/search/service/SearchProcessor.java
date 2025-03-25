@@ -28,6 +28,9 @@ import it.eng.dome.search.service.dto.SearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptType;
+
 @Service
 public class SearchProcessor {
 
@@ -327,15 +330,15 @@ public class SearchProcessor {
 			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
 			//logger.info("Found {} results", searchHits.getTotalHits());
 
-			// Create a map to associate each IndexingObject with its score
+			/*// Create a map to associate each IndexingObject with its score
 			Map<IndexingObject, Float> resultScoreMap = searchHits.stream()
 					.collect(Collectors.toMap(SearchHit::getContent, SearchHit::getScore));
 
 			// Convert search results into a list of IndexingObjects
 			List<IndexingObject> resultPage = searchHits.stream()
-//					.peek(hit -> logger.info("Product: {} | Score: {}",
-//							hit.getContent().getProductOfferingName(), // Product name
-//							hit.getScore())) // Result score
+					.peek(hit -> logger.info("Product: {} | Score: {}",
+							hit.getContent().getProductOfferingName(), // Product name
+							hit.getScore())) // Result score
 					.map(SearchHit::getContent)
 					.collect(Collectors.toList());
 			//logger.info("Generated score map with {} entries", resultScoreMap.size());
@@ -345,6 +348,49 @@ public class SearchProcessor {
 			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
 
 			// Store the paginated results along with their scores
+			resultPageMap.put(p, resultScoreMap);*/
+
+			// Create a map to associate each IndexingObject with its score
+			Map<IndexingObject, Float> resultScoreMap = new HashMap<>();
+
+			// Convert search results into a list of IndexingObjects
+			List<IndexingObject> resultPage = searchHits.stream()
+//					.peek(hit -> logger.info("BEFORE BOOST -> Product: {} | Score: {}",
+//							hit.getContent().getProductOfferingName(), // Nome prodotto
+//							hit.getScore())) // Punteggio originale
+					.map(SearchHit::getContent)
+					.collect(Collectors.toList());
+			//logger.info("Generated score map with {} entries", resultScoreMap.size());
+
+			// Apply the manual boost
+			String finalQ = words[0];
+			resultPage.forEach(obj -> {
+				float newScore = searchHits.getSearchHit(resultPage.indexOf(obj)).getScore(); // original score
+				String name = obj.getProductOfferingNameText();
+
+				if (name != null && !name.isEmpty()) {
+					String firstWord = name.split("\\s+")[0]; // Prima parola
+					if (firstWord.toLowerCase().startsWith(finalQ.toLowerCase())) {
+						newScore += 500;
+					}
+				}
+
+				resultScoreMap.put(obj, newScore);
+			});
+
+			// SORTING in descending order by score
+			//resultPage.sort((o1, o2) -> Float.compare(resultScoreMap.get(o2), resultScoreMap.get(o1)));
+
+//			// SECOND PRINT: Scores after the boost, ordered
+//			resultPage.stream()
+//					.peek(obj -> logger.info("AFTER BOOST -> Product: {} | Score: {}",
+//							obj.getProductOfferingName(), // Nome prodotto
+//							resultScoreMap.get(obj))) // Punteggio aggiornato
+//					.collect(Collectors.toList());
+
+			// Create a paginated result set
+			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
+			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new HashMap<>();
 			resultPageMap.put(p, resultScoreMap);
 
 			return resultPageMap;
