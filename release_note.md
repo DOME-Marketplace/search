@@ -2,6 +2,16 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.2.2</code>
+
+**Feature**
+* Added endpoint for the random display of products when accessing the services page.
+
+**Bug Fixing**
+* Quality House tickets issues fixed.
+
+:calendar: 16/03/2025
+
 ### <code>0.2.1</code>
 
 **Bug Fixing**
