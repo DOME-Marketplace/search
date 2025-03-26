@@ -141,7 +141,7 @@ public class RestUtil {
 					String jsonChunk = response.getBody();
 
 					// Rimuoviamo le parentesi quadre [] per unire i risultati
-					if (!jsonChunk.equals("[]")) {
+					if (!"[]".equals(jsonChunk)) {
 						if (jsonResult.length() > 1) {
 							jsonResult.append(","); // Aggiunge una virgola tra i blocchi
 						}

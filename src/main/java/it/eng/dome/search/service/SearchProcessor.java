@@ -351,7 +351,7 @@ public class SearchProcessor {
 			resultPageMap.put(p, resultScoreMap);*/
 
 			// Create a map to associate each IndexingObject with its score
-			Map<IndexingObject, Float> resultScoreMap = new HashMap<>();
+			Map<IndexingObject, Float> resultScoreMap = new ConcurrentHashMap<>();
 
 			// Convert search results into a list of IndexingObjects
 			List<IndexingObject> resultPage = searchHits.stream()
@@ -390,7 +390,7 @@ public class SearchProcessor {
 
 			// Create a paginated result set
 			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
-			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new HashMap<>();
+			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new ConcurrentHashMap<>();
 			resultPageMap.put(p, resultScoreMap);
 
 			return resultPageMap;
