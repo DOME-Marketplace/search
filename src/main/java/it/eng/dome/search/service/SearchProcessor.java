@@ -28,6 +28,9 @@ import it.eng.dome.search.service.dto.SearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptType;
+
 @Service
 public class SearchProcessor {
 
@@ -242,54 +245,54 @@ public class SearchProcessor {
 
 	public Map<Page<IndexingObject>, Map<IndexingObject, Float>> searchAllFields (String q, SearchRequest request, Pageable pageable) {
 
+		q = q.toLowerCase();
 		// Split the query into individual words
 		String[] words = q.split("\\s+");
 
 		// Create a bool query to collect all conditions
 		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery()
 				// Exact Match
-				.should(QueryBuilders.matchQuery("productOfferingName", q).boost(150))
-				.should(QueryBuilders.matchQuery("productOfferingNameText", q).boost(130))
-				.should(QueryBuilders.matchQuery("productSpecificationName", q).boost(125))
-				.should(QueryBuilders.matchQuery("productSpecificationBrand", q).boost(120))
-				.should(QueryBuilders.matchQuery("productSpecificationOwner", q).boost(120))
+				.should(QueryBuilders.matchQuery("productOfferingName", q).boost(290))
+				.should(QueryBuilders.matchQuery("productOfferingNameText", q).boost(270))
+				.should(QueryBuilders.matchQuery("productSpecificationName", q).boost(70))
+				.should(QueryBuilders.matchQuery("productSpecificationBrand", q).boost(65))
+				.should(QueryBuilders.matchQuery("productSpecificationOwner", q).boost(65))
 
 				// Phrase Match
-				.should(QueryBuilders.matchPhraseQuery("productOfferingNameText", q).boost(110))
-				.should(QueryBuilders.matchPhraseQuery("productSpecificationName", q).boost(100))
-				.should(QueryBuilders.matchPhraseQuery("productSpecificationBrand", q).boost(90))
-				.should(QueryBuilders.matchPhraseQuery("productSpecificationOwner", q).boost(90))
-//				.should(QueryBuilders.matchPhraseQuery("productOfferingDescription", q).boost(10))
+				.should(QueryBuilders.matchPhraseQuery("productOfferingNameText", q).boost(240))
+				.should(QueryBuilders.matchPhraseQuery("productSpecificationName", q).boost(45))
+				.should(QueryBuilders.matchPhraseQuery("productSpecificationBrand", q).boost(25))
+				.should(QueryBuilders.matchPhraseQuery("productSpecificationOwner", q).boost(25))
 
 				// Multi-Match Exact (for individual words)
 				.should(QueryBuilders.multiMatchQuery(q)
-						.field("productOfferingNameText", 105)
-						.field("productSpecificationName", 100)
-						.field("productSpecificationBrand", 85)
-						.field("productSpecificationOwner", 85)
-						.field("productOfferingDescription", 10)
-						.field("productSpecificationDescription", 8)
+						.field("productOfferingNameText", 220)
+						.field("productSpecificationName", 35)
+						.field("productSpecificationBrand", 20)
+						.field("productSpecificationOwner", 20)
+						.field("productOfferingDescription", 8)
+						.field("productSpecificationDescription", 4)
 						.operator(Operator.OR));
 
 		// Wildcard and Fuzzy for each word
 		for (String word : words) {
 			// Add wildcard for each word
 			boolQuery
-					.should(QueryBuilders.wildcardQuery("productOfferingNameText", "*" + word + "*").boost(100))
-					.should(QueryBuilders.wildcardQuery("productSpecificationName", "*" + word + "*").boost(90))
-					.should(QueryBuilders.wildcardQuery("productSpecificationBrand", "*" + word + "*").boost(80))
-					.should(QueryBuilders.wildcardQuery("productSpecificationOwner", "*" + word + "*").boost(80))
-					.should(QueryBuilders.wildcardQuery("productOfferingDescription", "*" + word + "*").boost(8))
-					.should(QueryBuilders.wildcardQuery("productSpecificationDescription", "*" + word + "*").boost(7));
+					.should(QueryBuilders.wildcardQuery("productOfferingNameText", word + "*" ).boost(200))
+					.should(QueryBuilders.wildcardQuery("productSpecificationName", word + "*" ).boost(25))
+					.should(QueryBuilders.wildcardQuery("productSpecificationBrand", word + "*" ).boost(15))
+					.should(QueryBuilders.wildcardQuery("productSpecificationOwner", word + "*" ).boost(15))
+					.should(QueryBuilders.wildcardQuery("productOfferingDescription", word + "*" ).boost(4))
+					.should(QueryBuilders.wildcardQuery("productSpecificationDescription", word + "*" ).boost(3));
 
 			// Add fuzzy search for each word
 			boolQuery
-					.should(QueryBuilders.fuzzyQuery("productOfferingNameText", word).fuzziness(Fuzziness.AUTO).boost(90))
-					.should(QueryBuilders.fuzzyQuery("productSpecificationName", word).fuzziness(Fuzziness.AUTO).boost(80))
-					.should(QueryBuilders.fuzzyQuery("productSpecificationBrand", word).fuzziness(Fuzziness.AUTO).boost(70))
-					.should(QueryBuilders.fuzzyQuery("productSpecificationOwner", word).fuzziness(Fuzziness.AUTO).boost(70))
-					.should(QueryBuilders.fuzzyQuery("productOfferingDescription", word).fuzziness(Fuzziness.AUTO).boost(5))
-					.should(QueryBuilders.fuzzyQuery("productSpecificationDescription", word).fuzziness(Fuzziness.AUTO).boost(4));
+					.should(QueryBuilders.fuzzyQuery("productOfferingNameText", word).fuzziness(Fuzziness.AUTO).boost(60))
+					.should(QueryBuilders.fuzzyQuery("productSpecificationName", word).fuzziness(Fuzziness.AUTO).boost(15))
+					.should(QueryBuilders.fuzzyQuery("productSpecificationBrand", word).fuzziness(Fuzziness.AUTO).boost(10))
+					.should(QueryBuilders.fuzzyQuery("productSpecificationOwner", word).fuzziness(Fuzziness.AUTO).boost(10))
+					.should(QueryBuilders.fuzzyQuery("productOfferingDescription", word).fuzziness(Fuzziness.AUTO).boost(2))
+					.should(QueryBuilders.fuzzyQuery("productSpecificationDescription", word).fuzziness(Fuzziness.AUTO).boost(1));
 		}
 
 		// Maintain the original score
@@ -327,15 +330,15 @@ public class SearchProcessor {
 			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
 			//logger.info("Found {} results", searchHits.getTotalHits());
 
-			// Create a map to associate each IndexingObject with its score
+			/*// Create a map to associate each IndexingObject with its score
 			Map<IndexingObject, Float> resultScoreMap = searchHits.stream()
 					.collect(Collectors.toMap(SearchHit::getContent, SearchHit::getScore));
 
 			// Convert search results into a list of IndexingObjects
 			List<IndexingObject> resultPage = searchHits.stream()
-//					.peek(hit -> logger.info("Product: {} | Score: {}",
-//							hit.getContent().getProductOfferingName(), // Product name
-//							hit.getScore())) // Result score
+					.peek(hit -> logger.info("Product: {} | Score: {}",
+							hit.getContent().getProductOfferingName(), // Product name
+							hit.getScore())) // Result score
 					.map(SearchHit::getContent)
 					.collect(Collectors.toList());
 			//logger.info("Generated score map with {} entries", resultScoreMap.size());
@@ -345,6 +348,49 @@ public class SearchProcessor {
 			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
 
 			// Store the paginated results along with their scores
+			resultPageMap.put(p, resultScoreMap);*/
+
+			// Create a map to associate each IndexingObject with its score
+			Map<IndexingObject, Float> resultScoreMap = new ConcurrentHashMap<>();
+
+			// Convert search results into a list of IndexingObjects
+			List<IndexingObject> resultPage = searchHits.stream()
+//					.peek(hit -> logger.info("BEFORE BOOST -> Product: {} | Score: {}",
+//							hit.getContent().getProductOfferingName(), // Nome prodotto
+//							hit.getScore())) // Punteggio originale
+					.map(SearchHit::getContent)
+					.collect(Collectors.toList());
+			//logger.info("Generated score map with {} entries", resultScoreMap.size());
+
+			// Apply the manual boost
+			String finalQ = words[0];
+			resultPage.forEach(obj -> {
+				float newScore = searchHits.getSearchHit(resultPage.indexOf(obj)).getScore(); // original score
+				String name = obj.getProductOfferingNameText();
+
+				if (name != null && !name.isEmpty()) {
+					String firstWord = name.split("\\s+")[0]; // Prima parola
+					if (firstWord.toLowerCase().startsWith(finalQ.toLowerCase())) {
+						newScore += 500;
+					}
+				}
+
+				resultScoreMap.put(obj, newScore);
+			});
+
+			// SORTING in descending order by score
+			//resultPage.sort((o1, o2) -> Float.compare(resultScoreMap.get(o2), resultScoreMap.get(o1)));
+
+//			// SECOND PRINT: Scores after the boost, ordered
+//			resultPage.stream()
+//					.peek(obj -> logger.info("AFTER BOOST -> Product: {} | Score: {}",
+//							obj.getProductOfferingName(), // Nome prodotto
+//							resultScoreMap.get(obj))) // Punteggio aggiornato
+//					.collect(Collectors.toList());
+
+			// Create a paginated result set
+			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
+			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new ConcurrentHashMap<>();
 			resultPageMap.put(p, resultScoreMap);
 
 			return resultPageMap;
