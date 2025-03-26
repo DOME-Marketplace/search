@@ -27,23 +27,23 @@ public class BrowsingResource {
     @Autowired
     private ResultProcessor resultProcessor;
 
-    // browse 1.0
-    @GetMapping(value = "/RandomizedProducts")
-    public ResponseEntity<List<ProductOffering>> getRandomizedProducts(Pageable pageable) {
-        // gets all indexed products with random order
-        Page<IndexingObject> page = browsingProcessor.getAllRandomizedProducts(pageable);
-        // IndexingObject to ProductOffering
-        Page<ProductOffering> pageProductOffering = resultProcessor.processBrowsingResults(page, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProductOffering, "/api/RandomizedProducts");
-        return new ResponseEntity<>(pageProductOffering.getContent(), headers, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/RandomizedProductOfferings")
-    public ResponseEntity<List<ProductOffering>> getRandomizedProductOfferings(Pageable pageable) {
-        Page<ProductOffering> page = browsingProcessor.getAllRandomizedProductOfferings(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/RandomizedProductOfferings");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
+//    // browse 1.0
+//    @GetMapping(value = "/RandomizedProducts")
+//    public ResponseEntity<List<ProductOffering>> getRandomizedProducts(Pageable pageable) {
+//        // gets all indexed products with random order
+//        Page<IndexingObject> page = browsingProcessor.getAllRandomizedProducts(pageable);
+//        // IndexingObject to ProductOffering
+//        Page<ProductOffering> pageProductOffering = resultProcessor.processBrowsingResults(page, pageable);
+//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProductOffering, "/api/RandomizedProducts");
+//        return new ResponseEntity<>(pageProductOffering.getContent(), headers, HttpStatus.OK);
+//    }
+//
+//    @GetMapping(value = "/RandomizedProductOfferings")
+//    public ResponseEntity<List<ProductOffering>> getRandomizedProductOfferings(Pageable pageable) {
+//        Page<ProductOffering> page = browsingProcessor.getAllRandomizedProductOfferings(pageable);
+//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/RandomizedProductOfferings");
+//        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+//    }
 
     @PostMapping(value = "/RandomizedProductOfferings")
     public ResponseEntity<List<ProductOffering>> postRandomizedProductOfferings(@RequestBody(required = false) SearchRequest filterRequest, Pageable pageable) {
