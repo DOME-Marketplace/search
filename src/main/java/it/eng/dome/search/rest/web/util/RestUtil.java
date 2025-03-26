@@ -124,6 +124,54 @@ public class RestUtil {
 		}
 	}
 
+	public String getAllProductOfferingsPaginated() {
+		int limit = 10;
+		int offset = 0;
+		boolean hasMore = true;
+		StringBuilder jsonResult = new StringBuilder("[");
+
+		while (hasMore) {
+			String url = getBAEUrl + "/catalog/productOffering?limit=" + limit + "&offset=" + offset;
+			log.debug("Fetching product offerings from URL: {}", url);
+
+			try {
+				ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+				if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+					String jsonChunk = response.getBody();
+
+					// Rimuoviamo le parentesi quadre [] per unire i risultati
+					if (!jsonChunk.equals("[]")) {
+						if (jsonResult.length() > 1) {
+							jsonResult.append(","); // Aggiunge una virgola tra i blocchi
+						}
+						jsonResult.append(jsonChunk.substring(1, jsonChunk.length() - 1));
+					}
+
+					// Contiamo il numero di elementi nel batch corrente
+					long count = jsonChunk.chars().filter(ch -> ch == '{').count();
+
+					if (count < limit) {
+						hasMore = false; // Se riceviamo meno elementi del limite, abbiamo finito
+					} else {
+						offset += limit; // Aumentiamo l'offset per la prossima richiesta
+					}
+				} else {
+					hasMore = false;
+				}
+			} catch (HttpStatusCodeException exception) {
+				log.error("Error retrieving product offerings: {}", exception.getMessage());
+				hasMore = false;
+			}
+		}
+
+		jsonResult.append("]"); // Chiudiamo il JSON array
+		return jsonResult.toString();
+	}
+
+
+
+
 	/*********************
 	 * TMForum Endpoints *
 	 *********************/

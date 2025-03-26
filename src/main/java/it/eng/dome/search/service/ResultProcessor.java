@@ -136,6 +136,11 @@ public class ResultProcessor {
 			// Sort the list based on scores in descending order
 			listProductOffering.sort((p1, p2) -> Float.compare(productScoreMap.get(p2), productScoreMap.get(p1)));
 
+//			log.info("Sorted ProductOfferings:");
+//			for (ProductOffering productOffering : listProductOffering) {
+//				log.info("ProductOffering: {} with score: {}", productOffering.getId(), productScoreMap.get(productOffering));
+//			}
+
 			return new PageImpl<>(listProductOffering, pageable, page.getTotalElements());
 
 		} catch (JsonProcessingException e) {
@@ -146,5 +151,44 @@ public class ResultProcessor {
 			return new PageImpl<>(new ArrayList<>());
 		}
 	}
+
+    public Page<ProductOffering> processBrowsingResults(Page<IndexingObject> page, Pageable pageable) {
+        List<ProductOffering> listProductOffering = new ArrayList<>();
+
+        try {
+            log.info("Total number of Elements " + page.getTotalElements());
+
+            // gets IndexingObject list
+            List<IndexingObject> indexingObjects = page.getContent();
+
+            for (IndexingObject indexingObject : indexingObjects) {
+                if (indexingObject.getProductOfferingId() != null) {
+                    String productOfferingId = indexingObject.getProductOfferingId();
+
+                    // Recuperiamo il ProductOffering tramite l'ID
+                    String response = restTemplate.getProductOfferingById(productOfferingId);
+
+                    if (response == null) {
+                        log.warn("getProductOfferingById {} not found", productOfferingId);
+                    } else {
+                        ProductOffering productOffering = objectMapper.readValue(response, ProductOffering.class);
+                        listProductOffering.add(productOffering);
+                        log.info("Added ProductOffering with ID: " + productOfferingId + " and name: " + productOffering.getName());
+                    }
+                }
+            }
+
+            return new PageImpl<>(listProductOffering, pageable, page.getTotalElements());
+
+        } catch (JsonProcessingException e) {
+            log.warn("JsonProcessingException - Error during processBrowsingResults: {}", e.getMessage());
+            e.printStackTrace();
+            return new PageImpl<>(new ArrayList<>());
+        } catch (HttpServerErrorException e) {
+            log.warn("HttpServerErrorException - Error during processBrowsingResults: {}", e.getMessage());
+            e.printStackTrace();
+            return new PageImpl<>(new ArrayList<>());
+        }
+    }
 
 }
