@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.ProductOffering;
 import it.eng.dome.search.service.OfferingProcessor;
 
 @RestController

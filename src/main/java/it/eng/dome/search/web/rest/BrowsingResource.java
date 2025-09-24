@@ -1,19 +1,20 @@
 package it.eng.dome.search.web.rest;
 
-import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.ProductOffering;
 import it.eng.dome.search.rest.web.util.PaginationUtil;
 import it.eng.dome.search.service.BrowsingProcessor;
 import it.eng.dome.search.service.ResultProcessor;
-import it.eng.dome.search.service.SearchProcessor;
 import it.eng.dome.search.service.dto.SearchRequest;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -51,6 +52,5 @@ public class BrowsingResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/RandomizedProductOfferings");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
-
 
 }

@@ -1,19 +1,23 @@
 package it.eng.dome.search.indexing;
 
-import it.eng.dome.search.domain.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.eng.dome.brokerage.api.ProductSpecificationApis;
+import it.eng.dome.brokerage.api.ResourceSpecificationApis;
+import it.eng.dome.brokerage.api.ServiceSpecificationApis;
+import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.rest.web.util.RestUtil;
+import it.eng.dome.search.tmf.TmfApiFactory;
+import it.eng.dome.tmforum.tmf620.v4.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import it.eng.dome.search.rest.web.util.RestUtil;
+import java.util.List;
 
 @Service
-public class IndexingManager {
+public class IndexingManager implements InitializingBean {
 
 	@Autowired
 	private RestUtil restUtil;
@@ -24,6 +28,18 @@ public class IndexingManager {
 	private static final Logger log = LoggerFactory.getLogger(IndexingManager.class);
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
+
+	@Autowired
+	TmfApiFactory tmfApiFactory;
+
+	ProductSpecificationApis productSpecificationApis;
+
+	@Override
+	public void afterPropertiesSet () throws Exception {
+		this.productSpecificationApis = new ProductSpecificationApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
+
+		log.info("IndexingManager initialized with ProductSpecificationApis");
+	}
 
 /*
 	public IndexingObject processOffering(ProductOffering product, IndexingObject objToIndex) {
@@ -119,30 +135,29 @@ public class IndexingManager {
 
 			objToIndex = mappingManager.prepareOfferingMetadata(product, objToIndex);
 
-			ProductSpecification productSpec = product.getProductSpecification();
-			if (productSpec.getId() == null) {
-				log.warn("null value in ProductSpecification ID");
+			ProductSpecificationRef productSpecRef = product.getProductSpecification();
+			if (productSpecRef == null) {
+				log.warn("null value in ProductSpecification");
 			} else {
-				String requestForProductSpecById = restUtil.getTMFProductSpecificationById(productSpec.getId());
-
-				if (requestForProductSpecById == null) {
-					log.warn("getTMFProductSpecificationById {} cannot found", productSpec.getId());
+//				String requestForProductSpecById = restUtil.getTMFProductSpecificationById(productSpec.getId());
+				ProductSpecification productSpec = productSpecificationApis.getProductSpecification(productSpecRef.getId(), null);
+				if (productSpec == null) {
+					log.warn("getTMFProductSpecificationById {} - Product Specification cannot found", productSpec.getId());
 				} else {
-					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
-							ProductSpecification.class);
+					/*ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
+							ProductSpecification.class);*/
+//					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
 
-					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
-
-					ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
+					List<ServiceSpecificationRef> serviceList = productSpec.getServiceSpecification();
 
 					if (serviceList != null) {
-						log.info("ProcessOffering TMForum => Mapping Services associated: " + serviceList.length);
+						log.info("ProcessOffering TMForum => Mapping Services associated: " + serviceList.size());
 						objToIndex = mappingManager.prepareTMFServiceSpecMetadata(serviceList, objToIndex);
 					}
 
-					ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
+					List<ResourceSpecificationRef> resourceList = productSpec.getResourceSpecification();
 					if (resourceList != null) {
-						log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.length);
+						log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.size());
 						objToIndex = mappingManager.prepareTMFResourceSpecMetadata(resourceList, objToIndex);
 					}
 				}

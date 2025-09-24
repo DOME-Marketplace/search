@@ -1,28 +1,23 @@
 package it.eng.dome.search.service;
 
-//import java.io.BufferedReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.eng.dome.brokerage.api.ProductOfferingApis;
+import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.indexing.IndexingManager;
+import it.eng.dome.search.repository.OfferingRepository;
+import it.eng.dome.search.tmf.TmfApiFactory;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.ProductOffering;
-import it.eng.dome.search.indexing.IndexingManager;
-
-import it.eng.dome.search.repository.OfferingRepository;
-import it.eng.dome.search.rest.web.util.RestUtil;
-
 @Service
-public class OfferingProcessor {
+public class OfferingProcessor implements InitializingBean {
 
 	@Autowired
 	private OfferingRepository offeringRepo;
@@ -32,11 +27,22 @@ public class OfferingProcessor {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-
-	@Autowired
-	private RestUtil restUtil;
+//	@Autowired
+//	private RestUtil restUtil;
 
 	private static final Logger log = LoggerFactory.getLogger(OfferingProcessor.class);
+
+	@Autowired
+	TmfApiFactory tmfApiFactory;
+
+	ProductOfferingApis productOfferingApis;
+
+	@Override
+	public void afterPropertiesSet () throws Exception {
+		this.productOfferingApis = new ProductOfferingApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
+
+		log.info("OfferingProcessor initialized with ProductOfferingApis");
+	}
 
 	public IndexingObject save(IndexingObject obj) {
 		return offeringRepo.save(obj);
@@ -163,39 +169,26 @@ public class OfferingProcessor {
 		// TODO Auto-generated method stub
 
 		List<IndexingObject> toRet = new ArrayList<IndexingObject>();
-		String listProductOfferings = restUtil.getAllProductOfferingsFromTMForum();
+//		String listProductOfferings = restUtil.getAllProductOfferingsFromTMForum();
+		List<ProductOffering> listProductOfferings = productOfferingApis.getAllProductOfferings(null, null);
 
 		if (listProductOfferings == null) {
 			log.warn("listProductOfferings TMForum cannot be null");
 		} else {
-		
-			try {
-				ProductOffering[] productOffList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
+//				ProductOffering[] productOffList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
 
-				for(ProductOffering product : productOffList) {
+			for(ProductOffering product : listProductOfferings) {
 
-					IndexingObject objToIndex = new IndexingObject();
-					objToIndex = indexingManager.processOfferingFromTMForum(product,objToIndex);
+				IndexingObject objToIndex = new IndexingObject();
+				objToIndex = indexingManager.processOfferingFromTMForum(product,objToIndex);
 
-					objToIndex = save(objToIndex);
-					toRet.add(objToIndex);
-				}
-
-			} catch (JsonMappingException e) {
-				log.warn("JsonMappingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
-
-				e.printStackTrace();
-			} catch (JsonProcessingException e) {
-				log.warn("JsonProcessingException - Error during processListProductOffering(). Skipped: {}", e.getMessage());
-
-				e.printStackTrace();
+				objToIndex = save(objToIndex);
+				toRet.add(objToIndex);
 			}
 		}
 
 		return toRet;
 	}
-
-
 
 	public IndexingObject processProductOfferingFromTMForumAPI(ProductOffering product) {
 
@@ -208,23 +201,14 @@ public class OfferingProcessor {
 		return toRet;
 	}
 	
-	
 	public IndexingObject processProductOfferingFromCallback(String message) {
 		return null;
 		
 	}
 
-
-
-
 	/** General usage*/
 	public void clearRepository() {		
 		offeringRepo.deleteAll();		
 	}
-
-
-
-
-
 
 }

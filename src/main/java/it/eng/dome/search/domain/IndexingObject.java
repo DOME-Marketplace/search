@@ -1,5 +1,10 @@
 package it.eng.dome.search.domain;
 
+import it.eng.dome.tmforum.tmf620.v4.model.CategoryRef;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
+import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
+import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -7,12 +12,14 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+
 @Document(indexName = "indexing-object")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IndexingObject {
 
 	public IndexingObject indexingObject() {
-		return this.indexingObject();
+		return new IndexingObject();
 	}
 
 	@Id
@@ -45,7 +52,7 @@ public class IndexingObject {
 	private Boolean productOfferingIsBundle;
 	
 	@Field(type = FieldType.Nested)
-	private Category[] categories;
+	private List<CategoryRef> categories;
 
 	// from ProductSpecification
 
@@ -73,11 +80,11 @@ public class IndexingObject {
 
 	// from ServiceSpecification
 	@Field(type = FieldType.Nested)
-	private ServiceSpecification[] services;
+	private List<ServiceSpecification> services;
 
 	// from Resource Specification
 	@Field(type = FieldType.Nested)
-	private ResourceSpecification[] resources;
+	private List<ResourceSpecification> resources;
 
 	// from Categorization and Entities Extraction //put here fields for semantic
 	// services ----
@@ -113,11 +120,11 @@ public class IndexingObject {
 		this.productOfferingDescription = productOfferingDescription;
 	}
 	
-	public Category[] getCategories() {
+	public List<CategoryRef> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(Category[] categories) {
+	public void setCategories(List<CategoryRef> categories) {
 		this.categories = categories;
 	}
 
@@ -203,19 +210,19 @@ public class IndexingObject {
 		this.relatedPartyId = relatedPartyId;
 	}
 
-	public ServiceSpecification[] getServices() {
+	public List<ServiceSpecification> getServices() {
 		return services;
 	}
 
-	public void setServices(ServiceSpecification[] services) {
+	public void setServices(List<ServiceSpecification> services) {
 		this.services = services;
 	}
 
-	public ResourceSpecification[] getResources() {
+	public List<ResourceSpecification> getResources() {
 		return resources;
 	}
 
-	public void setResources(ResourceSpecification[] resources) {
+	public void setResources(List<ResourceSpecification> resources) {
 		this.resources = resources;
 	}
 

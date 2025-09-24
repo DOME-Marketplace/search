@@ -67,6 +67,13 @@
 			<version>1.18.1</version>
 		</dependency>
 
+		<!--  Brokerage Utils dependencies  -->
+		<dependency>
+			<groupId>it.eng.dome.brokerage</groupId>
+			<artifactId>brokerage-utils</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
 		<!-- tmf  -->
 		<!-- TMF620 Catalog -->
 		<dependency>

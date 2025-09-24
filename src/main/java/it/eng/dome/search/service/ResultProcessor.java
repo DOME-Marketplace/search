@@ -1,14 +1,13 @@
 package it.eng.dome.search.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.eng.dome.brokerage.api.ProductOfferingApis;
+import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.tmf.TmfApiFactory;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,21 +15,33 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.ProductOffering;
-import it.eng.dome.search.rest.web.util.RestUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class ResultProcessor {
+public class ResultProcessor implements InitializingBean {
 
 	private static final Logger log = LoggerFactory.getLogger(ResultProcessor.class);
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
+//	@Autowired
+//	private RestUtil restTemplate;
+
 	@Autowired
-	private RestUtil restTemplate;
+	TmfApiFactory tmfApiFactory;
+
+	ProductOfferingApis productOfferingApis;
+
+	@Override
+	public void afterPropertiesSet () throws Exception {
+		this.productOfferingApis = new ProductOfferingApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
+
+		log.info("ResultProcessor initialized with ProductOfferingApis");
+	}
 
 	public Page<ProductOffering> processResults(Page<IndexingObject> page, Pageable pageable) {
 
@@ -46,16 +57,15 @@ public class ResultProcessor {
 				if (indexingObj.getProductOfferingId() != null) {
 
 					if (!mapProductOffering.containsKey(indexingObj.getProductOfferingId())) {
-						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
-
-						if (requestForProductOfferingId == null) {
-							log.warn("getProductOfferingById {} cannot found", indexingObj.getProductOfferingId());
+//						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
+						ProductOffering productOffering = productOfferingApis.getProductOffering(indexingObj.getProductOfferingId(), null);
+						if (productOffering == null) {
+							log.warn("getProductOfferingById {} - Product Offering cannot found", indexingObj.getProductOfferingId());
 						} else {
 
-							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,
-									ProductOffering.class);
-
-							mapProductOffering.put(indexingObj.getProductOfferingId(), productOfferingDetails);
+/*							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,
+									ProductOffering.class);*/
+							mapProductOffering.put(indexingObj.getProductOfferingId(), productOffering);
 						}
 					}
 				}
@@ -63,20 +73,14 @@ public class ResultProcessor {
 
 			if (!mapProductOffering.isEmpty()) {
 				for (Entry<String, ProductOffering> entry : mapProductOffering.entrySet()) {
-
 					listProductOffering.add(entry.getValue());
 					log.info(entry.getKey() + " " + entry.getValue().getName());
 				}
 			}
 
 			return new PageImpl<>(listProductOffering, pageable, page.getTotalElements());
-		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during processResults(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-			return new PageImpl<>(new ArrayList<>());
 		} catch (HttpServerErrorException e) {
-			log.warn("HttpServerErrorException - Error during processResults(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
+			log.warn("HttpServerErrorException - Error during processResults(). Skipped: {}", e.getMessage(), e);
 			return new PageImpl<>(new ArrayList<>());
 		}
 	}
@@ -109,14 +113,14 @@ public class ResultProcessor {
 				if (indexingObj.getProductOfferingId() != null) {
 					// Retrieve product details only if not already fetched
 					if (!mapProductOffering.containsKey(indexingObj.getProductOfferingId())) {
-						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
-
-						if (requestForProductOfferingId == null) {
-							log.warn("getProductOfferingById {} cannot be found", indexingObj.getProductOfferingId());
+						//String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
+						ProductOffering productOffering = productOfferingApis.getProductOffering(indexingObj.getProductOfferingId(), null);
+						if (productOffering == null) {
+							log.warn("getProductOfferingById {} - PO cannot be found", indexingObj.getProductOfferingId());
 						} else {
 							// Convert the retrieved JSON response into a ProductOffering object
-							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId, ProductOffering.class);
-							mapProductOffering.put(indexingObj.getProductOfferingId(), productOfferingDetails);
+//							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId, ProductOffering.class);
+							mapProductOffering.put(indexingObj.getProductOfferingId(), productOffering);
 						}
 					}
 
@@ -143,15 +147,13 @@ public class ResultProcessor {
 
 			return new PageImpl<>(listProductOffering, pageable, page.getTotalElements());
 
-		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during processResultsScore(). Skipped: {}", e.getMessage());
-			return new PageImpl<>(new ArrayList<>());
 		} catch (HttpServerErrorException e) {
 			log.warn("HttpServerErrorException - Error during processResultsScore(). Skipped: {}", e.getMessage());
 			return new PageImpl<>(new ArrayList<>());
 		}
 	}
 
+/*
     public Page<ProductOffering> processBrowsingResults(Page<IndexingObject> page, Pageable pageable) {
         List<ProductOffering> listProductOffering = new ArrayList<>();
 
@@ -190,5 +192,6 @@ public class ResultProcessor {
             return new PageImpl<>(new ArrayList<>());
         }
     }
+*/
 
 }

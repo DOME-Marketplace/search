@@ -1,44 +1,42 @@
 package it.eng.dome.search.indexing;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import it.eng.dome.search.semantic.domain.Analysis;
-import it.eng.dome.search.semantic.domain.AnalyzeResultObject;
-import org.jsoup.Jsoup;
+import it.eng.dome.brokerage.api.ResourceSpecificationApis;
+import it.eng.dome.brokerage.api.ServiceSpecificationApis;
+import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.tmf.TmfApiFactory;
+import it.eng.dome.tmforum.tmf620.v4.model.*;
+import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
+import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.ProductOffering;
-import it.eng.dome.search.domain.ProductSpecification;
-import it.eng.dome.search.domain.RelatedParty;
-import it.eng.dome.search.domain.ResourceSpecification;
-import it.eng.dome.search.domain.ServiceSpecification;
-import it.eng.dome.search.rest.web.util.RestSemanticUtil;
-import it.eng.dome.search.rest.web.util.RestUtil;
-import it.eng.dome.search.semantic.domain.CategorizationResultObject;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
-public class MappingManager {
+public class MappingManager implements InitializingBean{
 
-	@Autowired
-	private RestUtil restTemplate;
-	
-	@Autowired
-	private RestSemanticUtil restSemanticUtil;
-
-	private static final ObjectMapper objectMapper = new ObjectMapper();
 	private static final Logger log = LoggerFactory.getLogger(MappingManager.class);
 
+	@Autowired
+	TmfApiFactory tmfApiFactory;
 
+	ServiceSpecificationApis serviceSpecificationApis;
+
+	ResourceSpecificationApis resourceSpecificationApis;
+
+	@Override
+	public void afterPropertiesSet () throws Exception {
+		this.serviceSpecificationApis = new ServiceSpecificationApis(tmfApiFactory.getTMF633ServiceCatalogApiClient());
+		this.resourceSpecificationApis = new ResourceSpecificationApis(tmfApiFactory.getTMF634ResourceCatalogApiClient());
+
+		log.info("MappingManager initialized with ServiceSpecificationApis and ResourceSpecificationApis");
+	}
 
 	public IndexingObject prepareOfferingMetadata(ProductOffering product, IndexingObject objToIndex) {
 
@@ -47,7 +45,7 @@ public class MappingManager {
 		objToIndex.setProductOfferingDescription(product.getDescription());
 		objToIndex.setProductOfferingId(product.getId());
 		objToIndex.setProductOfferingIsBundle(product.getIsBundle());
-		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate());
+		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate().toString());
 		objToIndex.setProductOfferingLifecycleStatus(product.getLifecycleStatus());
 		objToIndex.setProductOfferingName(product.getName());
 		objToIndex.setProductOfferingNameText(product.getName());
@@ -56,7 +54,6 @@ public class MappingManager {
 		return objToIndex;
 
 	}
-
 
 	public IndexingObject prepareProdSpecMetadata(ProductSpecification productSpecDetails, IndexingObject objToIndex) {
 		//prepare metadata of Products specification
@@ -77,9 +74,7 @@ public class MappingManager {
 		return objToIndex;
 	}
 
-
-
-	public IndexingObject prepareServiceSpecMetadata(ServiceSpecification[] serviceList, IndexingObject objToIndex) {
+	/*public IndexingObject prepareServiceSpecMetadata(ServiceSpecification[] serviceList, IndexingObject objToIndex) {
 
 		ArrayList<ServiceSpecification> listServiceDetails = new ArrayList<ServiceSpecification>();
 
@@ -103,7 +98,7 @@ public class MappingManager {
 					log.error("Error for getServiceSpecificationById. Caught ResourceAccessException: {}", e.getMessage());
 					e.printStackTrace();
 				}
-			}	
+			}
 
 		} catch (JsonProcessingException e) {
 			log.warn("JsonProcessingException - Error during prepareServiceSpecMetadata(). Skipped: {}", e.getMessage());
@@ -117,7 +112,7 @@ public class MappingManager {
 
 		ServiceSpecification[] listServiceToIndex = listServiceDetails.toArray(new ServiceSpecification[listServiceDetails.size()]);
 
-		objToIndex.setServices(listServiceToIndex);	
+		objToIndex.setServices(listServiceToIndex);
 
 		return objToIndex;
 	}
@@ -146,93 +141,6 @@ public class MappingManager {
 					log.error("Error for getResourceSpecificationById. Caught ResourceAccessException: {}", e.getMessage());
 					e.printStackTrace();
 				}
-			}	
-
-		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during prepareResourceSpecMetadata(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-		} catch (Exception e) {
-			log.warn("Exception - Error during prepareResourceSpecMetadata(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-		}
-
-		//ResourceSpecification[] listResourceToIndex = new ResourceSpecification[listResourceDetails.size()];
-		ResourceSpecification[] listResourceToIndex = listResourceDetails.toArray(new ResourceSpecification[listResourceDetails.size()]);
-
-		objToIndex.setResources(listResourceToIndex);	
-
-		return objToIndex;
-	}
-
-
-	public IndexingObject prepareTMFServiceSpecMetadata(ServiceSpecification[] serviceList, IndexingObject objToIndex) {
-
-		ArrayList<ServiceSpecification> listServiceDetails = new ArrayList<ServiceSpecification>();
-
-		try {
-
-			for (ServiceSpecification s : serviceList) {
-
-				try {
-					String requestForServiceSpecificationId = restTemplate.getTMFServiceSpecificationById(s.getId());
-
-					if (requestForServiceSpecificationId == null) {
-						log.warn("getTMFServiceSpecificationById {} cannot found", s.getId());
-					} else {
-
-						ServiceSpecification serviceSpecDetails = objectMapper.readValue(requestForServiceSpecificationId, ServiceSpecification.class);
-
-						listServiceDetails.add(serviceSpecDetails);
-					}
-				} catch (HttpStatusCodeException exception) {
-					log.error("Error for getTMFServiceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
-				} catch (ResourceAccessException e) {
-					log.error("Error for prepareTMFServiceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage());
-					e.printStackTrace();
-				}
-			}	
-
-		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during prepareServiceSpecMetadata(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
- 		} catch (Exception e) {
-			log.warn("Exception - Error during prepareServiceSpecMetadata(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-		}
-
-		//ServiceSpecification[] listServiceToIndex = new ServiceSpecification[listServiceDetails.size()];
-
-		ServiceSpecification[] listServiceToIndex = listServiceDetails.toArray(new ServiceSpecification[listServiceDetails.size()]);
-
-		objToIndex.setServices(listServiceToIndex);	
-
-		return objToIndex;
-	}
-
-
-	public IndexingObject prepareTMFResourceSpecMetadata(ResourceSpecification[] resourceList, IndexingObject objToIndex) {
-
-		List<ResourceSpecification> listResourceDetails = new ArrayList<ResourceSpecification>();
-
-		try {
-
-			for (ResourceSpecification r : resourceList) {
-
-				try {
-					String requestForResourceSpecificationId = restTemplate.getTMFResourceSpecificationById(r.getId());
-					if (requestForResourceSpecificationId == null) {
-						log.warn("getTMFResourceSpecificationById {} cannot found", r.getId());
-					} else {
-						ResourceSpecification resourceSpecDetails = objectMapper.readValue(requestForResourceSpecificationId, ResourceSpecification.class);
-
-						listResourceDetails.add(resourceSpecDetails);
-					}
-				} catch (HttpStatusCodeException exception) {
-					log.error("Error for getTMFResourceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
-				} catch (ResourceAccessException e) {
-					log.error("Error for prepareTMFResourceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage());
-					e.printStackTrace();
-				}
 			}
 
 		} catch (JsonProcessingException e) {
@@ -246,13 +154,80 @@ public class MappingManager {
 		//ResourceSpecification[] listResourceToIndex = new ResourceSpecification[listResourceDetails.size()];
 		ResourceSpecification[] listResourceToIndex = listResourceDetails.toArray(new ResourceSpecification[listResourceDetails.size()]);
 
-		objToIndex.setResources(listResourceToIndex);	
+		objToIndex.setResources(listResourceToIndex);
+
+		return objToIndex;
+	}*/
+
+	public IndexingObject prepareTMFServiceSpecMetadata(List<ServiceSpecificationRef> serviceList, IndexingObject objToIndex) {
+
+		ArrayList<ServiceSpecification> listServiceDetails = new ArrayList<ServiceSpecification>();
+		try {
+			for (ServiceSpecificationRef s : serviceList) {
+				try {
+//					String requestForServiceSpecificationId = restTemplate.getTMFServiceSpecificationById(s.getId());
+					ServiceSpecification serviceSpecification = serviceSpecificationApis.getServiceSpecification(s.getId(), null);
+
+					if (serviceSpecification == null) {
+						log.warn("getTMFServiceSpecificationById {} - Service Specification cannot found", s.getId());
+					} else {
+//						ServiceSpecification serviceSpecDetails = objectMapper.readValue(requestForServiceSpecificationId, ServiceSpecification.class);
+
+						listServiceDetails.add(serviceSpecification);
+					}
+				} catch (HttpStatusCodeException exception) {
+					log.error("Error for getTMFServiceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				} catch (ResourceAccessException e) {
+					log.error("Error for prepareTMFServiceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage(), e);
+				}
+			}	
+
+		} catch (Exception e) {
+			log.warn("Exception - Error during prepareServiceSpecMetadata(). Skipped: {}", e.getMessage(), e);
+		}
+
+		//ServiceSpecification[] listServiceToIndex = new ServiceSpecification[listServiceDetails.size()];
+//		ServiceSpecification[] listServiceToIndex = listServiceDetails.toArray(new ServiceSpecification[listServiceDetails.size()]);
+		objToIndex.setServices(listServiceDetails);
 
 		return objToIndex;
 	}
 
 
-    public IndexingObject prepareClassify(IndexingObject objToIndex) {
+	public IndexingObject prepareTMFResourceSpecMetadata(List<ResourceSpecificationRef> resourceList, IndexingObject objToIndex) {
+
+		List<ResourceSpecification> listResourceDetails = new ArrayList<ResourceSpecification>();
+		try {
+			for (ResourceSpecificationRef r : resourceList) {
+				try {
+//					String requestForResourceSpecificationId = restTemplate.getTMFResourceSpecificationById(r.getId());
+					ResourceSpecification resourceSpecification = resourceSpecificationApis.getResourceSpecification(r.getId(), null);
+					if (resourceSpecification == null) {
+						log.warn("getTMFResourceSpecificationById {} - Resource Specification cannot found", r.getId());
+					} else {
+//						ResourceSpecification resourceSpecDetails = objectMapper.readValue(requestForResourceSpecificationId, ResourceSpecification.class);
+						listResourceDetails.add(resourceSpecification);
+					}
+				} catch (HttpStatusCodeException exception) {
+					log.error("Error for getTMFResourceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				} catch (ResourceAccessException e) {
+					log.error("Error for prepareTMFResourceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage(), e);
+				}
+			}
+
+		} catch (Exception e) {
+			log.warn("Exception - Error during prepareResourceSpecMetadata(). Skipped: {}", e.getMessage(), e);
+		}
+
+		//ResourceSpecification[] listResourceToIndex = new ResourceSpecification[listResourceDetails.size()];
+//		ResourceSpecification[] listResourceToIndex = listResourceDetails.toArray(new ResourceSpecification[listResourceDetails.size()]);
+
+		objToIndex.setResources(listResourceDetails);
+
+		return objToIndex;
+	}
+
+/*    public IndexingObject prepareClassify(IndexingObject objToIndex) {
 
         try {
             String contentToClassify = null;
@@ -277,10 +252,10 @@ public class MappingManager {
 						if (cat.length != 0) {
 							objToIndex.setClassifyResult(cat);
 						}
-						/*
+						*//*
 						 * if(cat.length!=0) { for(String s :cat) objToIndex.setClassifyResult(" , "+s);
 						 * }
-						 */
+						 *//*
 					}
 
 				} catch (HttpStatusCodeException exception) {
@@ -321,10 +296,10 @@ public class MappingManager {
 								objToIndex.setAnalyzeResult(cat.getContent());
 							}
 
-							/*
+							*//*
 							 * if(cat.length!=0) { for(String s :cat) objToIndex.setAnalyzeResult(" , "+s);
 							 * }
-							 */
+							 *//*
 						}
 					} catch (HttpStatusCodeException exception) {
 						log.error("Error for analyzeText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
@@ -343,5 +318,5 @@ public class MappingManager {
 			e.printStackTrace();
 		}
         return objToIndex;
-    }
+    }*/
 }
