@@ -21,7 +21,7 @@ import it.eng.dome.search.service.OfferingProcessor;
 @RestController
 @RequestMapping("/api")
 public class OfferingTMForumResource {
-	
+	/*
 	@Autowired
 	private OfferingProcessor offeringProcessor;
 	
@@ -43,7 +43,6 @@ public class OfferingTMForumResource {
 
 	}
 	
-	
 	@PostMapping("/offering/callbackProductOffering")
     public ResponseEntity<IndexingObject> callbackProductOffering(@RequestParam String message)
         throws ExecutionException, InterruptedException {
@@ -51,9 +50,5 @@ public class OfferingTMForumResource {
 		IndexingObject obj = offeringProcessor.processProductOfferingFromCallback(message);
 		return ResponseEntity.ok(obj);
     
-    }
-	
-	
-	
-
+    }*/
 }

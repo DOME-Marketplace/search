@@ -66,6 +66,35 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.18.1</version>
 		</dependency>
+
+		<!-- tmf  -->
+		<!-- TMF620 Catalog -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf620-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!-- TMF632 Party Management -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf632-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!--  TMF633 Sercvice Catalog Management  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf633-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!--  TMF634 Resource Catalog  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf634-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -47,20 +47,21 @@ public class OfferingProcessor {
 	/** MANAGE BAE ENDPOINT */
 
 
-	public IndexingObject processProductOffering(ProductOffering product) {
+//	public IndexingObject processProductOffering(ProductOffering product) {
+//
+//		IndexingObject objToIndex = new IndexingObject();
+//
+//		//validate product offering
+//		//prepare metadata
+//		objToIndex = indexingManager.processOffering(product, objToIndex);
+//		objToIndex = save(objToIndex);
+//
+//		return objToIndex;
+//
+//	}
 
-		IndexingObject objToIndex = new IndexingObject();
 
-		//validate product offering
-		//prepare metadata
-		objToIndex = indexingManager.processOffering(product, objToIndex);
-		objToIndex = save(objToIndex);
-
-		return objToIndex;
-
-	}
-
-
+/*
 	public List<IndexingObject> processListProductOffering() {
 
 		List<IndexingObject> indexingToRet = new ArrayList<IndexingObject>();
@@ -95,10 +96,11 @@ public class OfferingProcessor {
 
 		return indexingToRet;
 	}
+*/
 
 
 
-	public List<IndexingObject> processListProductOffering(ProductOffering[] products) throws JsonMappingException, JsonProcessingException {
+	/*public List<IndexingObject> processListProductOffering(ProductOffering[] products) throws JsonMappingException, JsonProcessingException {
 
 		List<IndexingObject> toRet = new ArrayList<IndexingObject>();
 
@@ -113,7 +115,7 @@ public class OfferingProcessor {
 
 		return toRet;
 	}
-
+*/
 
 
 	//method to analyze indexed tokens

@@ -25,6 +25,7 @@ public class IndexingManager {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
+/*
 	public IndexingObject processOffering(ProductOffering product, IndexingObject objToIndex) {
 
 		try {
@@ -111,6 +112,7 @@ public class IndexingManager {
 		return objToIndex;
 
 	}
+*/
 
 	public IndexingObject processOfferingFromTMForum(ProductOffering product, IndexingObject objToIndex) {
 		try {
@@ -147,8 +149,7 @@ public class IndexingManager {
 			}
 			// }
 		} catch (Exception e) {
-			log.warn("Exception - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
+			log.warn("Exception - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage(), e);
 		}
 		return objToIndex;
 	}

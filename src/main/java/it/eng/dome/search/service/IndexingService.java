@@ -53,6 +53,8 @@ public class IndexingService {
 		// invoca endpoint e recupera lista di product offering
 		String listProductOfferings = restUtil.getAllProductOfferings(); // -------> from BAE (change when needed)
 
+		//TODO: RETRIEVE PRODUCT OFFERING FROM TMF
+
 		if (listProductOfferings == null) {
 			log.warn("listProductOfferings cannot be null");
 		} else {
@@ -72,7 +74,7 @@ public class IndexingService {
 						log.debug("ProductOffering listFromRepo empty");
 						IndexingObject indexingObjEmpty = new IndexingObject();
 						// fare il mapping da productOffering a index
-						indexingObjEmpty = indexingManager.processOffering(product, indexingObjEmpty);
+						indexingObjEmpty = indexingManager.processOfferingFromTMForum(product, indexingObjEmpty);
 						offeringRepo.save(indexingObjEmpty);
 					} else {
 						log.debug("ProductOffering listFromRepo size: {}", listFromRepo.size());
@@ -81,7 +83,7 @@ public class IndexingService {
 							IndexingObject indexingObjEmpty = new IndexingObject();
 							// fare il mapping da productOffering a indx
 							indexingObjEmpty.setId(obj.getId());
-							indexingObjEmpty = indexingManager.processOffering(product, indexingObjEmpty);				
+							indexingObjEmpty = indexingManager.processOfferingFromTMForum(product, indexingObjEmpty);
 							
 							offeringRepo.save(indexingObjEmpty);
 						}
