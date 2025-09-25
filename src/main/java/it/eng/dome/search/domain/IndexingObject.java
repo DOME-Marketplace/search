@@ -1,5 +1,7 @@
 package it.eng.dome.search.domain;
 
+import it.eng.dome.search.domain.dto.ResourceSpecificationDTO;
+import it.eng.dome.search.domain.dto.ServiceSpecificationDTO;
 import it.eng.dome.tmforum.tmf620.v4.model.CategoryRef;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
@@ -80,11 +82,11 @@ public class IndexingObject {
 
 	// from ServiceSpecification
 	@Field(type = FieldType.Nested)
-	private List<ServiceSpecification> services;
+	private ServiceSpecificationDTO[] services;
 
 	// from Resource Specification
 	@Field(type = FieldType.Nested)
-	private List<ResourceSpecification> resources;
+	private ResourceSpecificationDTO[] resources;
 
 	// from Categorization and Entities Extraction //put here fields for semantic
 	// services ----
@@ -210,19 +212,19 @@ public class IndexingObject {
 		this.relatedPartyId = relatedPartyId;
 	}
 
-	public List<ServiceSpecification> getServices() {
+	public ServiceSpecificationDTO[] getServices() {
 		return services;
 	}
 
-	public void setServices(List<ServiceSpecification> services) {
+	public void setServices(ServiceSpecificationDTO[] services) {
 		this.services = services;
 	}
 
-	public List<ResourceSpecification> getResources() {
+	public ResourceSpecificationDTO[] getResources() {
 		return resources;
 	}
 
-	public void setResources(List<ResourceSpecification> resources) {
+	public void setResources(ResourceSpecificationDTO[] resources) {
 		this.resources = resources;
 	}
 

@@ -122,6 +122,9 @@
 						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<jvmArguments>--add-opens java.base/java.net=ALL-UNNAMED</jvmArguments>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

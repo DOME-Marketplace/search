@@ -2,8 +2,6 @@ package it.eng.dome.search.indexing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.dome.brokerage.api.ProductSpecificationApis;
-import it.eng.dome.brokerage.api.ResourceSpecificationApis;
-import it.eng.dome.brokerage.api.ServiceSpecificationApis;
 import it.eng.dome.search.domain.IndexingObject;
 import it.eng.dome.search.rest.web.util.RestUtil;
 import it.eng.dome.search.tmf.TmfApiFactory;

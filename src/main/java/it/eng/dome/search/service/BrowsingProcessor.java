@@ -73,11 +73,15 @@ public class BrowsingProcessor implements InitializingBean {
                 .filter(po -> "launched".equalsIgnoreCase(po.getLifecycleStatus()))
                 .collect(Collectors.toList());
 
+        //TODO: fix beacause categories are not filtered correctly
         // if request body contains categories, apply the filter
         if (filter != null && filter.getCategories() != null && !filter.getCategories().isEmpty()) {
             logger.info("Adding category filter for categories: {}", filter.getCategories());
             filteredOfferings = filteredOfferings.stream()
-                    .filter(po -> filter.getCategories().contains(po.getCategory())) // Supponiamo che esista getCategory()
+                    .filter(po -> po.getCategory() != null &&
+                            po.getCategory().stream()
+                                    .anyMatch(cat -> (cat.getId() != null && filter.getCategories().contains(cat.getId()))
+                                            || (cat.getName() != null && filter.getCategories().contains(cat.getName()))))
                     .collect(Collectors.toList());
         }
 

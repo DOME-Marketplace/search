@@ -43,7 +43,7 @@ public class ResultProcessor implements InitializingBean {
 		log.info("ResultProcessor initialized with ProductOfferingApis");
 	}
 
-	public Page<ProductOffering> processResults(Page<IndexingObject> page, Pageable pageable) {
+/*	public Page<ProductOffering> processResults(Page<IndexingObject> page, Pageable pageable) {
 
 		HashMap<String, ProductOffering> mapProductOffering = new HashMap<String, ProductOffering>();
 		List<ProductOffering> listProductOffering = new ArrayList<ProductOffering>();
@@ -63,8 +63,7 @@ public class ResultProcessor implements InitializingBean {
 							log.warn("getProductOfferingById {} - Product Offering cannot found", indexingObj.getProductOfferingId());
 						} else {
 
-/*							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,
-									ProductOffering.class);*/
+//							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,ProductOffering.class);
 							mapProductOffering.put(indexingObj.getProductOfferingId(), productOffering);
 						}
 					}
@@ -83,7 +82,7 @@ public class ResultProcessor implements InitializingBean {
 			log.warn("HttpServerErrorException - Error during processResults(). Skipped: {}", e.getMessage(), e);
 			return new PageImpl<>(new ArrayList<>());
 		}
-	}
+	}*/
 
 	public Page<ProductOffering> processResultsWithScore(Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage, Pageable pageable) {
 

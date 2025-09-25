@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
+import org.springframework.data.elasticsearch.core.convert.ElasticsearchCustomConversions;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.http.HttpHeaders;
 
@@ -17,6 +18,10 @@ import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+
+import org.springframework.core.convert.converter.Converter;
 
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "it.eng.dome.search.repository")
@@ -96,4 +101,5 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
         return RestClients.create(clientConfiguration).rest();
     }
+
 }

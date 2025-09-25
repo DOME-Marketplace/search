@@ -3,6 +3,8 @@ package it.eng.dome.search.indexing;
 import it.eng.dome.brokerage.api.ResourceSpecificationApis;
 import it.eng.dome.brokerage.api.ServiceSpecificationApis;
 import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.domain.dto.ResourceSpecificationDTO;
+import it.eng.dome.search.domain.dto.ServiceSpecificationDTO;
 import it.eng.dome.search.tmf.TmfApiFactory;
 import it.eng.dome.tmforum.tmf620.v4.model.*;
 import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,7 +191,23 @@ public class MappingManager implements InitializingBean{
 
 		//ServiceSpecification[] listServiceToIndex = new ServiceSpecification[listServiceDetails.size()];
 //		ServiceSpecification[] listServiceToIndex = listServiceDetails.toArray(new ServiceSpecification[listServiceDetails.size()]);
-		objToIndex.setServices(listServiceDetails);
+		List<ServiceSpecificationDTO> listServiceDTO = new ArrayList<>();
+		for(ServiceSpecification serv : listServiceDetails) {
+			ServiceSpecificationDTO servDTO = new ServiceSpecificationDTO();
+			servDTO.setId(serv.getId());
+			servDTO.setName(serv.getName());
+			servDTO.setDescription(serv.getDescription());
+			servDTO.setVersion(serv.getVersion());
+			servDTO.setLifecycleStatus(serv.getLifecycleStatus());
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+			servDTO.setLastUpdate(serv.getLastUpdate().format(formatter));
+
+			listServiceDTO.add(servDTO);
+
+		}
+		ServiceSpecificationDTO[] arrayServiceDTO = new ServiceSpecificationDTO[listServiceDTO.size()];
+		listServiceDTO.toArray(arrayServiceDTO);
+		objToIndex.setServices(arrayServiceDTO);
 
 		return objToIndex;
 	}
@@ -222,7 +241,27 @@ public class MappingManager implements InitializingBean{
 		//ResourceSpecification[] listResourceToIndex = new ResourceSpecification[listResourceDetails.size()];
 //		ResourceSpecification[] listResourceToIndex = listResourceDetails.toArray(new ResourceSpecification[listResourceDetails.size()]);
 
-		objToIndex.setResources(listResourceDetails);
+		List<ResourceSpecificationDTO> listResourceDTO = new ArrayList<>();
+		for(ResourceSpecification res : listResourceDetails) {
+			ResourceSpecificationDTO resDTO = new ResourceSpecificationDTO();
+			resDTO.setId(res.getId());
+			resDTO.setName(res.getName());
+			resDTO.setDescription(res.getDescription());
+			resDTO.setVersion(res.getVersion());
+			resDTO.setLifecycleStatus(res.getLifecycleStatus());
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+			resDTO.setLastUpdate(res.getLastUpdate().format(formatter));
+
+//			resDTO.setCategory(res.getCategory());
+//			resDTO.setCharacteristic(res.getCharacteristic());
+//			resDTO.setResourceSpecCharacteristic(res.getResourceSpecCharacteristic());
+//			resDTO.setResourceType(res.getResourceType());
+			resDTO.setRelatedParty(res.getRelatedParty());
+			listResourceDTO.add(resDTO);
+		}
+		ResourceSpecificationDTO[] arrayResourceDTO = new ResourceSpecificationDTO[listResourceDTO.size()];
+		listResourceDTO.toArray(arrayResourceDTO);
+		objToIndex.setResources(arrayResourceDTO);
 
 		return objToIndex;
 	}
