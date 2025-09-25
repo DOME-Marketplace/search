@@ -24,6 +24,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
 
@@ -76,12 +77,11 @@ public class RestSemanticUtil {
 
 			// Ottieni il corpo della risposta
 			String result = response.getBody();
-			log.info("Response for classifyText with status: {} - {}", response.getStatusCode().value(),	response.getStatusCode().name());
+			log.info("Response for classifyText with status: {} - {}", Optional.of(response.getStatusCode().value()), response.getStatusCode().name());
 			// log.debug("Response body: {}", result);
 			return result;
 		} catch (HttpStatusCodeException exception) {
-			log.error("Error for classifyText with status: {} - {}", exception.getStatusCode().value(),
-					exception.getStatusCode().name());
+			log.error("Error for classifyText with status: {} - {}", Optional.of(exception.getStatusCode().value()), exception.getStatusCode().name());
 			return null;
 		} catch (ResourceAccessException e) {
 			log.error("Error for classifyText. Caught ResourceAccessException: {}", e.getMessage());
@@ -111,11 +111,11 @@ public class RestSemanticUtil {
 			// Ottieni il corpo della risposta
 
 			String result = response.getBody();
-			log.info("Response for analyzeText with status: {} - {}", response.getStatusCode().value(), response.getStatusCode().name());
+			log.info("Response for analyzeText with status: {} - {}", Optional.of(response.getStatusCode().value()), response.getStatusCode().name());
 			// log.debug("Response body: {}", result);
 			return result;
 		} catch (HttpStatusCodeException exception) {
-			log.error("Error for analyzeText with status: {} - {}", exception.getStatusCode().value(),
+			log.error("Error for analyzeText with status: {} - {}", Optional.of(exception.getStatusCode().value()),
 					exception.getStatusCode().name());
 			return null;
 		} catch (ResourceAccessException e) {

@@ -1,29 +1,24 @@
 package it.eng.dome.search.config;
 
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.ssl.SSLContexts;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.elasticsearch.client.ClientConfiguration;
-import org.springframework.data.elasticsearch.client.RestClients;
-import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
-import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
-import org.springframework.http.HttpHeaders;
 
 import javax.net.ssl.SSLContext;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "it.eng.dome.search.repository")
-public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
-
-    @Value("${elasticsearch.cluster.name:elasticsearch}")
-    private String clusterName;
+public class ElasticSearchConfig {
 
     @Value("${elasticsearch.address.host:127.0.0.1}")
     private String elasticsearchHost;
@@ -43,57 +38,46 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
     @Value("${elasticsearch.address.ssl.verification:true}")
     private boolean usingSslVerification;
 
-    private final Logger logger = LoggerFactory.getLogger(ElasticSearchConfig.class);
+    @Bean
+    public ElasticsearchClient elasticsearchClient() throws Exception {
 
-    @Override
-    public RestHighLevelClient elasticsearchClient() {
+        HttpHost httpHost = new HttpHost(
+                elasticsearchHost,
+                elasticsearchPort,
+                usingSsl ? "https" : "http"
+        );
 
-        HttpHeaders compatibilityHeaders = new HttpHeaders();
-        compatibilityHeaders.add("Accept", "application/vnd.elasticsearch+json;compatible-with=7");
-        compatibilityHeaders.add("Content-Type", "application/vnd.elasticsearch+json;" + "compatible-with=7");
+        RestClientBuilder builder = RestClient.builder(httpHost);
 
-        ClientConfiguration.MaybeSecureClientConfigurationBuilder builder = ClientConfiguration.builder()
-                .connectedTo(elasticsearchHost + ":" + elasticsearchPort);
+        // Autenticazione
+        if (!elasticsearchUsername.isBlank() && !elasticsearchPassword.isBlank()) {
+            final BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(
+                    AuthScope.ANY,
+                    new UsernamePasswordCredentials(elasticsearchUsername, elasticsearchPassword)
+            );
 
-        logger.info("Search connected to host {} port {}", elasticsearchHost, elasticsearchPort);
+            builder.setHttpClientConfigCallback(httpClientBuilder -> {
+                httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
 
-        ClientConfiguration.TerminalClientConfigurationBuilder builderWithProtocol;
-        if (usingSsl) {
-            if (!usingSslVerification) {
-                try {
-                    SSLContextBuilder sslBuilder = SSLContexts.custom()
-                            .loadTrustMaterial(null, (x509Certificates, s) -> true);
-
-                    final SSLContext sslContext = sslBuilder.build();
-                    builderWithProtocol = builder.usingSsl(sslContext);
-
-                } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-                    logger.warn("Cannot disable ssl verification: {}", e.getLocalizedMessage());
-                    builderWithProtocol = builder.usingSsl();
+                // SSL senza verifica
+                if (usingSsl && !usingSslVerification) {
+                    try {
+                        SSLContext sslContext = SSLContext.getDefault();
+                        httpClientBuilder.setSSLContext(sslContext)
+                                .setSSLHostnameVerifier((s, sslSession) -> true);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-
-            } else {
-                builderWithProtocol = builder.usingSsl();
-            }
-        } else {
-            builderWithProtocol = builder;
+                return httpClientBuilder;
+            });
         }
 
-        if (elasticsearchUsername != null && elasticsearchPassword != null && !elasticsearchUsername.isBlank()
-                && !elasticsearchPassword.isBlank()) {
+        RestClient restClient = builder.build();
 
-            logger.debug("Set credentials for username {} and password {} ", elasticsearchUsername,
-                    elasticsearchPassword);
+        RestClientTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
 
-            builderWithProtocol = builderWithProtocol.withBasicAuth(elasticsearchUsername, elasticsearchPassword);
-        }
-
-        ClientConfiguration clientConfiguration = builderWithProtocol
-                .withConnectTimeout(10000)
-                .withSocketTimeout(10000)
-                .withDefaultHeaders(compatibilityHeaders)
-                .build();
-
-        return RestClients.create(clientConfiguration).rest();
+        return new ElasticsearchClient(transport);
     }
 }

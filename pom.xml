@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
+<!DOCTYPE xml>
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.17</version>
@@ -11,11 +12,11 @@
 	</parent>
 	<groupId>it.eng.dome</groupId>
 	<artifactId>search</artifactId>
-	<version>0.2.2-SNAPSHOT</version>
+	<version>0.2.3-SNAPSHOT</version>
 	<name>Search and Browsing</name>
 	<description>Demo for DOME Project</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<skipTests>true</skipTests>
 	</properties>
 	<dependencies>
@@ -30,6 +31,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.elastic.clients</groupId>
+			<artifactId>elasticsearch-java</artifactId>
+			<version>8.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -55,6 +61,11 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>jakarta.json</groupId>
+			<artifactId>jakarta.json-api</artifactId>
+			<version>2.1.1</version>
+		</dependency>
 		<!-- <dependency> -->
 		<!-- <groupId>org.springframework.security</groupId> -->
 		<!-- <artifactId>spring-security-test</artifactId> -->
@@ -65,6 +76,48 @@
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.18.1</version>
+		</dependency>
+
+		<!-- Brokerage Utils dependencies -->
+		<dependency>
+			<groupId>it.eng.dome.brokerage</groupId>
+			<artifactId>brokerage-utils</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!-- TMF620 Catalog -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf620-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!-- TMF632 Party Management -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf632-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!--  TMF633 Sercvice Catalog Management  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf633-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!--  TMF634 Resource Catalog  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf634-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!--  TMF637 Product Inventory Management  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf637-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
 		</dependency>
 	</dependencies>
 
@@ -79,11 +132,6 @@
 						<goals>
 							<goal>build-info</goal>
 						</goals>
-						<configuration>
-							<additionalProperties>
-								<version>${project.version}</version>
-							</additionalProperties>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>

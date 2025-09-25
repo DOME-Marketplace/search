@@ -3,6 +3,8 @@ package it.eng.dome.search;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.OffsetDateTime;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +27,7 @@ class SearchAndBrowsingApplicationTests {
 		index.setProductOfferingDescription("product offering description");
 		index.setProductOffering(null);
 		index.setProductOfferingIsBundle(false);
-		index.setProductOfferingLastUpdate("2024-05-21T10:02:40.254833831Z");
+		index.setProductOfferingLastUpdate(OffsetDateTime.now());
 		index.setProductOfferingName("product-offering-name");
 		index.setProductOfferingNameText("Name Text");
 		index.setProductSpecification(null);

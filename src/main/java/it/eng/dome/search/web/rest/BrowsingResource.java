@@ -1,12 +1,13 @@
 package it.eng.dome.search.web.rest;
 
 import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.ProductOffering;
 import it.eng.dome.search.rest.web.util.PaginationUtil;
 import it.eng.dome.search.service.BrowsingProcessor;
 import it.eng.dome.search.service.ResultProcessor;
 import it.eng.dome.search.service.SearchProcessor;
 import it.eng.dome.search.service.dto.SearchRequest;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

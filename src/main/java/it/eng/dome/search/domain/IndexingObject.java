@@ -1,18 +1,29 @@
 package it.eng.dome.search.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import it.eng.dome.tmforum.tmf620.v4.model.CategoryRef;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
+import it.eng.dome.tmforum.tmf620.v4.model.ResourceSpecificationRef;
+import it.eng.dome.tmforum.tmf620.v4.model.ServiceSpecificationRef;
+
+import java.util.List;
+import java.time.OffsetDateTime;
+
 @Document(indexName = "indexing-object")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IndexingObject {
 
 	public IndexingObject indexingObject() {
-		return this.indexingObject();
+		return new IndexingObject();
 	}
 
 	@Id
@@ -38,14 +49,15 @@ public class IndexingObject {
 	@Field(type = FieldType.Text)
 	private String productOfferingLifecycleStatus;
 
-	@Field(type = FieldType.Text)
-	private String productOfferingLastUpdate;
+	@Field(type = FieldType.Date)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+	private OffsetDateTime productOfferingLastUpdate;
 
 	@Field(type = FieldType.Boolean)
 	private Boolean productOfferingIsBundle;
 	
 	@Field(type = FieldType.Nested)
-	private Category[] categories;
+	private List<CategoryRef> categories;
 
 	// from ProductSpecification
 
@@ -73,11 +85,11 @@ public class IndexingObject {
 
 	// from ServiceSpecification
 	@Field(type = FieldType.Nested)
-	private ServiceSpecification[] services;
+	private List<ServiceSpecificationRef> services;
 
 	// from Resource Specification
 	@Field(type = FieldType.Nested)
-	private ResourceSpecification[] resources;
+	private List<ResourceSpecificationRef> resources;
 
 	// from Categorization and Entities Extraction //put here fields for semantic
 	// services ----
@@ -113,11 +125,11 @@ public class IndexingObject {
 		this.productOfferingDescription = productOfferingDescription;
 	}
 	
-	public Category[] getCategories() {
+	public List<CategoryRef> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(Category[] categories) {
+	public void setCategories(List<CategoryRef> categories) {
 		this.categories = categories;
 	}
 
@@ -145,11 +157,11 @@ public class IndexingObject {
 		this.productOfferingLifecycleStatus = productOfferingLifecycleStatus;
 	}
 
-	public String getProductOfferingLastUpdate() {
+	public OffsetDateTime getProductOfferingLastUpdate() {
 		return productOfferingLastUpdate;
 	}
 
-	public void setProductOfferingLastUpdate(String productOfferingLastUpdate) {
+	public void setProductOfferingLastUpdate(OffsetDateTime productOfferingLastUpdate) {
 		this.productOfferingLastUpdate = productOfferingLastUpdate;
 	}
 
@@ -160,8 +172,6 @@ public class IndexingObject {
 	public void setProductOfferingIsBundle(Boolean productOfferingIsBundle) {
 		this.productOfferingIsBundle = productOfferingIsBundle;
 	}
-
-
 
 	public String getProductSpecificationId() {
 		return productSpecificationId;
@@ -203,19 +213,19 @@ public class IndexingObject {
 		this.relatedPartyId = relatedPartyId;
 	}
 
-	public ServiceSpecification[] getServices() {
+	public List<ServiceSpecificationRef> getServices() {
 		return services;
 	}
 
-	public void setServices(ServiceSpecification[] services) {
+	public void setServices(List<ServiceSpecificationRef> services) {
 		this.services = services;
 	}
 
-	public ResourceSpecification[] getResources() {
+	public List<ResourceSpecificationRef> getResources() {
 		return resources;
 	}
 
-	public void setResources(ResourceSpecification[] resources) {
+	public void setResources(List<ResourceSpecificationRef> resources) {
 		this.resources = resources;
 	}
 

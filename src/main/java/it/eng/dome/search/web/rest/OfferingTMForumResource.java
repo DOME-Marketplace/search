@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.ProductOffering;
 import it.eng.dome.search.service.OfferingProcessor;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 
 @RestController
 @RequestMapping("/api")
@@ -52,8 +50,4 @@ public class OfferingTMForumResource {
 		return ResponseEntity.ok(obj);
     
     }
-	
-	
-	
-
 }

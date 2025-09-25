@@ -39,11 +39,26 @@ logging:
     it.eng.dome: ${LOG_LEVEL:DEBUG}
     org.apache.coyote.http11: ERROR
 
+tmforumapi:
+#  tmf_endpoint: ${TMF_ENDPOINT:http://tm-forum-api}
+  tmf_endpoint: ${TMF_ENDPOINT:https://tmf.dome-marketplace-sbx.org}
+  tmf_envoy:  ${TMF_ENVOY:true}
+  # valid only if envoy false  
+  tmf_namespace: ${TMF_NAMESPACE:marketplace}
+  tmf_postfix:  ${TMF_POSTFIX:svc.cluster.local}
+  tmf_port:  ${TMF_PORT:8080}
+
+  tmf620_catalog_path: tmf-api/productCatalogManagement/v4
+  tmf632_party_management_path: tmf-api/party/v4
+  tmf633_service_catalog_path: tmf-api/serviceCatalogManagement/v4
+  tmf634_resource_catalog_path: tmf-api/resourceCatalog/v4
+#  tmf637_inventory_path: tmf-api/productInventory/v4
+
 dome:
-  tmforum:
-    service-catalog-url: ${TMFORUM_SERVICE_CATALOG_URL:https://dome-dev.eng.it/tmf-api/serviceCatalogManagement/v4}
-    product-catalog-url: ${TMFORUM_PRODUCT_CATALOG_URL:https://dome-dev.eng.it/tmf-api/productCatalogManagement/v4}
-    resource-catalog-url: ${TMFORUM_RESOURCE_CATALOG_URL:https://dome-dev.eng.it/tmf-api/resourceCatalog/v4}
+#  tmforum:
+#    service-catalog-url: ${TMFORUM_SERVICE_CATALOG_URL:https://dome-dev.eng.it/tmf-api/serviceCatalogManagement/v4}
+#    product-catalog-url: ${TMFORUM_PRODUCT_CATALOG_URL:https://dome-dev.eng.it/tmf-api/productCatalogManagement/v4}
+#    resource-catalog-url: ${TMFORUM_RESOURCE_CATALOG_URL:https://dome-dev.eng.it/tmf-api/resourceCatalog/v4}
 
   # THIS MUST BE REMOVED IN THE FUTURE!!!
   bae:
