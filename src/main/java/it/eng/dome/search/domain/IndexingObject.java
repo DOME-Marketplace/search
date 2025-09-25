@@ -25,8 +25,8 @@ public class IndexingObject {
 	@Id
 	protected String id;
 
-	@Field(type = FieldType.Nested)
-	private ProductOffering productOffering;
+//	@Field(type = FieldType.Nested)
+//	private ProductOffering productOffering;
 
 	// from ProductOffering
 	
@@ -226,13 +226,13 @@ public class IndexingObject {
 		this.resources = resources;
 	}
 
-	public ProductOffering getProductOffering() {
-		return productOffering;
-	}
-
-	public void setProductOffering(ProductOffering productOffering) {
-		this.productOffering = productOffering;
-	}
+//	public ProductOffering getProductOffering() {
+//		return productOffering;
+//	}
+//
+//	public void setProductOffering(ProductOffering productOffering) {
+//		this.productOffering = productOffering;
+//	}
 
 	public ProductSpecification getProductSpecification() {
 		return productSpecification;

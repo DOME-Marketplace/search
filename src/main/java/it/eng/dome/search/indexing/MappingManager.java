@@ -41,7 +41,7 @@ public class MappingManager implements InitializingBean{
 	public IndexingObject prepareOfferingMetadata(ProductOffering product, IndexingObject objToIndex) {
 
 		//prepare metadata of offerings
-		objToIndex.setProductOffering(product);
+//		objToIndex.setProductOffering(product);
 		objToIndex.setProductOfferingDescription(product.getDescription());
 		objToIndex.setProductOfferingId(product.getId());
 		objToIndex.setProductOfferingIsBundle(product.getIsBundle());

@@ -88,8 +88,7 @@ public class ResultProcessor implements InitializingBean {
 	public Page<ProductOffering> processResultsWithScore(Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage, Pageable pageable) {
 
 		HashMap<String, ProductOffering> mapProductOffering = new HashMap<>();
-		List<ProductOffering> listProductOffering = new ArrayList<>();
-		Page<IndexingObject> page = null;
+        Page<IndexingObject> page = null;
 		Map<IndexingObject, Float> scoreMap = new ConcurrentHashMap<>();
 
 		// Extract the first entry from resultPage to get the indexed objects and their scores
@@ -128,22 +127,24 @@ public class ResultProcessor implements InitializingBean {
 					ProductOffering productOffering = mapProductOffering.get(indexingObj.getProductOfferingId());
 					if (productOffering != null) {
 						Float score = scoreMap.get(indexingObj);
-						log.debug("Processing IndexingObject: {} with score: {}", indexingObj.getProductOfferingId(), score);
+//						log.debug("Processing IndexingObject: {} with score: {}", indexingObj.getProductOfferingId(), score);
 						productScoreMap.put(productOffering, score != null ? score : 0.0f);
 					}
 				}
 			}
 
 			// Add all retrieved ProductOfferings to the list
-			listProductOffering.addAll(mapProductOffering.values());
+            List<ProductOffering> listProductOffering = new ArrayList<>(mapProductOffering.values());
 
 			// Sort the list based on scores in descending order
 			listProductOffering.sort((p1, p2) -> Float.compare(productScoreMap.get(p2), productScoreMap.get(p1)));
 
-//			log.info("Sorted ProductOfferings:");
-//			for (ProductOffering productOffering : listProductOffering) {
-//				log.info("ProductOffering: {} with score: {}", productOffering.getId(), productScoreMap.get(productOffering));
-//			}
+			if(!listProductOffering.isEmpty()) {
+				log.info("Sorted ProductOfferings:");
+				for (ProductOffering productOffering : listProductOffering) {
+					log.info("ProductOffering: {} - {} with score: {}", productOffering.getId(), productOffering.getName(), productScoreMap.get(productOffering));
+				}
+			}
 
 			return new PageImpl<>(listProductOffering, pageable, page.getTotalElements());
 
