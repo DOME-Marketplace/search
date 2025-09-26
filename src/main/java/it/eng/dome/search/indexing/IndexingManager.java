@@ -1,11 +1,11 @@
 package it.eng.dome.search.indexing;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import it.eng.dome.brokerage.api.OrganizationApis;
 import it.eng.dome.brokerage.api.ProductSpecificationApis;
 import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.rest.web.util.RestUtil;
 import it.eng.dome.search.tmf.TmfApiFactory;
 import it.eng.dome.tmforum.tmf620.v4.model.*;
+import it.eng.dome.tmforum.tmf632.v4.model.Organization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,152 +17,117 @@ import java.util.List;
 @Service
 public class IndexingManager implements InitializingBean {
 
-	@Autowired
-	private RestUtil restUtil;
+	private static final Logger log = LoggerFactory.getLogger(IndexingManager.class);
 
 	@Autowired
 	private MappingManager mappingManager;
-
-	private static final Logger log = LoggerFactory.getLogger(IndexingManager.class);
-
-	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Autowired
 	TmfApiFactory tmfApiFactory;
 
 	ProductSpecificationApis productSpecificationApis;
+	OrganizationApis organizationApis;
 
 	@Override
 	public void afterPropertiesSet () throws Exception {
 		this.productSpecificationApis = new ProductSpecificationApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
+		this.organizationApis = new OrganizationApis(tmfApiFactory.getTMF632PartyManagementApiClient());
 
-		log.info("IndexingManager initialized with ProductSpecificationApis");
+		log.info("IndexingManager initialized with ProductSpecificationApis and OrganizationApis");
 	}
-
-/*
-	public IndexingObject processOffering(ProductOffering product, IndexingObject objToIndex) {
-
-		try {
-
-			log.info("ProcessOffering objToIndex {}", objToIndex.getId());
-			objToIndex = mappingManager.prepareOfferingMetadata(product, objToIndex);
-
-			ProductSpecification productSpec = product.getProductSpecification();
-			if (productSpec.getId() == null) {
-				log.warn("null value in ProductSpecification ID");
-			} else {
-
-				String requestForProductSpecById = restUtil.getProductSpecificationById(productSpec.getId());
-				// log.debug("ProductSpecification object: {}", requestForProductSpecById);
-
-				if (requestForProductSpecById == null) {
-					log.warn("getProductSpecificationById {} cannot found", productSpec.getId());
-				} else {
-
-					ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
-							ProductSpecification.class);
-					log.debug("ProductSpecDetails Id: {}", productSpecDetails.getId());
-					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
-
-					// Retrieve the owner from the RelatedParty list
-					if (productSpecDetails.getRelatedParty() != null) {
-						for (RelatedParty party : productSpecDetails.getRelatedParty()) {
-							if ("Owner".equalsIgnoreCase(party.getRole())) { // Check if the role is "Owner"
-								String ownerId = party.getId();
-								if (ownerId != null) {
-									String requestForOrganizationById = restUtil.getOrganizationById(ownerId);
-									if (requestForOrganizationById == null) {
-										log.warn("getOrganizationById {} cannot found", productSpecDetails.getId());
-									} else {
-										Organization organizationDetails = objectMapper.readValue(requestForOrganizationById, Organization.class);
-										String ownerName = organizationDetails.getTradingName();
-										if (ownerName != null && !ownerName.isEmpty()) {
-											objToIndex.setProductSpecificationOwner(ownerName); // Set the owner's name
-										}
-									}
-								}
-								break; // Stop after finding the first owner
-							}
-						}
-					}
-
-					ServiceSpecification[] serviceList = productSpecDetails.getServiceSpecification();
-
-					if (serviceList != null) {
-						log.info("ProcessOffering BAE => Mapping Services associated: " + serviceList.length);
-						objToIndex = mappingManager.prepareServiceSpecMetadata(serviceList, objToIndex);
-					}
-
-					ResourceSpecification[] resourceList = productSpecDetails.getResourceSpecification();
-					if (resourceList != null) {
-						log.info("ProcessOffering BAE => Mapping Resources associated: " + resourceList.length);
-						objToIndex = mappingManager.prepareResourceSpecMetadata(resourceList, objToIndex);
-					}
-
-					// Reactivate for Semantic services
-					if ((objToIndex.getProductOfferingDescription() == null) || (objToIndex.getProductOfferingDescription() == "")) {
-						log.warn("null value for description in product: " + product.getId());
-					} else {
-
-						if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched") == true) {
-							objToIndex = mappingManager.prepareClassify(objToIndex);
-							objToIndex = mappingManager.prepareAnalyze(objToIndex);
-						}
-					}
-				}
-			}
-
-		} catch (JsonMappingException e) {
-			log.warn("JsonMappingException - Error during processProductOffering(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			log.warn("JsonProcessingException - Error during processProductOffering(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			log.warn("JsonProcessingException - Error during processProductOffering(). Skipped: {}", e.getMessage());
-			e.printStackTrace();
-		}
-
-		return objToIndex;
-
-	}
-*/
 
 	public IndexingObject processOfferingFromTMForum(ProductOffering product, IndexingObject objToIndex) {
 		try {
-
+			// map ProductOffering
 			objToIndex = mappingManager.prepareOfferingMetadata(product, objToIndex);
 
 			ProductSpecificationRef productSpecRef = product.getProductSpecification();
 			if (productSpecRef == null) {
 				log.warn("null value in ProductSpecification");
 			} else {
-//				String requestForProductSpecById = restUtil.getTMFProductSpecificationById(productSpec.getId());
 				ProductSpecification productSpec = productSpecificationApis.getProductSpecification(productSpecRef.getId(), null);
+
 				if (productSpec == null) {
-					log.warn("getTMFProductSpecificationById {} - Product Specification cannot found", productSpec.getId());
+					log.warn("getTMFProductSpecificationById {} - Product Specification cannot found", productSpecRef.getId());
 				} else {
-					/*ProductSpecification productSpecDetails = objectMapper.readValue(requestForProductSpecById,
-							ProductSpecification.class);*/
-//					objToIndex = mappingManager.prepareProdSpecMetadata(productSpecDetails, objToIndex);
+					// map ProductSpecification
+					objToIndex = mappingManager.prepareProdSpecMetadata(productSpec, objToIndex);
 
-					List<ServiceSpecificationRef> serviceList = productSpec.getServiceSpecification();
+					// map owner
+					mapOwner(productSpec, objToIndex);
 
-					if (serviceList != null) {
-						log.info("ProcessOffering TMForum => Mapping Services associated: " + serviceList.size());
-						objToIndex = mappingManager.prepareTMFServiceSpecMetadata(serviceList, objToIndex);
-					}
+					// map ServiceSpecification
+					objToIndex = mapServiceSpec(productSpec, objToIndex);
 
-					List<ResourceSpecificationRef> resourceList = productSpec.getResourceSpecification();
-					if (resourceList != null) {
-						log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.size());
-						objToIndex = mappingManager.prepareTMFResourceSpecMetadata(resourceList, objToIndex);
-					}
+					// map ResourceSpecification
+					objToIndex = mapResourceSpec(productSpec, objToIndex);
+
+					//TODO: for semantic services contact ExAI team for more details.
+					// process semantic services
+					objToIndex = processSemantic(objToIndex, product);
 				}
 			}
-			// }
 		} catch (Exception e) {
 			log.warn("Exception - Error during processProductOfferingTMForum(). Skipped: {}", e.getMessage(), e);
+		}
+
+		return objToIndex;
+	}
+
+	private void mapOwner(ProductSpecification productSpec, IndexingObject objToIndex) {
+		// retrieve the owner from the RelatedParty list
+		if (productSpec.getRelatedParty() != null) {
+			for (RelatedParty party : productSpec.getRelatedParty()) {
+				if ("Owner".equalsIgnoreCase(party.getRole())) {
+					String ownerId = party.getId();
+					if (ownerId != null) {
+						Organization organizationDetails = organizationApis.getOrganization(ownerId, null);
+						if (organizationDetails != null) {
+							String ownerName = organizationDetails.getTradingName();
+							if (ownerName != null && !ownerName.isEmpty()) {
+								objToIndex.setProductSpecificationOwner(ownerName);
+							}
+						} else {
+							log.warn("Organization {} cannot be found", ownerId);
+						}
+					}
+					break; // Stop after finding the first owner
+				}
+			}
+		}
+//		return objToIndex;
+	}
+
+	private IndexingObject mapServiceSpec(ProductSpecification productSpec, IndexingObject objToIndex) {
+		// map ServiceSpecification
+		List<ServiceSpecificationRef> serviceList = productSpec.getServiceSpecification();
+		if (serviceList != null) {
+			log.info("ProcessOffering TMForum => Mapping Services associated: " + serviceList.size());
+			objToIndex = mappingManager.prepareTMFServiceSpecMetadata(serviceList, objToIndex);
+		}
+		return objToIndex;
+	}
+
+	private IndexingObject mapResourceSpec(ProductSpecification productSpec, IndexingObject objToIndex) {
+		// map ResourceSpecification
+		List<ResourceSpecificationRef> resourceList = productSpec.getResourceSpecification();
+		if (resourceList != null) {
+			log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.size());
+			objToIndex = mappingManager.prepareTMFResourceSpecMetadata(resourceList, objToIndex);
+		}
+		return objToIndex;
+	}
+
+	private IndexingObject processSemantic(IndexingObject objToIndex, ProductOffering product) {
+		// Reactivate for Semantic services
+		if ((objToIndex.getProductOfferingDescription() == null) || (objToIndex.getProductOfferingDescription().isEmpty())) {
+			log.warn("null value for description in product: " + product.getId());
+		} else {
+			// TODO: maybe equalsIgnoreCase then contains for launched is better
+			if (objToIndex.getProductOfferingLifecycleStatus().contains("Launched")) {
+				objToIndex = mappingManager.prepareClassify(objToIndex);
+				objToIndex = mappingManager.prepareAnalyze(objToIndex);
+			}
 		}
 		return objToIndex;
 	}
