@@ -1,9 +1,7 @@
 package it.eng.dome.search.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.dome.brokerage.api.ProductOfferingApis;
-import it.eng.dome.search.rest.web.util.RestUtil;
 import it.eng.dome.search.service.dto.SearchRequest;
 import it.eng.dome.search.tmf.TmfApiFactory;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
@@ -18,7 +16,6 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,10 +26,6 @@ public class BrowsingProcessor implements InitializingBean {
 
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;
-
-    //    @Autowired
-//    private RestUtil restUtil;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     TmfApiFactory tmfApiFactory;
@@ -51,8 +44,6 @@ public class BrowsingProcessor implements InitializingBean {
     }
 
     public Page<ProductOffering> getAllRandomizedProductOfferings (SearchRequest filter, Pageable pageable) {
-//        String responseJson = restUtil.getAllProductOfferingsPaginated();
-
 //        HashMap<String, String> queryParams = new HashMap<>();
 //        queryParams.put("lifecycleStatus", "Launched");
         //TODO implements query params for launched status directly in the API call
@@ -61,12 +52,6 @@ public class BrowsingProcessor implements InitializingBean {
         if (listProductOfferings == null) {
             return Page.empty(pageable); // return empty page
         }
-
-        // JSON to ProductOffering list
-/*            List<ProductOffering> productOfferings = objectMapper.readValue(
-                responseJson,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, ProductOffering.class)
-        );*/
 
         // filter product offerings with lifecycleStatus "launched"
         List<ProductOffering> filteredOfferings = listProductOfferings.stream()

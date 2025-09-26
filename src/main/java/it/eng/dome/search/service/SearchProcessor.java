@@ -41,26 +41,6 @@ public class SearchProcessor {
 		this.elasticsearchOperations = elasticsearchOperations;
 	}
 
-	// search 0.1 - get
-	public Page<IndexingObject> search(String q, Pageable pageable){
-
-		// QueryBuilder queryBuilder = QueryBuilders.simpleQueryStringQuery(q);
-		QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(q); //.defaultOperator(null);
-
-		NativeSearchQueryBuilder nativeSearchQueryBuilder = new
-				NativeSearchQueryBuilder() .withQuery(queryBuilder ) .withPageable(pageable);
-
-		Query elasticQuery = nativeSearchQueryBuilder.build();
-
-		try { SearchHits<IndexingObject> searchHits =
-				elasticsearchOperations.search(elasticQuery, IndexingObject.class);
-		List<IndexingObject> resultPage =
-				searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-		return new PageImpl<>(resultPage,pageable,searchHits.getTotalHits()); } catch
-		(Exception e) { logger.warn("Error during search. Skipped: {}",
-				e.getMessage()); return new PageImpl<>(new ArrayList<>()); }
-	}
-
 	//Filter by category
 	public Page<IndexingObject> search(SearchRequest request, Pageable pageable) {
 
@@ -88,7 +68,7 @@ public class SearchProcessor {
 		// Log the final query for debugging
 		logger.info("Final Elasticsearch Query: {}", elasticQuery.toString());
 
-		 
+
 
 		try {
 			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
@@ -102,26 +82,7 @@ public class SearchProcessor {
 		}
 	}
 
-	public Page<IndexingObject> fuzzySearch(String q, Pageable pageable){
-
-		QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(q).fuzziness(Fuzziness.AUTO);
-
-		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()
-				.withQuery(queryBuilder )
-				.withPageable(pageable);
-
-		Query elasticQuery = nativeSearchQueryBuilder.build();
-
-		try {
-			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class); 
-			List<IndexingObject> resultPage = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-			return  new PageImpl<>(resultPage,pageable,searchHits.getTotalHits());
-		} catch (Exception e) {
-			logger.warn("Error during Fuzzy search. Skipped: {}", e.getMessage());
-			return new PageImpl<>(new ArrayList<>());
-		}
-	}
-
+	// search in all fields with boosting, fuzzy, wildcard, category filtering and launched status
 	public Map<Page<IndexingObject>, Map<IndexingObject, Float>> searchAllFields (String q, SearchRequest request, Pageable pageable) {
 
 		q = q.toLowerCase();
@@ -209,26 +170,6 @@ public class SearchProcessor {
 			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
 			//logger.info("Found {} results", searchHits.getTotalHits());
 
-			/*// Create a map to associate each IndexingObject with its score
-			Map<IndexingObject, Float> resultScoreMap = searchHits.stream()
-					.collect(Collectors.toMap(SearchHit::getContent, SearchHit::getScore));
-
-			// Convert search results into a list of IndexingObjects
-			List<IndexingObject> resultPage = searchHits.stream()
-					.peek(hit -> logger.info("Product: {} | Score: {}",
-							hit.getContent().getProductOfferingName(), // Product name
-							hit.getScore())) // Result score
-					.map(SearchHit::getContent)
-					.collect(Collectors.toList());
-			//logger.info("Generated score map with {} entries", resultScoreMap.size());
-
-			// Create a paginated result set
-			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new ConcurrentHashMap<>();
-			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
-
-			// Store the paginated results along with their scores
-			resultPageMap.put(p, resultScoreMap);*/
-
 			// Create a map to associate each IndexingObject with its score
 			Map<IndexingObject, Float> resultScoreMap = new ConcurrentHashMap<>();
 
@@ -260,13 +201,12 @@ public class SearchProcessor {
 			// SORTING in descending order by score
 			//resultPage.sort((o1, o2) -> Float.compare(resultScoreMap.get(o2), resultScoreMap.get(o1)));
 
-//			// SECOND PRINT: Scores after the boost, ordered
-//			resultPage.stream()
-//					.peek(obj -> logger.info("AFTER BOOST -> Product: {} | Score: {}",
-//							obj.getProductOfferingName(), // Nome prodotto
-//							resultScoreMap.get(obj))) // Punteggio aggiornato
-//					.collect(Collectors.toList());
-
+/*			// SECOND PRINT: Scores after the boost, ordered
+			resultPage.stream()
+					.peek(obj -> logger.info("AFTER BOOST -> Product: {} | Score: {}",
+							obj.getProductOfferingName(), // Nome prodotto
+							resultScoreMap.get(obj))) // Punteggio aggiornato
+					.collect(Collectors.toList());*/
 			// Create a paginated result set
 			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
 			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new ConcurrentHashMap<>();

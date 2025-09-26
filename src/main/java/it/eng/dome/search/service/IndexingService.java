@@ -56,14 +56,12 @@ public class IndexingService implements InitializingBean {
 	@Scheduled(fixedDelay = 300000)
 	public void indexing() {
 		log.info("Indexing is executing ..... ");
-		// invoca endpoint e recupera lista di product offering
-//		String listProductOfferings = restUtil.getAllProductOfferings(); // -------> from BAE (change when needed)
+		// invoke TMF API to get all ProductOfferings
 		List<ProductOffering> listProductOfferings = productOfferingApis.getAllProductOfferings(null, null); // -------> from TMF directly (change when needed)
 
 		if (listProductOfferings == null) {
 			log.warn("listProductOfferings cannot be null");
 		} else {
-//				ProductOffering[] productList = objectMapper.readValue(listProductOfferings, ProductOffering[].class);
 			log.info("Total of ProductOfferings found: {}", listProductOfferings.size());
 
 			for (ProductOffering product : listProductOfferings) {
@@ -82,13 +80,11 @@ public class IndexingService implements InitializingBean {
 					offeringRepo.save(indexingObjEmpty);
 				} else {
 					log.debug("ProductOffering listFromRepo size: {}", listFromRepo.size());
-
 					for (IndexingObject obj : listFromRepo) {
 						IndexingObject indexingObjEmpty = new IndexingObject();
 						// fare il mapping da productOffering a indx
 						indexingObjEmpty.setId(obj.getId());
 						indexingObjEmpty = indexingManager.processOfferingFromTMForum(product, indexingObjEmpty);
-
 						offeringRepo.save(indexingObjEmpty);
 					}
 				}

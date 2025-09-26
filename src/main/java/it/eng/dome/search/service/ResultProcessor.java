@@ -28,9 +28,6 @@ public class ResultProcessor implements InitializingBean {
 	private static final Logger log = LoggerFactory.getLogger(ResultProcessor.class);
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-//	@Autowired
-//	private RestUtil restTemplate;
-
 	@Autowired
 	TmfApiFactory tmfApiFactory;
 
@@ -43,7 +40,7 @@ public class ResultProcessor implements InitializingBean {
 		log.info("ResultProcessor initialized with ProductOfferingApis");
 	}
 
-/*	public Page<ProductOffering> processResults(Page<IndexingObject> page, Pageable pageable) {
+	public Page<ProductOffering> processResults(Page<IndexingObject> page, Pageable pageable) {
 
 		HashMap<String, ProductOffering> mapProductOffering = new HashMap<String, ProductOffering>();
 		List<ProductOffering> listProductOffering = new ArrayList<ProductOffering>();
@@ -52,18 +49,15 @@ public class ResultProcessor implements InitializingBean {
 			log.info("Total number of Elements " + page.getTotalElements());
 
 			List<IndexingObject> listIdexingObject = page.getContent();
+
 			for (IndexingObject indexingObj : listIdexingObject) {
-
 				if (indexingObj.getProductOfferingId() != null) {
-
 					if (!mapProductOffering.containsKey(indexingObj.getProductOfferingId())) {
-//						String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
 						ProductOffering productOffering = productOfferingApis.getProductOffering(indexingObj.getProductOfferingId(), null);
 						if (productOffering == null) {
 							log.warn("getProductOfferingById {} - Product Offering cannot found", indexingObj.getProductOfferingId());
 						} else {
-
-//							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId,ProductOffering.class);
+							// store the fetched ProductOffering
 							mapProductOffering.put(indexingObj.getProductOfferingId(), productOffering);
 						}
 					}
@@ -82,7 +76,7 @@ public class ResultProcessor implements InitializingBean {
 			log.warn("HttpServerErrorException - Error during processResults(). Skipped: {}", e.getMessage(), e);
 			return new PageImpl<>(new ArrayList<>());
 		}
-	}*/
+	}
 
 	public Page<ProductOffering> processResultsWithScore(Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage, Pageable pageable) {
 
@@ -111,13 +105,11 @@ public class ResultProcessor implements InitializingBean {
 				if (indexingObj.getProductOfferingId() != null) {
 					// Retrieve product details only if not already fetched
 					if (!mapProductOffering.containsKey(indexingObj.getProductOfferingId())) {
-						//String requestForProductOfferingId = restTemplate.getProductOfferingById(indexingObj.getProductOfferingId());
 						ProductOffering productOffering = productOfferingApis.getProductOffering(indexingObj.getProductOfferingId(), null);
 						if (productOffering == null) {
 							log.warn("getProductOfferingById {} - PO cannot be found", indexingObj.getProductOfferingId());
 						} else {
-							// Convert the retrieved JSON response into a ProductOffering object
-//							ProductOffering productOfferingDetails = objectMapper.readValue(requestForProductOfferingId, ProductOffering.class);
+							// Store the fetched ProductOffering
 							mapProductOffering.put(indexingObj.getProductOfferingId(), productOffering);
 						}
 					}
@@ -153,8 +145,7 @@ public class ResultProcessor implements InitializingBean {
 		}
 	}
 
-/*
-    public Page<ProductOffering> processBrowsingResults(Page<IndexingObject> page, Pageable pageable) {
+    /*public Page<ProductOffering> processBrowsingResults(Page<IndexingObject> page, Pageable pageable) {
         List<ProductOffering> listProductOffering = new ArrayList<>();
 
         try {
@@ -191,7 +182,6 @@ public class ResultProcessor implements InitializingBean {
             e.printStackTrace();
             return new PageImpl<>(new ArrayList<>());
         }
-    }
-*/
+    }*/
 
 }
