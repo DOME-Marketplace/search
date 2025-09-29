@@ -1,18 +1,15 @@
 package it.eng.dome.search.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import it.eng.dome.search.domain.dto.ProductOfferingDTO;
+import it.eng.dome.search.domain.dto.ProductSpecificationDTO;
 import it.eng.dome.search.domain.dto.ResourceSpecificationDTO;
 import it.eng.dome.search.domain.dto.ServiceSpecificationDTO;
 import it.eng.dome.tmforum.tmf620.v4.model.CategoryRef;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
-import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
-import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
@@ -27,11 +24,10 @@ public class IndexingObject {
 	@Id
 	protected String id;
 
-//	@Field(type = FieldType.Nested)
-//	private ProductOffering productOffering;
+	@Field(type = FieldType.Nested)
+	private ProductOfferingDTO productOffering;
 
 	// from ProductOffering
-	
 	@Field(type = FieldType.Keyword)
 	private String productOfferingId;
 
@@ -59,7 +55,7 @@ public class IndexingObject {
 	// from ProductSpecification
 
 	@Field(type = FieldType.Nested)
-	private ProductSpecification productSpecification;
+	private ProductSpecificationDTO productSpecification;
 
 	@Field(type = FieldType.Keyword)
 	private String productSpecificationId;
@@ -82,13 +78,14 @@ public class IndexingObject {
 
 	// from ServiceSpecification
 	@Field(type = FieldType.Nested)
-	private ServiceSpecificationDTO[] services;
+	private List<ServiceSpecificationDTO> services;
 
 	// from Resource Specification
 	@Field(type = FieldType.Nested)
-	private ResourceSpecificationDTO[] resources;
+	private List<ResourceSpecificationDTO> resources;
 
-	// from Categorization and Entities Extraction //put here fields for semantic
+	// from Categorization and Entities Extraction
+	// put here fields for semantic
 	// services ----
 	@Field(type = FieldType.Text)
 	private String[] classifyResult;
@@ -170,8 +167,6 @@ public class IndexingObject {
 		this.productOfferingIsBundle = productOfferingIsBundle;
 	}
 
-
-
 	public String getProductSpecificationId() {
 		return productSpecificationId;
 	}
@@ -212,35 +207,35 @@ public class IndexingObject {
 		this.relatedPartyId = relatedPartyId;
 	}
 
-	public ServiceSpecificationDTO[] getServices() {
+	public List<ServiceSpecificationDTO> getServices() {
 		return services;
 	}
 
-	public void setServices(ServiceSpecificationDTO[] services) {
+	public void setServices(List<ServiceSpecificationDTO> services) {
 		this.services = services;
 	}
 
-	public ResourceSpecificationDTO[] getResources() {
+	public List<ResourceSpecificationDTO> getResources() {
 		return resources;
 	}
 
-	public void setResources(ResourceSpecificationDTO[] resources) {
+	public void setResources(List<ResourceSpecificationDTO> resources) {
 		this.resources = resources;
 	}
 
-//	public ProductOffering getProductOffering() {
-//		return productOffering;
-//	}
-//
-//	public void setProductOffering(ProductOffering productOffering) {
-//		this.productOffering = productOffering;
-//	}
+	public ProductOfferingDTO getProductOffering() {
+		return productOffering;
+	}
 
-	public ProductSpecification getProductSpecification() {
+	public void setProductOffering(ProductOfferingDTO productOffering) {
+		this.productOffering = productOffering;
+	}
+
+	public ProductSpecificationDTO getProductSpecification() {
 		return productSpecification;
 	}
 
-	public void setProductSpecification(ProductSpecification productSpecification) {
+	public void setProductSpecification(ProductSpecificationDTO productSpecification) {
 		this.productSpecification = productSpecification;
 	}
 	

@@ -1,7 +1,6 @@
 package it.eng.dome.search.domain.dto;
 
 import it.eng.dome.tmforum.tmf634.v4.model.RelatedParty;
-import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecificationCharacteristic;
 
 import java.util.List;
 
