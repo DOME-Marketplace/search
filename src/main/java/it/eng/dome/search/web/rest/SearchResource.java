@@ -27,32 +27,6 @@ public class SearchResource {
 	@Autowired
 	private ResultProcessor resultProcessor;
 
-//	//search 0.1 - PoC March 2024
-//	@GetMapping(value = "/SearchProductsByKeywords/{query}")
-//	public ResponseEntity<List<ProductOffering>> searchProductOfferings(@PathVariable String query,
-//			/*
-//			 * @PageableDefault(sort = {"productOfferingName.keyword"}, direction =
-//			 * Sort.Direction.ASC, size = 50)
-//			 */ Pageable pageable) {
-//		Page<IndexingObject> page = searchProcessor.search(query, pageable);
-//		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
-//		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProductsByKeywords/" + query);
-//		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
-//		// List<IndexingObject> objList = page.getContent();
-//		// return ResponseEntity.ok(objList);
-//	}
-
-	//search 1.0 - First Review July 2024
-//	@PostMapping(value = "/SearchProduct/{query}")
-//	public ResponseEntity<List<ProductOffering>> searchProduct(@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
-//
-//
-//		Page<IndexingObject> page = searchProcessor.search(query, request, pageable);
-//		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
-//		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProduct/" + query);
-//		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
-//	}
-
 	//search 2.0 - Improvement Feb 2025
 	@PostMapping(value = "/SearchProduct/{query}")
 	public ResponseEntity<List<ProductOffering>> searchProduct (@PathVariable String query, @RequestBody SearchRequest request, Pageable pageable){
@@ -62,11 +36,11 @@ public class SearchResource {
 		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
 	}
 	
-//	@PostMapping(value = "/SearchProductByFilterCategory")
-//	public ResponseEntity<List<ProductOffering>> searchProductByFilterCategory(@RequestBody SearchRequest request, Pageable pageable){
-//		Page<IndexingObject> page = searchProcessor.search(request, pageable);
-//		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
-//		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProductByFilterCategory");
-//		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
-//	}
+	@PostMapping(value = "/SearchProductByFilterCategory")
+	public ResponseEntity<List<ProductOffering>> searchProductByFilterCategory(@RequestBody SearchRequest request, Pageable pageable){
+		Page<IndexingObject> page = searchProcessor.search(request, pageable);
+		Page<ProductOffering> pageProduct = resultProcessor.processResults(page, pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/SearchProductByFilterCategory");
+		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
+	}
 }
