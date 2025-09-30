@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import it.eng.dome.brokerage.api.ResourceSpecificationApis;
 import it.eng.dome.brokerage.api.ServiceSpecificationApis;
 import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.dto.ProductOfferingDTO;
-import it.eng.dome.search.domain.dto.ProductSpecificationDTO;
-import it.eng.dome.search.domain.dto.ResourceSpecificationDTO;
-import it.eng.dome.search.domain.dto.ServiceSpecificationDTO;
+import it.eng.dome.search.domain.dto.*;
 import it.eng.dome.search.rest.web.util.RestSemanticUtil;
 import it.eng.dome.search.semantic.domain.Analysis;
 import it.eng.dome.search.semantic.domain.AnalyzeResultObject;
@@ -69,7 +66,7 @@ public class MappingManager implements InitializingBean{
 		objToIndex.setProductOfferingLifecycleStatus(product.getLifecycleStatus());
 		objToIndex.setProductOfferingName(product.getName());
 		objToIndex.setProductOfferingNameText(product.getName());
-		objToIndex.setCategories(product.getCategory());
+		objToIndex.setCategories(toCategoryDTOList(product.getCategory()));
 		return objToIndex;
 	}
 
@@ -312,6 +309,24 @@ public class MappingManager implements InitializingBean{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 		dto.setLastUpdate(resourceSpec.getLastUpdate().format(DATE_FORMATTER));
 		dto.setRelatedParty(resourceSpec.getRelatedParty());
+		return dto;
+	}
+
+	List<CategoryDTO> toCategoryDTOList(List<CategoryRef> categoryRefs) {
+		List<CategoryDTO> dtos = new ArrayList<>();
+		if(categoryRefs!=null) {
+			for (CategoryRef c : categoryRefs)
+				dtos.add(toCategoryDTO(c));
+		}
+		return dtos;
+	}
+
+	private CategoryDTO toCategoryDTO(CategoryRef categoryRef) {
+		CategoryDTO dto = new CategoryDTO();
+		dto.setId(categoryRef.getId());
+		dto.setHref(categoryRef.getHref().toString());
+		dto.setName(categoryRef.getName());
+		//TODO: add other fields if needed
 		return dto;
 	}
 

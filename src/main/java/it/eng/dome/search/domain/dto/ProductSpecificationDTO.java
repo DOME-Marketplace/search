@@ -5,6 +5,7 @@ import it.eng.dome.tmforum.tmf620.v4.model.RelatedParty;
 import java.util.List;
 
 public class ProductSpecificationDTO {
+
     protected String id;
 
     private String href;

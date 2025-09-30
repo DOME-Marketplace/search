@@ -1,10 +1,7 @@
 package it.eng.dome.search.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import it.eng.dome.search.domain.dto.ProductOfferingDTO;
-import it.eng.dome.search.domain.dto.ProductSpecificationDTO;
-import it.eng.dome.search.domain.dto.ResourceSpecificationDTO;
-import it.eng.dome.search.domain.dto.ServiceSpecificationDTO;
+import it.eng.dome.search.domain.dto.*;
 import it.eng.dome.tmforum.tmf620.v4.model.CategoryRef;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -50,7 +47,7 @@ public class IndexingObject {
 	private Boolean productOfferingIsBundle;
 	
 	@Field(type = FieldType.Nested)
-	private List<CategoryRef> categories;
+	private List<CategoryDTO> categories;
 
 	// from ProductSpecification
 
@@ -119,11 +116,11 @@ public class IndexingObject {
 		this.productOfferingDescription = productOfferingDescription;
 	}
 	
-	public List<CategoryRef> getCategories() {
+	public List<CategoryDTO> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<CategoryRef> categories) {
+	public void setCategories(List<CategoryDTO> categories) {
 		this.categories = categories;
 	}
 

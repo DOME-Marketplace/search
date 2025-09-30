@@ -1,6 +1,5 @@
 package it.eng.dome.search.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.dome.brokerage.api.ProductOfferingApis;
 import it.eng.dome.search.service.dto.SearchRequest;
 import it.eng.dome.search.tmf.TmfApiFactory;
