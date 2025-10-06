@@ -1,14 +1,11 @@
 package it.eng.dome.search.service;
 
-import it.eng.dome.brokerage.api.OrganizationApis;
 import it.eng.dome.search.domain.IndexingObject;
 import it.eng.dome.search.repository.OfferingRepository;
 import it.eng.dome.search.service.dto.SearchRequest;
-import it.eng.dome.search.tmf.TmfApiFactory;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ProviderService implements InitializingBean {
+public class ProviderService {
 
     private static final Logger log = LoggerFactory.getLogger(ProviderService.class);
 
@@ -28,16 +25,7 @@ public class ProviderService implements InitializingBean {
     private OfferingRepository offeringRepo;
 
     @Autowired
-    private TmfApiFactory tmfClient; // client per chiamare le API TMF
-
-    private OrganizationApis organizationApis;
-
-    @Override
-    public void afterPropertiesSet () throws Exception {
-        this.organizationApis = new OrganizationApis(tmfClient.getTMF632PartyManagementApiClient());
-
-        log.info("ProviderService initialized with OrganizationApis");
-    }
+    TmfDataRetriever tmfDataRetriever;
 
     public Page<Organization> getProvidersByCategories(SearchRequest filter, Pageable pageable) {
         if (filter == null || filter.getCategories() == null || filter.getCategories().isEmpty()) {
@@ -68,7 +56,7 @@ public class ProviderService implements InitializingBean {
         List<Organization> providers = relatedPartyIds.parallelStream()
                 .map(id -> {
                     try {
-                        return organizationApis.getOrganization(id, null);
+                        return tmfDataRetriever.getOrganizationById(id, null);
                     } catch (Exception e) {
                         log.error("Error retrieving Organization {}: {}", id, e.getMessage());
                         return null;

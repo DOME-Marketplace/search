@@ -2,7 +2,6 @@ package it.eng.dome.search.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import it.eng.dome.search.domain.dto.*;
-import it.eng.dome.tmforum.tmf620.v4.model.CategoryRef;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;

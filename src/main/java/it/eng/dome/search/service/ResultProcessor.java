@@ -1,13 +1,9 @@
 package it.eng.dome.search.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.eng.dome.brokerage.api.ProductOfferingApis;
 import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.tmf.TmfApiFactory;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,22 +19,12 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class ResultProcessor implements InitializingBean {
+public class ResultProcessor {
 
 	private static final Logger log = LoggerFactory.getLogger(ResultProcessor.class);
-	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Autowired
-	TmfApiFactory tmfApiFactory;
-
-	ProductOfferingApis productOfferingApis;
-
-	@Override
-	public void afterPropertiesSet () throws Exception {
-		this.productOfferingApis = new ProductOfferingApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
-
-		log.info("ResultProcessor initialized with ProductOfferingApis");
-	}
+	TmfDataRetriever tmfDataRetriever;
 
 	public Page<ProductOffering> processResults(Page<IndexingObject> page, Pageable pageable) {
 
@@ -53,7 +39,7 @@ public class ResultProcessor implements InitializingBean {
 			for (IndexingObject indexingObj : listIdexingObject) {
 				if (indexingObj.getProductOfferingId() != null) {
 					if (!mapProductOffering.containsKey(indexingObj.getProductOfferingId())) {
-						ProductOffering productOffering = productOfferingApis.getProductOffering(indexingObj.getProductOfferingId(), null);
+						ProductOffering productOffering = tmfDataRetriever.getProductOfferingById(indexingObj.getProductOfferingId(), null);
 						if (productOffering == null) {
 							log.warn("getProductOfferingById {} - Product Offering cannot found", indexingObj.getProductOfferingId());
 						} else {
@@ -105,7 +91,7 @@ public class ResultProcessor implements InitializingBean {
 				if (indexingObj.getProductOfferingId() != null) {
 					// Retrieve product details only if not already fetched
 					if (!mapProductOffering.containsKey(indexingObj.getProductOfferingId())) {
-						ProductOffering productOffering = productOfferingApis.getProductOffering(indexingObj.getProductOfferingId(), null);
+						ProductOffering productOffering = tmfDataRetriever.getProductOfferingById(indexingObj.getProductOfferingId(), null);
 						if (productOffering == null) {
 							log.warn("getProductOfferingById {} - PO cannot be found", indexingObj.getProductOfferingId());
 						} else {
@@ -144,44 +130,5 @@ public class ResultProcessor implements InitializingBean {
 			return new PageImpl<>(new ArrayList<>());
 		}
 	}
-
-    /*public Page<ProductOffering> processBrowsingResults(Page<IndexingObject> page, Pageable pageable) {
-        List<ProductOffering> listProductOffering = new ArrayList<>();
-
-        try {
-            log.info("Total number of Elements " + page.getTotalElements());
-
-            // gets IndexingObject list
-            List<IndexingObject> indexingObjects = page.getContent();
-
-            for (IndexingObject indexingObject : indexingObjects) {
-                if (indexingObject.getProductOfferingId() != null) {
-                    String productOfferingId = indexingObject.getProductOfferingId();
-
-                    // Recuperiamo il ProductOffering tramite l'ID
-                    String response = restTemplate.getProductOfferingById(productOfferingId);
-
-                    if (response == null) {
-                        log.warn("getProductOfferingById {} not found", productOfferingId);
-                    } else {
-                        ProductOffering productOffering = objectMapper.readValue(response, ProductOffering.class);
-                        listProductOffering.add(productOffering);
-                        log.info("Added ProductOffering with ID: " + productOfferingId + " and name: " + productOffering.getName());
-                    }
-                }
-            }
-
-            return new PageImpl<>(listProductOffering, pageable, page.getTotalElements());
-
-        } catch (JsonProcessingException e) {
-            log.warn("JsonProcessingException - Error during processBrowsingResults: {}", e.getMessage());
-            e.printStackTrace();
-            return new PageImpl<>(new ArrayList<>());
-        } catch (HttpServerErrorException e) {
-            log.warn("HttpServerErrorException - Error during processBrowsingResults: {}", e.getMessage());
-            e.printStackTrace();
-            return new PageImpl<>(new ArrayList<>());
-        }
-    }*/
 
 }

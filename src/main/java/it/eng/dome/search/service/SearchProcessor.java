@@ -41,7 +41,7 @@ public class SearchProcessor {
 		this.elasticsearchOperations = elasticsearchOperations;
 	}
 
-	//Filter by category
+	//Filter by category (only)
 	public Page<IndexingObject> search(SearchRequest request, Pageable pageable) {
 
 		// Create a BoolQueryBuilder to combine the category filters
@@ -50,6 +50,7 @@ public class SearchProcessor {
 		// Add category filter if categories are specified in the searchRequest
 		if (request.getCategories() != null && !request.getCategories().isEmpty()) {
 			logger.info("Adding category filter for categories: {}", request.getCategories());
+
 			BoolQueryBuilder nestedBoolQuery = QueryBuilders.boolQuery();
             nestedBoolQuery.must(QueryBuilders.termsQuery("categories.name", request.getCategories()));
 
@@ -66,9 +67,7 @@ public class SearchProcessor {
         Query elasticQuery = nativeSearchQueryBuilder.build();
 
 		// Log the final query for debugging
-		logger.info("Final Elasticsearch Query: {}", elasticQuery.toString());
-
-
+		//logger.info("Final Elasticsearch Query: {}", elasticQuery.toString());
 
 		try {
 			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
@@ -116,6 +115,9 @@ public class SearchProcessor {
 
 		// Wildcard and Fuzzy for each word
 		for (String word : words) {
+			if (word.length() < 2)
+				continue; // skip tiny tokens
+
 			// Add wildcard for each word
 			boolQuery
 					.should(QueryBuilders.wildcardQuery("productOfferingNameText", word + "*" ).boost(200))
@@ -198,15 +200,13 @@ public class SearchProcessor {
 				resultScoreMap.put(obj, newScore);
 			});
 
-			// SORTING in descending order by score
-			//resultPage.sort((o1, o2) -> Float.compare(resultScoreMap.get(o2), resultScoreMap.get(o1)));
-
 /*			// SECOND PRINT: Scores after the boost, ordered
 			resultPage.stream()
 					.peek(obj -> logger.info("AFTER BOOST -> Product: {} | Score: {}",
 							obj.getProductOfferingName(), // Nome prodotto
 							resultScoreMap.get(obj))) // Punteggio aggiornato
 					.collect(Collectors.toList());*/
+
 			// Create a paginated result set
 			Page<IndexingObject> p = new PageImpl<>(resultPage, pageable, searchHits.getTotalHits());
 			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPageMap = new ConcurrentHashMap<>();
@@ -215,7 +215,7 @@ public class SearchProcessor {
 			return resultPageMap;
 
 		} catch (Exception e) {
-			logger.warn("Error during search. Skipped: {}", e.getMessage());
+			logger.warn("Error executing search query: {}", e.getMessage());
 			return new HashMap<>();
 		}
 	}

@@ -1,12 +1,9 @@
 package it.eng.dome.search.service;
 
-import it.eng.dome.brokerage.api.ProductOfferingApis;
 import it.eng.dome.search.service.dto.SearchRequest;
-import it.eng.dome.search.tmf.TmfApiFactory;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BrowsingProcessor implements InitializingBean {
+public class BrowsingProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowsingProcessor.class);
 
@@ -28,16 +25,7 @@ public class BrowsingProcessor implements InitializingBean {
     private ElasticsearchOperations elasticsearchOperations;
 
     @Autowired
-    TmfApiFactory tmfApiFactory;
-
-    ProductOfferingApis productOfferingApis;
-
-    @Override
-    public void afterPropertiesSet () throws Exception {
-        this.productOfferingApis = new ProductOfferingApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
-
-        logger.info("BrowsingProcessor initialized with ProductOfferingApis");
-    }
+    TmfDataRetriever tmfDataRetriever;
 
     public BrowsingProcessor (ElasticsearchOperations elasticsearchOperations) {
         this.elasticsearchOperations = elasticsearchOperations;
@@ -46,7 +34,8 @@ public class BrowsingProcessor implements InitializingBean {
     public Page<ProductOffering> getAllRandomizedProductOfferings (SearchRequest filter, Pageable pageable) {
         HashMap<String, String> queryParams = new HashMap<>();
         queryParams.put("lifecycleStatus", "Launched");
-        List<ProductOffering> offerings = productOfferingApis.getAllProductOfferings(null, queryParams);
+
+        List<ProductOffering> offerings = tmfDataRetriever.getAllPaginatedProductOfferings(null, queryParams);
 
         if (offerings == null || offerings.isEmpty()) {
             logger.info("No product offerings found with lifecycleStatus=Launched");

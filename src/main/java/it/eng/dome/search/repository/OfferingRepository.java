@@ -12,6 +12,8 @@ import it.eng.dome.search.domain.IndexingObject;
 @Repository
 public interface OfferingRepository extends ElasticsearchRepository<IndexingObject, String> {
 
+	List<IndexingObject> findByProductOfferingIdIn(List<String> ids);
+
 	List<IndexingObject> findByProductOfferingId(String productOfferingId);
 	
 	List<IndexingObject> findByServicesId(String servicesId);
