@@ -46,9 +46,10 @@ public class BrowsingProcessor implements InitializingBean {
     public Page<ProductOffering> getAllRandomizedProductOfferings (SearchRequest filter, Pageable pageable) {
         HashMap<String, String> queryParams = new HashMap<>();
         queryParams.put("lifecycleStatus", "Launched");
-        List<ProductOffering> listProductOfferings = productOfferingApis.getAllProductOfferings(null, queryParams);
+        List<ProductOffering> offerings = productOfferingApis.getAllProductOfferings(null, queryParams);
 
-        if (listProductOfferings == null) {
+        if (offerings == null || offerings.isEmpty()) {
+            logger.info("No product offerings found with lifecycleStatus=Launched");
             return Page.empty(pageable); // return empty page
         }
 
@@ -58,24 +59,35 @@ public class BrowsingProcessor implements InitializingBean {
 //                .collect(Collectors.toList());
 
         if (filter != null && filter.getCategories() != null && !filter.getCategories().isEmpty()) {
-            logger.info("Adding category filter for categories: {}", filter.getCategories());
-            listProductOfferings = listProductOfferings.stream()
-                    .filter(po -> po.getCategory() != null &&
-                            po.getCategory().stream()
-                                    .anyMatch(cat -> (cat.getId() != null && filter.getCategories().contains(cat.getId()))
-                                            || (cat.getName() != null && filter.getCategories().contains(cat.getName()))))
+            logger.info("Applying category filter: {}", filter.getCategories());
+            offerings = offerings.stream()
+                    .filter(po -> po.getCategory() != null && po.getCategory().stream()
+                            .anyMatch(cat -> {
+                                String catId = cat.getId();
+                                String catName = cat.getName();
+                                return (catId != null && filter.getCategories().contains(catId))
+                                        || (catName != null && filter.getCategories().contains(catName));
+                            }))
                     .collect(Collectors.toList());
         }
 
+        if (offerings.isEmpty()) {
+            logger.info("No offerings matched the category filter");
+            return Page.empty(pageable);
+        }
+
         // random order
-        Collections.shuffle(listProductOfferings);
-        logger.info("Total ProductOfferings after filtering: {}", listProductOfferings.size());
+        Collections.shuffle(offerings);
+        logger.info("Total ProductOfferings after filtering: {}", offerings.size());
 
         // pagination
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), listProductOfferings.size());
-        List<ProductOffering> paginatedList = listProductOfferings.subList(start, end);
+        int end = Math.min((start + pageable.getPageSize()), offerings.size());
+        if (start >= end) {
+            return Page.empty(pageable);
+        }
+        List<ProductOffering> paginatedList = offerings.subList(start, end);
 
-        return new PageImpl<>(paginatedList, pageable, listProductOfferings.size());
+        return new PageImpl<>(paginatedList, pageable, offerings.size());
     }
 }

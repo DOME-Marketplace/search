@@ -3,16 +3,18 @@ package it.eng.dome.search.service;
 import it.eng.dome.brokerage.api.OrganizationApis;
 import it.eng.dome.search.domain.IndexingObject;
 import it.eng.dome.search.repository.OfferingRepository;
+import it.eng.dome.search.service.dto.SearchRequest;
 import it.eng.dome.search.tmf.TmfApiFactory;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,44 +39,58 @@ public class ProviderService implements InitializingBean {
         log.info("ProviderService initialized with OrganizationApis");
     }
 
-    public List<Organization> getProvidersByCategories(List<String> categoryIds) {
+    public Page<Organization> getProvidersByCategories(SearchRequest filter, Pageable pageable) {
+        if (filter == null || filter.getCategories() == null || filter.getCategories().isEmpty()) {
+            log.warn("No categories provided in filter.");
+            return Page.empty(pageable);
+        }
+        log.info("Searching providers for categories: {}", filter.getCategories());
 
         // Collect all RelatedParty IDs for the given categories
-        Set<String> relatedPartyIds = new HashSet<>();
-        for (String categoryId : categoryIds) {
-            List<IndexingObject> objects = offeringRepo.findByCategoryId(categoryId);
-            objects.forEach(obj -> {
-                if (obj.getRelatedPartyId() != null) {
-                    relatedPartyIds.add(obj.getRelatedPartyId());
-                }
-            });
+        List<IndexingObject> allObjects = offeringRepo.findByCategoryIdsOrNames(filter.getCategories());
+        if (allObjects.isEmpty()) {
+            return Page.empty(pageable);
         }
 
-        log.info("Found {} RelatedParty IDs", relatedPartyIds.size());
-        log.debug("RelatedParty IDs: {}", relatedPartyIds);
+        //Unique RelatedParty IDs
+        Set<String> relatedPartyIds = allObjects.stream()
+                .map(IndexingObject::getRelatedPartyId)
+                .filter(id -> id != null && !id.isBlank())
+                .collect(Collectors.toSet());
 
-        // Retrieve RelatedParty (Organization) details from TMF API
-        List<Organization> providers = new ArrayList<>();
-        for (String relatedPartyId : relatedPartyIds) {
-            //log.info("Fetching RelatedParty for ID: {}", relatedPartyId);
-            try {
-                Organization party = organizationApis.getOrganization(relatedPartyId, null);
-                if (party != null) {
-                    providers.add(party);
-                } else {
-                    log.warn("RelatedParty not found for ID: {}", relatedPartyId);
-                }
-            } catch (Exception e) {
-                log.error("Error retrieving RelatedParty with ID {}: {}", relatedPartyId, e.getMessage());
-            }
+        //log.info("Found {} unique RelatedParty IDs", relatedPartyIds.size());
+        if(relatedPartyIds.isEmpty()) {
+            return Page.empty(pageable); // return empty page
         }
+//        log.debug("RelatedParty IDs: {}", relatedPartyIds);
+
+        // Retrieve RelatedParty (Organization) details from TMF API in parallel
+        List<Organization> providers = relatedPartyIds.parallelStream()
+                .map(id -> {
+                    try {
+                        return organizationApis.getOrganization(id, null);
+                    } catch (Exception e) {
+                        log.error("Error retrieving Organization {}: {}", id, e.getMessage());
+                        return null;
+                    }
+                })
+                .filter(org -> org != null)
+                .collect(Collectors.toList());
 
         log.debug("Found {} Providers: {}", providers.size(),
                 providers.stream()
                         .map(Organization::getId)
                         .collect(Collectors.toList()));
 
-        return providers;
+        // pagination
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), providers.size());
+        if (start >= end) {
+            return Page.empty(pageable);
+        }
+        List<Organization> paginatedList = providers.subList(start, end);
+
+        return new PageImpl<>(paginatedList, pageable, providers.size());
     }
 
 }

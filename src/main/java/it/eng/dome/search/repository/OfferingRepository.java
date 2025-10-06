@@ -19,11 +19,9 @@ public interface OfferingRepository extends ElasticsearchRepository<IndexingObje
 	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"match\": {\"categories.name\": \"?0\"}}}}")
 	List<IndexingObject> findByCategoryName(String categoryName, Pageable pageable);
 
-//	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"terms\": {\"categories.id\": \"?0\"}}}}")
-//	List<IndexingObject> findByCategoryIds(List<String> categoryIds);
-
 	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"term\": {\"categories.id\": \"?0\"}}}}")
 	List<IndexingObject> findByCategoryId(String categoryId);
 
-
+	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"bool\": {\"should\": [ {\"terms\": {\"categories.id\": ?0}}, {\"terms\": {\"categories.name\": ?0}} ]}}}}")
+	List<IndexingObject> findByCategoryIdsOrNames(List<String> categoryValues);
 }
