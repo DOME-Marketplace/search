@@ -15,6 +15,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,25 +44,22 @@ public class BrowsingProcessor implements InitializingBean {
     }
 
     public Page<ProductOffering> getAllRandomizedProductOfferings (SearchRequest filter, Pageable pageable) {
-//        HashMap<String, String> queryParams = new HashMap<>();
-//        queryParams.put("lifecycleStatus", "Launched");
-        //TODO implements query params for launched status directly in the API call
-        List<ProductOffering> listProductOfferings = productOfferingApis.getAllProductOfferings(null, null);
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("lifecycleStatus", "Launched");
+        List<ProductOffering> listProductOfferings = productOfferingApis.getAllProductOfferings(null, queryParams);
 
         if (listProductOfferings == null) {
             return Page.empty(pageable); // return empty page
         }
 
         // filter product offerings with lifecycleStatus "launched"
-        List<ProductOffering> filteredOfferings = listProductOfferings.stream()
-                .filter(po -> "launched".equalsIgnoreCase(po.getLifecycleStatus()))
-                .collect(Collectors.toList());
+//        List<ProductOffering> filteredOfferings = listProductOfferings.stream()
+//                .filter(po -> "launched".equalsIgnoreCase(po.getLifecycleStatus()))
+//                .collect(Collectors.toList());
 
-        //TODO: fix beacause categories are not filtered correctly
-        // if request body contains categories, apply the filter
         if (filter != null && filter.getCategories() != null && !filter.getCategories().isEmpty()) {
             logger.info("Adding category filter for categories: {}", filter.getCategories());
-            filteredOfferings = filteredOfferings.stream()
+            listProductOfferings = listProductOfferings.stream()
                     .filter(po -> po.getCategory() != null &&
                             po.getCategory().stream()
                                     .anyMatch(cat -> (cat.getId() != null && filter.getCategories().contains(cat.getId()))
@@ -70,13 +68,14 @@ public class BrowsingProcessor implements InitializingBean {
         }
 
         // random order
-        Collections.shuffle(filteredOfferings);
+        Collections.shuffle(listProductOfferings);
+        logger.info("Total ProductOfferings after filtering: {}", listProductOfferings.size());
 
         // pagination
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), filteredOfferings.size());
-        List<ProductOffering> paginatedList = filteredOfferings.subList(start, end);
+        int end = Math.min((start + pageable.getPageSize()), listProductOfferings.size());
+        List<ProductOffering> paginatedList = listProductOfferings.subList(start, end);
 
-        return new PageImpl<>(paginatedList, pageable, filteredOfferings.size());
+        return new PageImpl<>(paginatedList, pageable, listProductOfferings.size());
     }
 }
