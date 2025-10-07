@@ -291,7 +291,7 @@ public class MappingManager {
 		dto.setDescription(resourceSpec.getDescription());
 		dto.setVersion(resourceSpec.getVersion());
 		dto.setLifecycleStatus(resourceSpec.getLifecycleStatus());
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+		//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 		dto.setLastUpdate(resourceSpec.getLastUpdate().format(DATE_FORMATTER));
 		dto.setRelatedParty(resourceSpec.getRelatedParty());
 		return dto;

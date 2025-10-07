@@ -55,7 +55,7 @@ public class TmfDataRetriever implements InitializingBean {
 
     public List<Organization> getAllPaginatedOrganization(String fields, Map<String, String> filter) {
 //        logger.info("Retrieving all organizations from TMF API");
-        List<Organization> allOrgs = null;
+        List<Organization> allOrgs;
         try {
             allOrgs = TMFApiUtils.fetchAllOrganizations(orgApi, fields, 15, filter);
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class TmfDataRetriever implements InitializingBean {
 
     public List<ProductOffering> getAllPaginatedProductOfferings(String fields, Map<String, String> filter) {
 //        logger.debug("Retrieving all Product Offerings from TMF API");
-        List<ProductOffering> allOfferings = null;
+        List<ProductOffering> allOfferings;
         try {
             allOfferings = TMFApiUtils.fetchAllProductOfferings(productOfferingApi, fields, 50, filter);
         } catch (Exception e) {
