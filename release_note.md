@@ -2,6 +2,23 @@
 
 **Release Notes** for the *Search*:
 
+### <code>0.3.0</code>
+
+**Feature**
+* Added endpoint to retrieve Providers from a Category/Categories.
+* Added TMFApiUtils class to manage TMForum API calls to retrieve data batch by batch.
+
+**Improvement**
+* Using of TMForum:
+  * domain refactoring with TMForum's models.
+  * API refactoring with TMForum's API.
+  * Added filter directly on TMF API to retrieve lists. 
+* Optimisation of code calculation times.
+* Clean up of code: removed classes and unused code.
+
+**Bug Fixing**
+* Quality House tickets issues fixed.
+
 ### <code>0.2.2</code>
 
 **Feature**
