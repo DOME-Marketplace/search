@@ -44,14 +44,10 @@ public final class TmfApiFactory implements InitializingBean {
     @Value( "${tmforumapi.tmf634_resource_catalog_path}" )
     private String tmf634ResourceCatalogPath;
 
-//  @Value( "${tmforumapi.tmf637_inventory_path}" )
-//  private String tmf637InventoryPath;
-
     private it.eng.dome.tmforum.tmf620.v4.ApiClient apiClientTmf620;
     private it.eng.dome.tmforum.tmf632.v4.ApiClient apiClientTmf632;
     private it.eng.dome.tmforum.tmf633.v4.ApiClient apiClientTmf633;
     private it.eng.dome.tmforum.tmf634.v4.ApiClient apiClientTmf634;
-//    private it.eng.dome.tmforum.tmf637.v4.ApiClient apiClientTmf637;
 
     public it.eng.dome.tmforum.tmf620.v4.ApiClient getTMF620ProductCatalogApiClient() {
         if (apiClientTmf620 == null) {
@@ -113,21 +109,6 @@ public final class TmfApiFactory implements InitializingBean {
         return apiClientTmf634;
     }
 
-//  public it.eng.dome.tmforum.tmf637.v4.ApiClient getTMF637ProductCatalogApiClient() {
-//     if (apiClientTmf637 == null) {
-//        apiClientTmf637 = it.eng.dome.tmforum.tmf637.v4.Configuration.getDefaultApiClient();
-//        if (tmfEnvoy) {
-//           // usage of envoyProxy to access on TMForum APIs
-//           apiClientTmf637.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
-//        }else {
-//           // use direct access on specific TMForum APIs software
-//           apiClientTmf637.setBasePath(tmfEndpoint + TMF_ENDPOINT_CONCAT_PATH + "product-inventory" + "." + tmfNamespace + "." + tmfPostfix + ":" + tmfPort + "/" + tmf637InventoryPath);
-//        }
-//        log.debug("Invoke Service Catalog API at endpoint: " + apiClientTmf637.getBasePath());
-//     }
-//     return apiClientTmf637;
-//  }
-
     @Override
     public void afterPropertiesSet() throws Exception {
 
@@ -143,7 +124,6 @@ public final class TmfApiFactory implements InitializingBean {
         Assert.state(!StringUtils.isBlank(tmf632PartyManagementPath), "Search Engine not properly configured. tmf632_party_management_path property has no value.");
         Assert.state(!StringUtils.isBlank(tmf633ServiceCatalogPath), "Search Engine not properly configured. tmf633_service_catalog_path property has no value.");
         Assert.state(!StringUtils.isBlank(tmf634ResourceCatalogPath), "Search Engine not properly configured. tmf634_resource_catalog_path property has no value.");
-//     Assert.state(!StringUtils.isBlank(tmf637InventoryPath), "Search Engine not properly configured. tmf637_inventory_path property has no value.");
 
         if (tmfEndpoint.endsWith("/")) {
             tmfEndpoint = removeFinalSlash(tmfEndpoint);
@@ -164,10 +144,6 @@ public final class TmfApiFactory implements InitializingBean {
         if (tmf634ResourceCatalogPath.startsWith("/")) {
             tmf634ResourceCatalogPath = removeInitialSlash(tmf634ResourceCatalogPath);
         }
-
-//     if (tmf637InventoryPath.startsWith("/")) {
-//        tmf637InventoryPath = removeInitialSlash(tmf637InventoryPath);
-//     }
     }
 
     private String removeFinalSlash(String s) {

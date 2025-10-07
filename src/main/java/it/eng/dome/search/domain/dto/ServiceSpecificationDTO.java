@@ -1,11 +1,5 @@
 package it.eng.dome.search.domain.dto;
 
-import it.eng.dome.tmforum.tmf620.v4.model.RelatedParty;
-import it.eng.dome.tmforum.tmf633.v4.model.CharacteristicSpecification;
-import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecificationCharacteristic;
-
-import java.util.List;
-
 public class ServiceSpecificationDTO {
 
     protected String id;

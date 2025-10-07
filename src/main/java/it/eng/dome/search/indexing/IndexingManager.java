@@ -1,21 +1,18 @@
 package it.eng.dome.search.indexing;
 
-import it.eng.dome.brokerage.api.OrganizationApis;
-import it.eng.dome.brokerage.api.ProductSpecificationApis;
 import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.tmf.TmfApiFactory;
+import it.eng.dome.search.service.TmfDataRetriever;
 import it.eng.dome.tmforum.tmf620.v4.model.*;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class IndexingManager implements InitializingBean {
+public class IndexingManager {
 
 	private static final Logger log = LoggerFactory.getLogger(IndexingManager.class);
 
@@ -23,18 +20,7 @@ public class IndexingManager implements InitializingBean {
 	private MappingManager mappingManager;
 
 	@Autowired
-	TmfApiFactory tmfApiFactory;
-
-	ProductSpecificationApis productSpecificationApis;
-	OrganizationApis organizationApis;
-
-	@Override
-	public void afterPropertiesSet () throws Exception {
-		this.productSpecificationApis = new ProductSpecificationApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
-		this.organizationApis = new OrganizationApis(tmfApiFactory.getTMF632PartyManagementApiClient());
-
-		log.info("IndexingManager initialized with ProductSpecificationApis and OrganizationApis");
-	}
+	TmfDataRetriever tmfDataRetriever;
 
 	public IndexingObject processOfferingFromTMForum(ProductOffering product, IndexingObject objToIndex) {
 		try {
@@ -45,7 +31,7 @@ public class IndexingManager implements InitializingBean {
 			if (productSpecRef == null) {
 				log.warn("null value in ProductSpecification");
 			} else {
-				ProductSpecification productSpec = productSpecificationApis.getProductSpecification(productSpecRef.getId(), null);
+				ProductSpecification productSpec = tmfDataRetriever.getProductSpecificationById(productSpecRef.getId(), null);
 
 				if (productSpec == null) {
 					log.warn("getTMFProductSpecificationById {} - Product Specification cannot found", productSpecRef.getId());
@@ -81,7 +67,7 @@ public class IndexingManager implements InitializingBean {
 				if ("Owner".equalsIgnoreCase(party.getRole())) {
 					String ownerId = party.getId();
 					if (ownerId != null) {
-						Organization organizationDetails = organizationApis.getOrganization(ownerId, null);
+						Organization organizationDetails = tmfDataRetriever.getOrganizationById(ownerId, null);
 						if (organizationDetails != null) {
 							String ownerName = organizationDetails.getTradingName();
 							if (ownerName != null && !ownerName.isEmpty()) {

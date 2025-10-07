@@ -1,4 +1,4 @@
-package it.eng.dome.search.tmf;
+package it.eng.dome.search.utils;
 
 import it.eng.dome.tmforum.tmf632.v4.api.OrganizationApi;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;

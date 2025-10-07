@@ -1,34 +1,31 @@
 package it.eng.dome.search.indexing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import it.eng.dome.brokerage.api.ResourceSpecificationApis;
-import it.eng.dome.brokerage.api.ServiceSpecificationApis;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.dome.search.domain.IndexingObject;
 import it.eng.dome.search.domain.dto.*;
 import it.eng.dome.search.rest.web.util.RestSemanticUtil;
 import it.eng.dome.search.semantic.domain.Analysis;
 import it.eng.dome.search.semantic.domain.AnalyzeResultObject;
 import it.eng.dome.search.semantic.domain.CategorizationResultObject;
-import it.eng.dome.search.tmf.TmfApiFactory;
+import it.eng.dome.search.service.TmfDataRetriever;
 import it.eng.dome.tmforum.tmf620.v4.model.*;
 import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
 import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MappingManager implements InitializingBean{
+public class MappingManager {
 
 	private static final Logger log = LoggerFactory.getLogger(MappingManager.class);
 
@@ -41,19 +38,7 @@ public class MappingManager implements InitializingBean{
 	private RestSemanticUtil restSemanticUtil;
 
 	@Autowired
-	TmfApiFactory tmfApiFactory;
-
-	ServiceSpecificationApis serviceSpecificationApis;
-
-	ResourceSpecificationApis resourceSpecificationApis;
-
-	@Override
-	public void afterPropertiesSet () throws Exception {
-		this.serviceSpecificationApis = new ServiceSpecificationApis(tmfApiFactory.getTMF633ServiceCatalogApiClient());
-		this.resourceSpecificationApis = new ResourceSpecificationApis(tmfApiFactory.getTMF634ResourceCatalogApiClient());
-
-		log.info("MappingManager initialized with ServiceSpecificationApis and ResourceSpecificationApis");
-	}
+	private TmfDataRetriever tmfDataRetriever;
 
 	public IndexingObject prepareOfferingMetadata(ProductOffering product, IndexingObject objToIndex) {
 		// prepare metadata of offerings
@@ -199,7 +184,7 @@ public class MappingManager implements InitializingBean{
 
 		for (ServiceSpecificationRef s : serviceRefs) {
 			try {
-				ServiceSpecification spec = serviceSpecificationApis.getServiceSpecification(s.getId(), null);
+				ServiceSpecification spec = tmfDataRetriever.getServiceSpecificationById(s.getId(), null);
 				if (spec != null) {
 					list.add(spec);
 				} else {
@@ -220,7 +205,7 @@ public class MappingManager implements InitializingBean{
 
 		for (ResourceSpecificationRef r : resourceRefs) {
 			try {
-				ResourceSpecification spec = resourceSpecificationApis.getResourceSpecification(r.getId(), null);
+				ResourceSpecification spec = tmfDataRetriever.getResourceSpecificationById(r.getId(), null);
 				if (spec != null) {
 					list.add(spec);
 				} else {
