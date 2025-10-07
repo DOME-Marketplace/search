@@ -40,7 +40,6 @@ logging:
     org.apache.coyote.http11: ERROR
 
 tmforumapi:
-  #  tmf_endpoint: ${TMF_ENDPOINT:http://tm-forum-api}
   tmf_endpoint: ${TMF_ENDPOINT:https://tmf.dome-marketplace-sbx.org}
   tmf_envoy:  ${TMF_ENVOY:true}
   # valid only if envoy false
@@ -54,15 +53,6 @@ tmforumapi:
   tmf634_resource_catalog_path: tmf-api/resourceCatalog/v4
 
 dome:
-  tmforum:
-    service-catalog-url: ${TMFORUM_SERVICE_CATALOG_URL:https://dome-dev.eng.it/tmf-api/serviceCatalogManagement/v4}
-    product-catalog-url: ${TMFORUM_PRODUCT_CATALOG_URL:https://dome-dev.eng.it/tmf-api/productCatalogManagement/v4}
-    resource-catalog-url: ${TMFORUM_RESOURCE_CATALOG_URL:https://dome-dev.eng.it/tmf-api/resourceCatalog/v4}
-
-  # THIS MUST BE REMOVED IN THE FUTURE!!!
-  bae:
-    url: ${BAE_URL:https://dome-marketplace-sbx.org}
-
   classify:
     url: ${CLASSIFY_URL:https://deployenv6.expertcustomers.ai:8086/services/dome/classify}
   
