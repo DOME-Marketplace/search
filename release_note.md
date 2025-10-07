@@ -2,7 +2,7 @@
 
 **Release Notes** for the *Search*:
 
-### <code>0.3.0</code>
+### <code>1.0.0</code>
 
 **Feature**
 * Added endpoint to retrieve Providers from a Category/Categories.
