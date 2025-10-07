@@ -258,4 +258,5 @@ public class IndexingObject {
 	public void setProductSpecificationOwner (String productSpecificationOwner) {
 		this.productSpecificationOwner = productSpecificationOwner;
 	}
+
 }
