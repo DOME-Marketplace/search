@@ -14,6 +14,7 @@
   * API refactoring with TMForum's API.
   * Added filter directly on TMF API to retrieve lists. 
 * Optimisation of code calculation times.
+* Improved Indexing process.
 * Clean up of code: removed classes and unused code.
 
 **Bug Fixing**
