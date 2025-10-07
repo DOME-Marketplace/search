@@ -221,8 +221,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REPOSITORY }}
-          username: ${{ secrets.HARBOR_USERNAME_BILLING }}
-          password: ${{ secrets.HARBOR_PASSWORD_BILLING }}
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
 
       - name: Build and Tag Image
         run: docker build -t ${{ env.REPOSITORY }}/dome/${{ env.IMAGE_NAME }}:${{ steps.getVersion.outputs.version }} .    
