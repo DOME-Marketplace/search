@@ -1,28 +1,29 @@
 package it.eng.dome.search.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import it.eng.dome.search.domain.dto.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 
 @Document(indexName = "indexing-object")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IndexingObject {
 
 	public IndexingObject indexingObject() {
-		return this.indexingObject();
+		return new IndexingObject();
 	}
 
 	@Id
 	protected String id;
 
 	@Field(type = FieldType.Nested)
-	private ProductOffering productOffering;
+	private ProductOfferingDTO productOffering;
 
 	// from ProductOffering
-	
 	@Field(type = FieldType.Keyword)
 	private String productOfferingId;
 
@@ -45,12 +46,12 @@ public class IndexingObject {
 	private Boolean productOfferingIsBundle;
 	
 	@Field(type = FieldType.Nested)
-	private Category[] categories;
+	private List<CategoryDTO> categories;
 
 	// from ProductSpecification
 
 	@Field(type = FieldType.Nested)
-	private ProductSpecification productSpecification;
+	private ProductSpecificationDTO productSpecification;
 
 	@Field(type = FieldType.Keyword)
 	private String productSpecificationId;
@@ -73,13 +74,14 @@ public class IndexingObject {
 
 	// from ServiceSpecification
 	@Field(type = FieldType.Nested)
-	private ServiceSpecification[] services;
+	private List<ServiceSpecificationDTO> services;
 
 	// from Resource Specification
 	@Field(type = FieldType.Nested)
-	private ResourceSpecification[] resources;
+	private List<ResourceSpecificationDTO> resources;
 
-	// from Categorization and Entities Extraction //put here fields for semantic
+	// from Categorization and Entities Extraction
+	// put here fields for semantic
 	// services ----
 	@Field(type = FieldType.Text)
 	private String[] classifyResult;
@@ -113,11 +115,11 @@ public class IndexingObject {
 		this.productOfferingDescription = productOfferingDescription;
 	}
 	
-	public Category[] getCategories() {
+	public List<CategoryDTO> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(Category[] categories) {
+	public void setCategories(List<CategoryDTO> categories) {
 		this.categories = categories;
 	}
 
@@ -161,8 +163,6 @@ public class IndexingObject {
 		this.productOfferingIsBundle = productOfferingIsBundle;
 	}
 
-
-
 	public String getProductSpecificationId() {
 		return productSpecificationId;
 	}
@@ -203,35 +203,35 @@ public class IndexingObject {
 		this.relatedPartyId = relatedPartyId;
 	}
 
-	public ServiceSpecification[] getServices() {
+	public List<ServiceSpecificationDTO> getServices() {
 		return services;
 	}
 
-	public void setServices(ServiceSpecification[] services) {
+	public void setServices(List<ServiceSpecificationDTO> services) {
 		this.services = services;
 	}
 
-	public ResourceSpecification[] getResources() {
+	public List<ResourceSpecificationDTO> getResources() {
 		return resources;
 	}
 
-	public void setResources(ResourceSpecification[] resources) {
+	public void setResources(List<ResourceSpecificationDTO> resources) {
 		this.resources = resources;
 	}
 
-	public ProductOffering getProductOffering() {
+	public ProductOfferingDTO getProductOffering() {
 		return productOffering;
 	}
 
-	public void setProductOffering(ProductOffering productOffering) {
+	public void setProductOffering(ProductOfferingDTO productOffering) {
 		this.productOffering = productOffering;
 	}
 
-	public ProductSpecification getProductSpecification() {
+	public ProductSpecificationDTO getProductSpecification() {
 		return productSpecification;
 	}
 
-	public void setProductSpecification(ProductSpecification productSpecification) {
+	public void setProductSpecification(ProductSpecificationDTO productSpecification) {
 		this.productSpecification = productSpecification;
 	}
 	
@@ -258,4 +258,5 @@ public class IndexingObject {
 	public void setProductSpecificationOwner (String productSpecificationOwner) {
 		this.productSpecificationOwner = productSpecificationOwner;
 	}
+
 }

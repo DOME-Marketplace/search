@@ -20,6 +20,13 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableScheduling
 public class AsyncConfiguration implements AsyncConfigurer {
 
+    /*
+    * THIS CLASS IS IMPORTANT TO ENABLE SCEDULING PROCESS
+    * At the time we use Default configuration
+    * (the code below is commented but the class is important to enable scheduling)
+     */
+
+
 //    private final Logger log = LoggerFactory.getLogger(AsyncConfiguration.class);
 //
 //    private final TaskExecutionProperties taskExecutionProperties;
