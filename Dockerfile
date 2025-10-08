@@ -19,10 +19,11 @@ RUN apk update && apk add --no-cache curl
 WORKDIR /usr/app
 
 # Copy JAR in the working directory
-COPY target/search-*.jar search.jar
+COPY target/search.jar search.jar
 
 # Espose port 8080
 EXPOSE 8080
 
 # Comand to run the Spring Boot application
-ENTRYPOINT ["java","-jar","payment-scheduler.jar"]
+#ENTRYPOINT ["java","-jar","search.jar"]
+ENTRYPOINT exec java $JAVA_OPTS -jar search.jar
