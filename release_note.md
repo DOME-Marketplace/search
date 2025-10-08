@@ -2,6 +2,13 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.0.1</code>
+
+**Feature**
+* Add `InfoSearch` Controller to get the **Search** version.
+* Add `StartupListener` listener to log (display) the current version of *Search* at startup time.
+
+
 ### <code>1.0.0</code>
 
 **Feature**
