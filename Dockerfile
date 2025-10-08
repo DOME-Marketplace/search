@@ -1,8 +1,9 @@
 FROM openjdk:17-jdk-alpine 
 
-COPY ./target/search-*.jar /usr/app/search.jar
+RUN apk update && apk add --no-cache curl
+
 WORKDIR /usr/app
 
-FROM openjdk:17-jdk-alpine 
+COPY target/search.jar search.jar
 	
 ENTRYPOINT exec java $JAVA_OPTS -jar search.jar
