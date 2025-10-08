@@ -24,6 +24,8 @@ COPY target/search.jar search.jar
 # Espose port 8080
 EXPOSE 8080
 
+ENV JAVA_OPTS="--add-opens=java.base/java.net=ALL-UNNAMED"
+
 # Comand to run the Spring Boot application
 #ENTRYPOINT ["java","-jar","search.jar"]
 ENTRYPOINT exec java $JAVA_OPTS -jar search.jar
