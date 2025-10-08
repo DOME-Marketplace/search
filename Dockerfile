@@ -1,4 +1,4 @@
-FROM openjdk:11-slim
+FROM openjdk:17-jdk-alpine 
 
 COPY ./target/search-*.jar /usr/app/search.jar
 WORKDIR /usr/app
