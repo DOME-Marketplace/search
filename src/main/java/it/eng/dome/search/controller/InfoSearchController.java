@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class InfoSearchController {
 			@ApiResponse(content = @Content(mediaType = "application/json", examples = @ExampleObject(value = INFO))) })
 	public Map<String, String> getInfo() {
 		log.info("Request getInfo");
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new ConcurrentHashMap<String, String>();
 		map.put("version", buildProperties.getVersion());
 		map.put("name", buildProperties.getName());
 		map.put("release_time", getFormatterTimestamp(buildProperties.getTime()));

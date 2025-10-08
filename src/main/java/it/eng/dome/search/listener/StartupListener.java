@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,7 +70,7 @@ public class StartupListener implements ApplicationListener<ApplicationReadyEven
         });
 
         // find all env_var that they get placeholder ${…}
-        Map<String, String> vars = new TreeMap<String, String>(); // to get order by key
+        Map<String, String> vars = new ConcurrentHashMap<String, String>(); // to get order by key
                 
         for (PropertySource<?> ps : yamlSources) {
             if (ps instanceof EnumerablePropertySource) {
