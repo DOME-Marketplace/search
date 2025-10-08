@@ -13,7 +13,7 @@ services:
       - TMF_ENVOY=${TMF_ENVOY}
       - TMF_NAMESPACE=${TMF_NAMESPACE}
       - TMF_POSTFIX=${TMF_POSTFIX}
-      - TMF_PORT=${TMF_PORT}
+      - TMF_PORT=${TMF_PORT}      
       - CLASSIFY_URL=${CLASSIFY_URL}
       - ANALYZE_URL=${ANALYZE_URL}
       - LOG_LEVEL=${LOG_LEVEL}
