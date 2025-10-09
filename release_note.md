@@ -2,6 +2,11 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.0.3</code>
+**Bug Fix**
+* Set `party-catalog` string in **TmfApiFactory** in `getTMF632PartyManagementApiClient`.
+
+
 ### <code>1.0.2</code>
 
 **Bug Fix**
