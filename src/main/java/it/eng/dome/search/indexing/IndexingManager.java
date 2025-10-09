@@ -37,20 +37,25 @@ public class IndexingManager {
 					log.warn("getTMFProductSpecificationById {} - Product Specification cannot found", productSpecRef.getId());
 				} else {
 					// map ProductSpecification
+					log.debug("map ProductSpecification");
 					objToIndex = mappingManager.prepareProdSpecMetadata(productSpec, objToIndex);
-
+					
 					// map owner
 					mapOwner(productSpec, objToIndex);
 
 					// map ServiceSpecification
+					log.debug("map ServiceSpecification");
 					objToIndex = mapServiceSpec(productSpec, objToIndex);
 
 					// map ResourceSpecification
+					log.debug("map ResourceSpecification");
 					objToIndex = mapResourceSpec(productSpec, objToIndex);
+					
 
 					//TODO: for semantic services contact ExAI team for more details.
 					// process semantic services
-					objToIndex = processSemantic(objToIndex, product);
+					log.debug("map semantic");
+//					objToIndex = processSemantic(objToIndex, product);
 				}
 			}
 		} catch (Exception e) {

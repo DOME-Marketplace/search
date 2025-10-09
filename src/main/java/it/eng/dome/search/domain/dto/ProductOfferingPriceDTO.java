@@ -4,7 +4,7 @@ public class ProductOfferingPriceDTO {
 
     protected String id;
 
-    private String href;
+//    private String href;
     private String name;
 
     private String description;
@@ -34,12 +34,12 @@ public class ProductOfferingPriceDTO {
     public void setId(String id) {
         this.id = id;
     }
-    public String getHref() {
-        return href;
-    }
-    public void setHref(String href) {
-        this.href = href;
-    }
+//    public String getHref() {
+//        return href;
+//    }
+//    public void setHref(String href) {
+//        this.href = href;
+//    }
     public String getName() {
         return name;
     }

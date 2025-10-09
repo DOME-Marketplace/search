@@ -8,7 +8,7 @@ public class CategoryDTO {
     @Field(type = FieldType.Keyword)
     private String id;
 
-    private String href;
+//    private String href;
 
 //    @Field(type = FieldType.Boolean)
 //    private Boolean isRoot;
@@ -27,8 +27,8 @@ public class CategoryDTO {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public String getHref() { return href; }
-    public void setHref(String href) { this.href = href; }
+//    public String getHref() { return href; }
+//    public void setHref(String href) { this.href = href; }
 
 //    public Boolean getIsRoot() { return isRoot; }
 //    public void setIsRoot(Boolean isRoot) { this.isRoot = isRoot; }

@@ -70,13 +70,15 @@ public class IndexingService {
 					created++;
 					existingObj = new IndexingObject();
 				}
+				
+				log.debug("Processing productOffering: {}", po.getId());
 				IndexingObject processed = indexingManager.processOfferingFromTMForum(po, existingObj);
 				toSave.add(processed);
 			}
 
+			log.debug("Saving {} index objects", toSave.size());
 			offeringRepo.saveAll(toSave);
-			log.info("Indexing process terminated: {} processed ({} updated, {} created)",
-					toSave.size(), updated, created);
+			log.info("Indexing process terminated: {} processed ({} updated, {} created)", toSave.size(), updated, created);
 
 		} catch (Exception e) {
 			log.error("Error during indexing: {}", e.getMessage(), e);

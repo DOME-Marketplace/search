@@ -7,7 +7,7 @@ import java.util.List;
 public class ProductSpecificationDTO {
 
     protected String id;
-    private String href;
+//    private String href;
     private String brand;
     private String description;
     private Boolean isBundle;
@@ -32,12 +32,12 @@ public class ProductSpecificationDTO {
     public void setId(String id) {
         this.id = id;
     }
-    public String getHref() {
-        return href;
-    }
-    public void setHref(String href) {
-        this.href = href;
-    }
+//    public String getHref() {
+//        return href;
+//    }
+//    public void setHref(String href) {
+//        this.href = href;
+//    }
     public String getBrand() {
         return brand;
     }

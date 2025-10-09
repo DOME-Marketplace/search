@@ -271,7 +271,7 @@ public class MappingManager {
 	private ProductSpecificationDTO toProductSpecificationDTO(ProductSpecification productSpec) {
 		ProductSpecificationDTO dto = new ProductSpecificationDTO();
 		dto.setId(productSpec.getId());
-		dto.setHref(productSpec.getHref() != null ? productSpec.getHref(): null);
+//		dto.setHref(productSpec.getHref() != null ? productSpec.getHref().toString(): null);
 		dto.setName(productSpec.getName() != null ? productSpec.getName() : null);
 		dto.setDescription(productSpec.getDescription() != null ? productSpec.getDescription() : null);
 		dto.setBrand(productSpec.getBrand() != null ? productSpec.getBrand() : null);
@@ -289,7 +289,7 @@ public class MappingManager {
 	private ProductSpecificationDTO toProductSpecificationDTOByRef(ProductSpecificationRef prdSPec) {
 		ProductSpecificationDTO dto = new ProductSpecificationDTO();
 		dto.setId(prdSPec.getId());
-		dto.setHref(prdSPec.getHref() != null ? prdSPec.getHref().toString() : null);
+//		dto.setHref(prdSPec.getHref() != null ? prdSPec.getHref().toString() : null);
 		dto.setName(prdSPec.getName() != null ? prdSPec.getName() : null);
 
 		return dto;
@@ -298,7 +298,7 @@ public class MappingManager {
 	private ProductOfferingPriceDTO toProductOfferingPriceDTO(ProductOfferingPriceRefOrValue pop) {
 		ProductOfferingPriceDTO dto = new ProductOfferingPriceDTO();
 		dto.setId(pop.getId());
-		dto.setHref(pop.getHref() != null ? pop.getHref().toString() : null);
+//		dto.setHref(pop.getHref() != null ? pop.getHref().toString() : null);
 		dto.setName(pop.getName() != null ? pop.getName() : null);
 		dto.setDescription(pop.getDescription() != null ? pop.getDescription() : null);
 		dto.setVersion(pop.getVersion() != null ? pop.getVersion() : null);
@@ -349,7 +349,7 @@ public class MappingManager {
 	private CategoryDTO toCategoryDTO(CategoryRef categoryRef) {
 		CategoryDTO dto = new CategoryDTO();
 		dto.setId(categoryRef.getId());
-		dto.setHref(categoryRef.getHref() != null ? categoryRef.getHref().toString() : null);
+//		dto.setHref(categoryRef.getHref() != null ? categoryRef.getHref().toString() : null);
 		dto.setName(categoryRef.getName() != null ? categoryRef.getName() : null);
 		//TODO: add other fields if needed
 		return dto;
