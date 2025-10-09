@@ -47,7 +47,9 @@ public class MappingManager {
 		objToIndex.setProductOfferingDescription(product.getDescription());
 		objToIndex.setProductOfferingId(product.getId());
 		objToIndex.setProductOfferingIsBundle(product.getIsBundle());
-		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate().toString());
+		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate() != null
+				? product.getLastUpdate().format(DATE_FORMATTER)
+				: null);
 		objToIndex.setProductOfferingLifecycleStatus(product.getLifecycleStatus());
 		objToIndex.setProductOfferingName(product.getName());
 		objToIndex.setProductOfferingNameText(product.getName());
@@ -59,13 +61,10 @@ public class MappingManager {
 		// prepare metadata of Product Specifications
 		ProductSpecificationDTO prodSpecDTO = toProductSpecificationDTO(productSpecDetails);
 		objToIndex.setProductSpecification(prodSpecDTO);
-		objToIndex.setProductSpecificationBrand(productSpecDetails.getBrand());
-		objToIndex.setProductSpecificationId(productSpecDetails.getId());
-		objToIndex.setProductSpecificationName(productSpecDetails.getName());
-
-		if (productSpecDetails.getDescription() != null)
-			objToIndex.setProductSpecificationDescription(productSpecDetails.getDescription());
-
+		objToIndex.setProductSpecificationBrand(productSpecDetails.getBrand() != null ? productSpecDetails.getBrand() : null);
+		objToIndex.setProductSpecificationId(productSpecDetails.getId() != null ? productSpecDetails.getId() : null);
+		objToIndex.setProductSpecificationName(productSpecDetails.getName() != null ? productSpecDetails.getName() : null);
+		objToIndex.setProductSpecificationDescription(productSpecDetails.getDescription() != null ? productSpecDetails.getDescription() : null);
 		if (productSpecDetails.getRelatedParty() != null) {
 			for (RelatedParty party : productSpecDetails.getRelatedParty()) {
 				objToIndex.setRelatedPartyId(party.getId());
@@ -240,6 +239,15 @@ public class MappingManager {
 		return dtos;
 	}
 
+	List<ProductOfferingPriceDTO> toProductOfferingPriceDTOs(List<ProductOfferingPriceRefOrValue> popList) {
+		List<ProductOfferingPriceDTO> dtos = new ArrayList<>();
+		if(popList!=null) {
+			for (ProductOfferingPriceRefOrValue p : popList)
+				dtos.add(toProductOfferingPriceDTO(p));
+		}
+		return dtos;
+	}
+
 	// --- Helper methods for DTO conversion ---
 	private ProductOfferingDTO toProductOfferingDTO(ProductOffering product) {
 		ProductOfferingDTO dto = new ProductOfferingDTO();
@@ -252,17 +260,18 @@ public class MappingManager {
 		dto.setLastUpdate(product.getLastUpdate() != null
 				? product.getLastUpdate().format(DATE_FORMATTER)
 				: null);
-		dto.setCategory(product.getCategory() );
+		dto.setCategory(this.toCategoryDTOList(product.getCategory()) );
 		dto.setVersion(product.getVersion() != null ? product.getVersion() : null);
-		dto.setProductSpecification(product.getProductSpecification());
-		dto.setProductOfferingPrice(product.getProductOfferingPrice());
+		if (product.getProductSpecification() != null)
+			dto.setProductSpecification(this.toProductSpecificationDTOByRef(product.getProductSpecification()));
+		dto.setProductOfferingPrice(this.toProductOfferingPriceDTOs(product.getProductOfferingPrice()));
 		return dto;
 	}
 
 	private ProductSpecificationDTO toProductSpecificationDTO(ProductSpecification productSpec) {
 		ProductSpecificationDTO dto = new ProductSpecificationDTO();
 		dto.setId(productSpec.getId());
-		dto.setHref(productSpec.getHref() != null ? productSpec.getHref().toString() : null);
+		dto.setHref(productSpec.getHref() != null ? productSpec.getHref(): null);
 		dto.setName(productSpec.getName() != null ? productSpec.getName() : null);
 		dto.setDescription(productSpec.getDescription() != null ? productSpec.getDescription() : null);
 		dto.setBrand(productSpec.getBrand() != null ? productSpec.getBrand() : null);
@@ -277,16 +286,41 @@ public class MappingManager {
 		return dto;
 	}
 
+	private ProductSpecificationDTO toProductSpecificationDTOByRef(ProductSpecificationRef prdSPec) {
+		ProductSpecificationDTO dto = new ProductSpecificationDTO();
+		dto.setId(prdSPec.getId());
+		dto.setHref(prdSPec.getHref() != null ? prdSPec.getHref().toString() : null);
+		dto.setName(prdSPec.getName() != null ? prdSPec.getName() : null);
+
+		return dto;
+	}
+
+	private ProductOfferingPriceDTO toProductOfferingPriceDTO(ProductOfferingPriceRefOrValue pop) {
+		ProductOfferingPriceDTO dto = new ProductOfferingPriceDTO();
+		dto.setId(pop.getId());
+		dto.setHref(pop.getHref() != null ? pop.getHref().toString() : null);
+		dto.setName(pop.getName() != null ? pop.getName() : null);
+		dto.setDescription(pop.getDescription() != null ? pop.getDescription() : null);
+		dto.setVersion(pop.getVersion() != null ? pop.getVersion() : null);
+		dto.setLifecycleStatus(pop.getLifecycleStatus() != null ? pop.getLifecycleStatus() : null);
+		dto.setLastUpdate(pop.getLastUpdate() != null
+				? pop.getLastUpdate().format(DATE_FORMATTER)
+				: null);
+		return dto;
+	}
+
 	private ServiceSpecificationDTO toServiceSpecificationDTO(ServiceSpecification serviceSpec) {
 		ServiceSpecificationDTO dto = new ServiceSpecificationDTO();
 		dto.setId(serviceSpec.getId());
+		dto.setHref(serviceSpec.getHref() != null ? serviceSpec.getHref().toString() : null);
 		dto.setName(serviceSpec.getName() != null ? serviceSpec.getName() : null);
 		dto.setDescription(serviceSpec.getDescription() != null ? serviceSpec.getDescription() : null);
 		dto.setVersion(serviceSpec.getVersion() != null ? serviceSpec.getVersion() : null);
 		dto.setLifecycleStatus(serviceSpec.getLifecycleStatus() != null ? serviceSpec.getLifecycleStatus() : null);
 		dto.setLastUpdate(serviceSpec.getLastUpdate() != null
 				? serviceSpec.getLastUpdate().format(DATE_FORMATTER)
-				: null);		return dto;
+				: null);
+		return dto;
 	}
 
 	private ResourceSpecificationDTO toResourceSpecificationDTO(ResourceSpecification resourceSpec) {
@@ -296,7 +330,6 @@ public class MappingManager {
 		dto.setDescription(resourceSpec.getDescription() != null ? resourceSpec.getDescription() : null);
 		dto.setVersion(resourceSpec.getVersion() != null ? resourceSpec.getVersion() : null);
 		dto.setLifecycleStatus(resourceSpec.getLifecycleStatus() != null ? resourceSpec.getLifecycleStatus() : null);
-		//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 		dto.setLastUpdate(resourceSpec.getLastUpdate() != null
 				? resourceSpec.getLastUpdate().format(DATE_FORMATTER)
 				: null);

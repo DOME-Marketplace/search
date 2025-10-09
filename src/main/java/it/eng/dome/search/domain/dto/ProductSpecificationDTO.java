@@ -7,7 +7,6 @@ import java.util.List;
 public class ProductSpecificationDTO {
 
     protected String id;
-
     private String href;
     private String brand;
     private String description;
