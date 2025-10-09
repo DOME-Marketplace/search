@@ -244,14 +244,16 @@ public class MappingManager {
 	private ProductOfferingDTO toProductOfferingDTO(ProductOffering product) {
 		ProductOfferingDTO dto = new ProductOfferingDTO();
 		dto.setId(product.getId());
-		dto.setName(product.getName());
-		dto.setHref(product.getHref());
-		dto.setDescription(product.getDescription());
-		dto.setIsBundle(product.getIsBundle());
-		dto.setLifecycleStatus(product.getLifecycleStatus());
-		dto.setLastUpdate(product.getLastUpdate().toString());
-		dto.setCategory(product.getCategory());
-		dto.setVersion(product.getVersion());
+		dto.setName(product.getName() != null ? product.getName() : null);
+		dto.setHref(product.getHref() != null ? product.getHref().toString() : null);
+		dto.setDescription(product.getDescription() != null ? product.getDescription() : null);
+		dto.setIsBundle(product.getIsBundle() != null ? product.getIsBundle() : null);
+		dto.setLifecycleStatus(product.getLifecycleStatus() != null ? product.getLifecycleStatus() : null);
+		dto.setLastUpdate(product.getLastUpdate() != null
+				? product.getLastUpdate().format(DATE_FORMATTER)
+				: null);
+		dto.setCategory(product.getCategory() );
+		dto.setVersion(product.getVersion() != null ? product.getVersion() : null);
 		dto.setProductSpecification(product.getProductSpecification());
 		dto.setProductOfferingPrice(product.getProductOfferingPrice());
 		return dto;
@@ -260,40 +262,45 @@ public class MappingManager {
 	private ProductSpecificationDTO toProductSpecificationDTO(ProductSpecification productSpec) {
 		ProductSpecificationDTO dto = new ProductSpecificationDTO();
 		dto.setId(productSpec.getId());
-		dto.setHref(productSpec.getHref());
-		dto.setName(productSpec.getName());
-		dto.setDescription(productSpec.getDescription());
-		dto.setBrand(productSpec.getBrand());
-		dto.setVersion(productSpec.getVersion());
-		dto.setLifecycleStatus(productSpec.getLifecycleStatus());
-		dto.setIsBundle(productSpec.getIsBundle());
-		dto.setLastUpdate(productSpec.getLastUpdate().toString());
-		dto.setRelatedParty(productSpec.getRelatedParty());
-		dto.setProductNumber(productSpec.getProductNumber());
+		dto.setHref(productSpec.getHref() != null ? productSpec.getHref().toString() : null);
+		dto.setName(productSpec.getName() != null ? productSpec.getName() : null);
+		dto.setDescription(productSpec.getDescription() != null ? productSpec.getDescription() : null);
+		dto.setBrand(productSpec.getBrand() != null ? productSpec.getBrand() : null);
+		dto.setVersion(productSpec.getVersion() != null ? productSpec.getVersion() : null);
+		dto.setLifecycleStatus(productSpec.getLifecycleStatus() != null ? productSpec.getLifecycleStatus() : null);
+		dto.setIsBundle(productSpec.getIsBundle() != null ? productSpec.getIsBundle() : null);
+		dto.setLastUpdate(productSpec.getLastUpdate() != null
+				? productSpec.getLastUpdate().format(DATE_FORMATTER)
+				: null);
+		dto.setRelatedParty(productSpec.getRelatedParty() != null ? productSpec.getRelatedParty() : null);
+		dto.setProductNumber(productSpec.getProductNumber() != null ? productSpec.getProductNumber() : null);
 		return dto;
 	}
 
 	private ServiceSpecificationDTO toServiceSpecificationDTO(ServiceSpecification serviceSpec) {
 		ServiceSpecificationDTO dto = new ServiceSpecificationDTO();
 		dto.setId(serviceSpec.getId());
-		dto.setName(serviceSpec.getName());
-		dto.setDescription(serviceSpec.getDescription());
-		dto.setVersion(serviceSpec.getVersion());
-		dto.setLifecycleStatus(serviceSpec.getLifecycleStatus());
-		dto.setLastUpdate(serviceSpec.getLastUpdate().format(DATE_FORMATTER));
-		return dto;
+		dto.setName(serviceSpec.getName() != null ? serviceSpec.getName() : null);
+		dto.setDescription(serviceSpec.getDescription() != null ? serviceSpec.getDescription() : null);
+		dto.setVersion(serviceSpec.getVersion() != null ? serviceSpec.getVersion() : null);
+		dto.setLifecycleStatus(serviceSpec.getLifecycleStatus() != null ? serviceSpec.getLifecycleStatus() : null);
+		dto.setLastUpdate(serviceSpec.getLastUpdate() != null
+				? serviceSpec.getLastUpdate().format(DATE_FORMATTER)
+				: null);		return dto;
 	}
 
 	private ResourceSpecificationDTO toResourceSpecificationDTO(ResourceSpecification resourceSpec) {
 		ResourceSpecificationDTO dto = new ResourceSpecificationDTO();
 		dto.setId(resourceSpec.getId());
-		dto.setName(resourceSpec.getName());
-		dto.setDescription(resourceSpec.getDescription());
-		dto.setVersion(resourceSpec.getVersion());
-		dto.setLifecycleStatus(resourceSpec.getLifecycleStatus());
+		dto.setName(resourceSpec.getName() != null ? resourceSpec.getName() : null);
+		dto.setDescription(resourceSpec.getDescription() != null ? resourceSpec.getDescription() : null);
+		dto.setVersion(resourceSpec.getVersion() != null ? resourceSpec.getVersion() : null);
+		dto.setLifecycleStatus(resourceSpec.getLifecycleStatus() != null ? resourceSpec.getLifecycleStatus() : null);
 		//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
-		dto.setLastUpdate(resourceSpec.getLastUpdate().format(DATE_FORMATTER));
-		dto.setRelatedParty(resourceSpec.getRelatedParty());
+		dto.setLastUpdate(resourceSpec.getLastUpdate() != null
+				? resourceSpec.getLastUpdate().format(DATE_FORMATTER)
+				: null);
+		dto.setRelatedParty(resourceSpec.getRelatedParty() != null ? resourceSpec.getRelatedParty() : null);
 		return dto;
 	}
 
@@ -309,8 +316,8 @@ public class MappingManager {
 	private CategoryDTO toCategoryDTO(CategoryRef categoryRef) {
 		CategoryDTO dto = new CategoryDTO();
 		dto.setId(categoryRef.getId());
-		dto.setHref(categoryRef.getHref().toString());
-		dto.setName(categoryRef.getName());
+		dto.setHref(categoryRef.getHref() != null ? categoryRef.getHref().toString() : null);
+		dto.setName(categoryRef.getName() != null ? categoryRef.getName() : null);
 		//TODO: add other fields if needed
 		return dto;
 	}
