@@ -72,7 +72,7 @@ public final class TmfApiFactory implements InitializingBean {
                 apiClientTmf632.setBasePath(tmfEndpoint + "/" + tmf632PartyManagementPath);
             }else {
                 // use direct access on specific TMForum APIs software
-                apiClientTmf632.setBasePath(tmfEndpoint + TMF_ENDPOINT_CONCAT_PATH + "party-catalog-management" + "." + tmfNamespace + "." + tmfPostfix + ":" + tmfPort + "/" + tmf632PartyManagementPath);
+                apiClientTmf632.setBasePath(tmfEndpoint + TMF_ENDPOINT_CONCAT_PATH + "party-catalog" + "." + tmfNamespace + "." + tmfPostfix + ":" + tmfPort + "/" + tmf632PartyManagementPath);
             }
             log.debug("Invoke Product Ordering API at endpoint: " + apiClientTmf632.getBasePath());
         }
