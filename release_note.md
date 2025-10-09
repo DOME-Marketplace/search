@@ -2,6 +2,11 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.0.4</code>
+**Bug Fix**
+* Update `MappingManager` to check null value on mapping.
+
+
 ### <code>1.0.3</code>
 **Bug Fix**
 * Update `party-catalog` string path in **TmfApiFactory** in `getTMF632PartyManagementApiClient`.
