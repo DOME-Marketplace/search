@@ -2,6 +2,11 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.0.2</code>
+
+**Bug Fix**
+* Add `BrokerarageUtils` for API's calls.
+
 ### <code>1.0.1</code>
 
 **Feature**

@@ -13,7 +13,7 @@
 	</parent>
 	<groupId>it.eng.dome</groupId>
 	<artifactId>search</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<name>Search and Browsing</name>
 	<description>Demo for DOME Project</description>
 	<properties>
@@ -70,6 +70,14 @@
 		</dependency>
 
 		<!-- tmf  -->
+
+		<!-- Brokerage Utils dependencies -->
+		<dependency>
+			<groupId>it.eng.dome.brokerage</groupId>
+			<artifactId>brokerage-utils</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
 		<!-- TMF620 Catalog -->
 		<dependency>
 			<groupId>it.eng.dome.tmforum-sdk</groupId>
