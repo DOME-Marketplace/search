@@ -109,6 +109,7 @@ public class IndexingManager {
 		return objToIndex;
 	}
 
+	/*
 	private IndexingObject processSemantic(IndexingObject objToIndex, ProductOffering product) {
 		// Reactivate for Semantic services
 		if ((objToIndex.getProductOfferingDescription() == null) || (objToIndex.getProductOfferingDescription().isEmpty())) {
@@ -121,6 +122,6 @@ public class IndexingManager {
 			}
 		}
 		return objToIndex;
-	}
+	}*/
 
 }
