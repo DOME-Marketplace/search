@@ -85,6 +85,11 @@ public class IndexingService {
 		}
 	}
 
+	/** General usage*/
+	public void clearRepository() {
+		offeringRepo.deleteAll();
+	}
+
 	// @Scheduled(fixedDelay = 3000)
 	// private void test() {
 	//

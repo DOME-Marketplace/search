@@ -13,11 +13,11 @@ public class ProductOfferingDTO {
     private String lifecycleStatus;
     private String name;
     private String version;
-    private List<ProductOfferingTerm> productOfferingTerm;
-    private ProductSpecificationRef productSpecification;
-    private List<ProductOfferingPriceRefOrValue> productOfferingPrice;
+//    private List<ProductOfferingTerm> productOfferingTerm;
+    private ProductSpecificationDTO productSpecification;
+    private List<ProductOfferingPriceDTO> productOfferingPrice;
 //    private ValidFor validFor;
-    private List<CategoryRef> category;
+    private List<CategoryDTO> category;
     // private boolean isSellable;
     // private String statusReason;
     // private Agreement[] agreement; (bisogna creare anche classe Agreement)
@@ -31,8 +31,6 @@ public class ProductOfferingDTO {
     // private ResourceCandidate resourceCandidate; (aggiungere anche la classe ResourceCandidate)
     // private ServiceCandidate serviceCandidate; (aggiungere anche la classe ServiceCandidate)
     // private SLA serviceLevelAgreement; (aggiungere anche la classe SLA)
-
-
 
     public String getId() {
         return id;
@@ -82,34 +80,34 @@ public class ProductOfferingDTO {
     public void setVersion(String version) {
         this.version = version;
     }
-    public ProductSpecificationRef getProductSpecification() {
+    public ProductSpecificationDTO getProductSpecificationDTO() {
         return productSpecification;
     }
-    public void setProductSpecification(ProductSpecificationRef productSpecification) {
-        this.productSpecification = productSpecification;
+    public void setProductSpecification(ProductSpecificationDTO productSpecificationDTO) {
+        this.productSpecification = productSpecificationDTO;
     }
-    public List<ProductOfferingPriceRefOrValue> getProductOfferingPrice() {
+    public List<ProductOfferingPriceDTO> getProductOfferingPrice() {
         return productOfferingPrice;
     }
-    public void setProductOfferingPrice(List<ProductOfferingPriceRefOrValue> productOfferingPrice) {
+    public void setProductOfferingPrice(List<ProductOfferingPriceDTO> productOfferingPrice) {
         this.productOfferingPrice = productOfferingPrice;
     }
-    public List<ProductOfferingTerm> getProductOfferingTerm() {
-        return productOfferingTerm;
-    }
-    public void setProductOfferingTerm(List<ProductOfferingTerm> productOfferingTerm) {
-        this.productOfferingTerm = productOfferingTerm;
-    }
+//    public List<ProductOfferingTerm> getProductOfferingTerm() {
+//        return productOfferingTerm;
+//    }
+//    public void setProductOfferingTerm(List<ProductOfferingTerm> productOfferingTerm) {
+//        this.productOfferingTerm = productOfferingTerm;
+//    }
 //    public ValidFor getValidFor() {
 //        return validFor;
 //    }
 //    public void setValidFor(ValidFor validFor) {
 //        this.validFor = validFor;
 //    }
-    public List<CategoryRef> getCategory() {
+    public List<CategoryDTO> getCategory() {
         return category;
     }
-    public void setCategory(List<CategoryRef> category) {
+    public void setCategory(List<CategoryDTO> category) {
         this.category = category;
     }
 }
