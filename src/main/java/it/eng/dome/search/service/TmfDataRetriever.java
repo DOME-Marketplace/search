@@ -56,6 +56,15 @@ public class TmfDataRetriever implements InitializingBean {
         return this.orgApi.getOrganization(orgId, fields);
     }
 
+    public List<Organization> getAllPaginatedOrganizations(String fields, Map<String, String> filter) {
+//        logger.debug("Retrieving all Product Offerings from TMF API");
+        //TODO: implement pagination
+        List<Organization> allOfferings = orgApi.getOrganizations(fields, filter);
+
+        logger.info("Retrieved {} organization from TMF API", allOfferings.size());
+        return allOfferings;
+    }
+
     // =============== PRODUCT OFFERING ===============
 
     public ProductOffering getProductOfferingById(String poId, String fields) {

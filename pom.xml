@@ -69,6 +69,14 @@
 			<version>1.18.1</version>
 		</dependency>
 
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.34</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- tmf  -->
 
 		<!-- Brokerage Utils dependencies -->

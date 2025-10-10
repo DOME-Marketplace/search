@@ -2,6 +2,7 @@ package it.eng.dome.search.web.rest;
 
 import it.eng.dome.search.rest.web.util.PaginationUtil;
 import it.eng.dome.search.service.ProviderService;
+import it.eng.dome.search.service.dto.OrganizationSearchRequest;
 import it.eng.dome.search.service.dto.SearchRequest;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,13 @@ public class ProviderResource {
 
     @Autowired
     private ProviderService providerService;
+
+    @PostMapping("/searchOrganizations")
+    public ResponseEntity<List<Organization>> searchOrganizations(@RequestBody OrganizationSearchRequest request, Pageable pageable) {
+        Page<Organization> results = providerService.filterOrganizations(request, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(results, "/api/searchOrganizations");
+        return new ResponseEntity<>(results.getContent(), headers, HttpStatus.OK);
+    }
 
     @PostMapping("/providersByCategories")
     public ResponseEntity<List<Organization>> getProvidersByCategories(@RequestBody(required = false) SearchRequest filterRequest, Pageable pageable) {

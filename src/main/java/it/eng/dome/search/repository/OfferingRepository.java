@@ -14,16 +14,19 @@ public interface OfferingRepository extends ElasticsearchRepository<IndexingObje
 
 	List<IndexingObject> findByProductOfferingIdIn(List<String> ids);
 
-	List<IndexingObject> findByProductOfferingId(String productOfferingId);
-	
-	List<IndexingObject> findByServicesId(String servicesId);
-	
-	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"match\": {\"categories.name\": \"?0\"}}}}")
-	List<IndexingObject> findByCategoryName(String categoryName, Pageable pageable);
-
-	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"term\": {\"categories.id\": \"?0\"}}}}")
-	List<IndexingObject> findByCategoryId(String categoryId);
+//	List<IndexingObject> findByProductOfferingId(String productOfferingId);
+//
+//	List<IndexingObject> findByServicesId(String servicesId);
+//
+//	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"match\": {\"categories.name\": \"?0\"}}}}")
+//	List<IndexingObject> findByCategoryName(String categoryName, Pageable pageable);
+//
+//	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"term\": {\"categories.id\": \"?0\"}}}}")
+//	List<IndexingObject> findByCategoryId(String categoryId);
 
 	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"bool\": {\"should\": [ {\"terms\": {\"categories.id\": ?0}}, {\"terms\": {\"categories.name\": ?0}} ]}}}}")
 	List<IndexingObject> findByCategoryIdsOrNames(List<String> categoryValues);
+
+	@Query("{ \"exists\": { \"field\": \"relatedPartyId\" } }")
+	List<IndexingObject> findAllWithRelatedPartyId();
 }

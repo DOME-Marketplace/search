@@ -4,7 +4,14 @@
 
 ### <code>1.0.6</code>
 **Bug Fix**
-* Add `RelatedPartyDTO` to manage **TMForum RelatedParty**.
+* Added `RelatedPartyDTO` to manage **TMForum RelatedParty**.
+
+**Feature**
+* Added new endpoint `/api/searchOrganizations` to retriever filtered Organizations.
+* Added `OrganizationSearchRequest` to manage the request for `/api/searchOrganizations` endpoint.
+
+**Improvement**
+* Added Lombok dependency to `pom.xml` file.
 
 ### <code>1.0.5</code>
 **Improvement**
