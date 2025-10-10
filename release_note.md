@@ -2,6 +2,11 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.0.7</code>
+**Improvement**
+* Changed RelatedPartyId field with a List of RelatedPartyIds in the `IndexingObject`.
+* Added `BadRequest` when the filters of `/api/searchOrganizations` endpoint are empty.
+
 ### <code>1.0.6</code>
 **Bug Fix**
 * Added `RelatedPartyDTO` to manage **TMForum RelatedParty**.

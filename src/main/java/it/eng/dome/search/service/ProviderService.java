@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,7 +32,8 @@ public class ProviderService {
     public Page<Organization> filterOrganizations(OrganizationSearchRequest request, Pageable pageable) {
         if (request == null) {
             log.warn("Organization request is null.");
-            return Page.empty(pageable);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Organization request is null.");
+//            return Page.empty(pageable);
         }
 
         boolean hasCategories = hasValues(request.getCategories());
@@ -38,7 +41,9 @@ public class ProviderService {
 
         if (!hasCategories && !hasCountries) {
             log.warn("No filter criteria provided");
-            return Page.empty(pageable);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "At least one filter (categories or countries) must be provided");
+            // change with line below if you want return all providers when the filters are empty.
+            //return findAllProviders(pageable); // metodo da creare per recuperare tutto
         }
 
         List<Organization> resultOrganizations;
@@ -53,7 +58,7 @@ public class ProviderService {
                             .collect(Collectors.toList()));
             List<Organization> byCountry = findOrganizationsByCountry(request.getCountries());
             log.debug("Found {} Countries Providers: {}", byCountry.size(),
-                    byCategory.stream()
+                    byCountry.stream()
                             .map(Organization::getId)
                             .collect(Collectors.toList()));
             resultOrganizations = intersectOrganizations(byCategory, byCountry);
@@ -82,7 +87,6 @@ public class ProviderService {
         return paginate(resultOrganizations, pageable);
     }
 
-
     private boolean hasValues(List<?> list) {
         return list != null && !list.isEmpty();
     }
@@ -95,7 +99,8 @@ public class ProviderService {
 
         // extract unique RelatedParty IDs
         Set<String> relatedPartyIds = allObjects.stream()
-                .map(IndexingObject::getRelatedPartyId)
+                .filter(obj -> obj.getRelatedPartyIds() != null)
+                .flatMap(obj -> obj.getRelatedPartyIds().stream())
                 .filter(id -> id != null && !id.isBlank())
                 .collect(Collectors.toSet());
 
@@ -116,17 +121,18 @@ public class ProviderService {
 
     private List<Organization> findOrganizationsByCountry(List<String> countries) {
         // retrieve all objects with a relatedPartyId from offering repo (elasticsearch)
-        List<IndexingObject> allObjects = offeringRepo.findAllWithRelatedPartyId();
+        List<IndexingObject> allObjects = offeringRepo.findAllWithRelatedPartyIds();
 
         if (allObjects.isEmpty()) return Collections.emptyList();
 
         // extract unique RelatedParty IDs
         Set<String> relatedPartyIds = allObjects.stream()
-                .map(IndexingObject::getRelatedPartyId)
+                .filter(obj -> obj.getRelatedPartyIds() != null)
+                .flatMap(obj -> obj.getRelatedPartyIds().stream())
                 .filter(id -> id != null && !id.isBlank())
                 .collect(Collectors.toSet());
 
-        log.debug("Found {} unique RelatedParty IDs from ProductOfferings", relatedPartyIds.size());
+        log.debug("Found {} unique RelatedParty IDs from ProductOfferings {}", relatedPartyIds.size(), relatedPartyIds);
 
         List<Organization> allOrg = relatedPartyIds.parallelStream()
                 .map(id -> {
@@ -176,7 +182,6 @@ public class ProviderService {
                 .collect(Collectors.toList());
     }
 
-
     private Page<Organization> paginate(List<Organization> organizations, Pageable pageable) {
         if (organizations == null || organizations.isEmpty()) {
             return Page.empty(pageable);
@@ -206,7 +211,8 @@ public class ProviderService {
 
         //Unique RelatedParty IDs
         Set<String> relatedPartyIds = allObjects.stream()
-                .map(IndexingObject::getRelatedPartyId)
+                .filter(obj -> obj.getRelatedPartyIds() != null)
+                .flatMap(obj -> obj.getRelatedPartyIds().stream())
                 .filter(id -> id != null && !id.isBlank())
                 .collect(Collectors.toSet());
 
