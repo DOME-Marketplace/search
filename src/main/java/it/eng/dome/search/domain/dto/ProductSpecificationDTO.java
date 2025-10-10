@@ -1,7 +1,5 @@
 package it.eng.dome.search.domain.dto;
 
-import it.eng.dome.tmforum.tmf620.v4.model.RelatedParty;
-
 import java.util.List;
 
 public class ProductSpecificationDTO {
@@ -20,7 +18,7 @@ public class ProductSpecificationDTO {
     //private BundledProductSpecification[] bundledProductSpecification;
 //    private ProductSpecCharacteristic[] productSpecCharacteristic;
 //    private ProductSpecificationRelationship[] productSpecificationRelationship;
-    private List<RelatedParty> relatedParty;
+    private List<RelatedPartyDTO> relatedParty;
 //    private ResourceSpecification[] resourceSpecification;
 //    private ServiceSpecification[] serviceSpecification;
     //private TargetProductSchema[] targetProductSchema;
@@ -92,10 +90,10 @@ public class ProductSpecificationDTO {
 //    public void setProductSpecCharacteristic(ProductSpecCharacteristic[] productSpecCharacteristic) {
 //        this.productSpecCharacteristic = productSpecCharacteristic;
 //    }
-    public List<RelatedParty> getRelatedParty() {
+    public List<RelatedPartyDTO> getRelatedParty() {
         return relatedParty;
     }
-    public void setRelatedParty(List<RelatedParty> relatedParty) {
+    public void setRelatedParty(List<RelatedPartyDTO> relatedParty) {
         this.relatedParty = relatedParty;
     }
 //    public ResourceSpecification[] getResourceSpecification() {

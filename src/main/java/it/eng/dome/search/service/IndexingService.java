@@ -38,7 +38,7 @@ public class IndexingService {
 			return;
 		}
 
-		try {
+//		try {
 			log.info("Starting indexing process...");
 
 			List<ProductOffering> offerings = tmfDataRetriever.getAllPaginatedProductOfferings(null, null);
@@ -77,14 +77,26 @@ public class IndexingService {
 			}
 
 			log.debug("Saving {} index objects", toSave.size());
-			offeringRepo.saveAll(toSave);
+			//offeringRepo.saveAll(toSave);
+
+			int count = 0;
+			for (IndexingObject indexingObject : toSave) {
+				try {
+					log.debug("{} - saving index: {}", ++count, indexingObject.getId());
+					offeringRepo.save(indexingObject);
+				}catch (Exception e) {
+					log.error("Error saving indexing: {} - {}", indexingObject.getId(), e.getMessage());
+				}
+			}
+			
+		
 			log.info("Indexing process terminated: {} processed ({} updated, {} created)", toSave.size(), updated, created);
 
-		} catch (Exception e) {
-			log.error("Error during indexing: {}", e.getMessage(), e);
-		} finally {
-			running.set(false);
-		}
+//		} catch (Exception e) {
+//			log.error("Error during indexing: {}", e.getMessage(), e);
+//		} finally {
+//			running.set(false);
+//		}
 	}
 
 	/** General usage*/

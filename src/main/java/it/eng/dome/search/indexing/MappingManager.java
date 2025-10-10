@@ -247,6 +247,15 @@ public class MappingManager {
 		}
 		return dtos;
 	}
+	
+	List<RelatedPartyDTO> toRelatedPartyDTOs(List<RelatedParty> parties) {
+		List<RelatedPartyDTO> dtos = new ArrayList<>();
+		if(parties!=null) {
+			for (RelatedParty p : parties)
+				dtos.add(toRelatedPartyDTO(p));
+		}
+		return dtos;
+	}
 
 	// --- Helper methods for DTO conversion ---
 	private ProductOfferingDTO toProductOfferingDTO(ProductOffering product) {
@@ -281,7 +290,7 @@ public class MappingManager {
 		dto.setLastUpdate(productSpec.getLastUpdate() != null
 				? productSpec.getLastUpdate().format(DATE_FORMATTER)
 				: null);
-		dto.setRelatedParty(productSpec.getRelatedParty() != null ? productSpec.getRelatedParty() : null);
+		dto.setRelatedParty(productSpec.getRelatedParty() != null ? this.toRelatedPartyDTOs(productSpec.getRelatedParty()) : null);
 		dto.setProductNumber(productSpec.getProductNumber() != null ? productSpec.getProductNumber() : null);
 		return dto;
 	}
@@ -334,6 +343,15 @@ public class MappingManager {
 				? resourceSpec.getLastUpdate().format(DATE_FORMATTER)
 				: null);
 		dto.setRelatedParty(resourceSpec.getRelatedParty() != null ? resourceSpec.getRelatedParty() : null);
+		return dto;
+	}
+	
+	private RelatedPartyDTO toRelatedPartyDTO(RelatedParty party) {
+		RelatedPartyDTO dto = new RelatedPartyDTO();
+		dto.setId(party.getId());
+		dto.setName(party.getName() != null ? party.getName() : null);
+		dto.setReferredType(party.getAtReferredType() != null ? party.getAtReferredType() : null);
+		dto.setRole(party.getRole() != null ? party.getRole() : null);
 		return dto;
 	}
 
