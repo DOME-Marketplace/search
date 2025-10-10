@@ -41,7 +41,7 @@ public class ProviderService {
             return Page.empty(pageable);
         }
 
-        List<Organization> resultOrganizations = null;
+        List<Organization> resultOrganizations;
 
         if (hasCategories && hasCountries) {
             // both categories and countries

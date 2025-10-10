@@ -38,7 +38,7 @@ public class IndexingService {
 			return;
 		}
 
-//		try {
+		try {
 			log.info("Starting indexing process...");
 
 			List<ProductOffering> offerings = tmfDataRetriever.getAllPaginatedProductOfferings(null, null);
@@ -92,11 +92,11 @@ public class IndexingService {
 		
 			log.info("Indexing process terminated: {} processed ({} updated, {} created)", toSave.size(), updated, created);
 
-//		} catch (Exception e) {
-//			log.error("Error during indexing: {}", e.getMessage(), e);
-//		} finally {
-//			running.set(false);
-//		}
+		} catch (Exception e) {
+			log.error("Error during indexing: {}", e.getMessage(), e);
+		} finally {
+			running.set(false);
+		}
 	}
 
 	/** General usage*/
