@@ -1,8 +1,7 @@
 package it.eng.dome.search.domain.dto;
 
-import it.eng.dome.tmforum.tmf620.v4.model.*;
-
 import java.util.List;
+
 
 public class ProductOfferingDTO {
     protected String id;
@@ -15,9 +14,11 @@ public class ProductOfferingDTO {
     private String version;
 //    private List<ProductOfferingTerm> productOfferingTerm;
     private ProductSpecificationDTO productSpecification;
+
     private List<ProductOfferingPriceDTO> productOfferingPrice;
-//    private ValidFor validFor;
+//    private ValidFor validFor;    
     private List<CategoryDTO> category;
+    
     // private boolean isSellable;
     // private String statusReason;
     // private Agreement[] agreement; (bisogna creare anche classe Agreement)

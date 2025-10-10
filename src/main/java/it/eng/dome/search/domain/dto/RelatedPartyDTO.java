@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class RelatedPartyDTO {
 
     protected String id;
-    private String href;
+//    private String href;
     private String name;
     private String role;
     private String referredType;
-    private String lastUpdate;
-    private String version;
+//    private String lastUpdate;
+//    private String version;
 
     public String getId() {
         return id;
@@ -25,12 +25,12 @@ public class RelatedPartyDTO {
     public void setName(String name) {
         this.name = name;
     }
-    public String getHref() {
-        return href;
-    }
-    public void setHref(String href) {
-        this.href = href;
-    }
+//    public String getHref() {
+//        return href;
+//    }
+//    public void setHref(String href) {
+//        this.href = href;
+//    }
     public String getRole() {
         return role;
     }
@@ -43,16 +43,16 @@ public class RelatedPartyDTO {
     public void setReferredType(String referredType) {
         this.referredType = referredType;
     }
-    public String getLastUpdate() {
-        return lastUpdate;
-    }
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-    public String getVersion() {
-        return version;
-    }
-    public void setVersion(String version) {
-        this.version = version;
-    }
+//    public String getLastUpdate() {
+//        return lastUpdate;
+//    }
+//    public void setLastUpdate(String lastUpdate) {
+//        this.lastUpdate = lastUpdate;
+//    }
+//    public String getVersion() {
+//        return version;
+//    }
+//    public void setVersion(String version) {
+//        this.version = version;
+//    }
 }

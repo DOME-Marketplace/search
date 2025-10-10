@@ -2,6 +2,11 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.0.6</code>
+**Bug Fix**
+* Add `RelatedPartyDTO` to manage **TMForum RelatedParty**.
+
+
 ### <code>1.0.5</code>
 **Improvement**
 * Added `MoneyDTO`, `ProductOfferingPriceDTO`, `RelatedPartyDTO`, `ValidForDTO` DTOs to `MappingManager`.
