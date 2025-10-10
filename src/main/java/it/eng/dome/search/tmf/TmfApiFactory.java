@@ -74,7 +74,7 @@ public final class TmfApiFactory implements InitializingBean {
                 // use direct access on specific TMForum APIs software
                 apiClientTmf632.setBasePath(tmfEndpoint + TMF_ENDPOINT_CONCAT_PATH + "party-catalog" + "." + tmfNamespace + "." + tmfPostfix + ":" + tmfPort + "/" + tmf632PartyManagementPath);
             }
-            log.debug("Invoke Product Ordering API at endpoint: " + apiClientTmf632.getBasePath());
+            log.debug("Invoke Party Catalog API at endpoint: " + apiClientTmf632.getBasePath());
         }
         return apiClientTmf632;
     }
@@ -89,7 +89,7 @@ public final class TmfApiFactory implements InitializingBean {
                 // use direct access on specific TMForum APIs software
                 apiClientTmf633.setBasePath(tmfEndpoint + TMF_ENDPOINT_CONCAT_PATH + "service-catalog" + "." + tmfNamespace + "." + tmfPostfix + ":" + tmfPort + "/" + tmf633ServiceCatalogPath);
             }
-            log.debug("Invoke Customer Billing API at endpoint: " + apiClientTmf633.getBasePath());
+            log.debug("Invoke Service Catalog API at endpoint: " + apiClientTmf633.getBasePath());
         }
         return apiClientTmf633;
     }
@@ -104,7 +104,7 @@ public final class TmfApiFactory implements InitializingBean {
                 // use direct access on specific TMForum APIs software
                 apiClientTmf634.setBasePath(tmfEndpoint + TMF_ENDPOINT_CONCAT_PATH + "resource-catalog" + "." + tmfNamespace + "." + tmfPostfix + ":" + tmfPort + "/" + tmf634ResourceCatalogPath);
             }
-            log.debug("Invoke Product Catalog API at endpoint: " + apiClientTmf634.getBasePath());
+            log.debug("Invoke Resource Catalog API at endpoint: " + apiClientTmf634.getBasePath());
         }
         return apiClientTmf634;
     }

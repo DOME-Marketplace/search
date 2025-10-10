@@ -21,14 +21,14 @@ public class BrowsingProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowsingProcessor.class);
 
-    @Autowired
-    private ElasticsearchOperations elasticsearchOperations;
+//    @Autowired
+//    private ElasticsearchOperations elasticsearchOperations;
 
     @Autowired
     TmfDataRetriever tmfDataRetriever;
 
     public BrowsingProcessor (ElasticsearchOperations elasticsearchOperations) {
-        this.elasticsearchOperations = elasticsearchOperations;
+//        this.elasticsearchOperations = elasticsearchOperations;
     }
 
     public Page<ProductOffering> getAllRandomizedProductOfferings (SearchRequest filter, Pageable pageable) {

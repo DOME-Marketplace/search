@@ -2,7 +2,6 @@ package it.eng.dome.search.web.rest;
 
 import it.eng.dome.search.rest.web.util.PaginationUtil;
 import it.eng.dome.search.service.BrowsingProcessor;
-import it.eng.dome.search.service.ResultProcessor;
 import it.eng.dome.search.service.dto.SearchRequest;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ public class BrowsingResource {
     @Autowired
     private BrowsingProcessor browsingProcessor;
 
-    @Autowired
-    private ResultProcessor resultProcessor;
+//    @Autowired
+//    private ResultProcessor resultProcessor;
 
 //    // browse 1.0
 //    @GetMapping(value = "/RandomizedProducts")
