@@ -2,6 +2,18 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.1.0</code>
+**Improvement**
+* Add new `Brokerage Utils` version: `2.2.0`.
+* Usage of `AbstractHealthService` class from `Brokerage Utils` to manage **getInfo()** and **getHealth()** features.
+* Add `TmfApiConfig` class to avoid loading the **TMFourm APIs** objects every time they are used in service classes.
+* Add `TrailingSlashFilter` filter to remove trailing slash from request path.
+
+### <code>1.0.7</code>
+**Improvement**
+* Changed RelatedPartyId field with a List of RelatedPartyIds in the `IndexingObject`.
+* Added `BadRequest` when the filters of `/api/searchOrganizations` endpoint are empty.
+
 ### <code>1.0.6</code>
 **Bug Fix**
 * Added `RelatedPartyDTO` to manage **TMForum RelatedParty**.

@@ -2,7 +2,6 @@ package it.eng.dome.search.repository;
 
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -27,6 +26,12 @@ public interface OfferingRepository extends ElasticsearchRepository<IndexingObje
 	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"bool\": {\"should\": [ {\"terms\": {\"categories.id\": ?0}}, {\"terms\": {\"categories.name\": ?0}} ]}}}}")
 	List<IndexingObject> findByCategoryIdsOrNames(List<String> categoryValues);
 
-	@Query("{ \"exists\": { \"field\": \"relatedPartyId\" } }")
-	List<IndexingObject> findAllWithRelatedPartyId();
+	@Query("{ \"exists\": { \"field\": \"relatedPartyIds\" } }")
+	List<IndexingObject> findAllWithRelatedPartyIds();
+
+	//documents that contains xx RelatedParty
+	List<IndexingObject> findByRelatedPartyIdsContaining(String relatedPartyId);
+
+	// documents that contains a List of RelatedPartyIds
+	List<IndexingObject> findByRelatedPartyIdsIn(List<String> relatedPartyIds);
 }

@@ -1,99 +1,150 @@
 package it.eng.dome.search.service;
 
-import it.eng.dome.brokerage.api.*;
-import it.eng.dome.search.tmf.TmfApiFactory;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
-import it.eng.dome.tmforum.tmf632.v4.model.Organization;
-import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
-import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import it.eng.dome.brokerage.api.APIPartyApis;
+import it.eng.dome.brokerage.api.ProductCatalogManagementApis;
+import it.eng.dome.brokerage.api.ResourceCatalogManagementApis;
+import it.eng.dome.brokerage.api.ServiceCatalogManagementApis;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
+import it.eng.dome.tmforum.tmf632.v4.ApiException;
+import it.eng.dome.tmforum.tmf632.v4.model.Organization;
+import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
+import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
+
 @Service
-public class TmfDataRetriever implements InitializingBean {
+public class TmfDataRetriever {
 
     private final Logger logger = LoggerFactory.getLogger(TmfDataRetriever.class);
 
     // Factory for TMF APIss
-    @Autowired
-    private TmfApiFactory tmfApiFactory;
+//    @Autowired
+//    private TmfApiFactory tmfApiFactory;
 
     // TMForum API to retrieve bills, organizations and products
-    private OrganizationApis orgApi;
-    private ProductOfferingApis productOfferingApi;
-    private ProductSpecificationApis productSpecificationApi;
-    private ServiceSpecificationApis serviceSpecificationApi;
-    private ResourceSpecificationApis resourceSpecificationApi;
+//    private OrganizationApis orgApi;
+//    private ProductOfferingApis productOfferingApi;
+//    private ProductSpecificationApis productSpecificationApi;
+//    private ServiceSpecificationApis serviceSpecificationApi;
+//    private ResourceSpecificationApis resourceSpecificationApi;
+    
+    private ProductCatalogManagementApis productCatalogManagementApis;
+    private ServiceCatalogManagementApis serviceCatalogManagementApis;
+    private ResourceCatalogManagementApis resourceCatalogManagementApis;
+    private APIPartyApis apiPartyApis;
 
-    public TmfDataRetriever() {
+    public TmfDataRetriever(ProductCatalogManagementApis productCatalogManagementApis, 
+    		ServiceCatalogManagementApis serviceCatalogManagementApis, 
+    		ResourceCatalogManagementApis resourceCatalogManagementApis, APIPartyApis apiPartyApis) {
+    	
+    	this.productCatalogManagementApis = productCatalogManagementApis;
+    	this.serviceCatalogManagementApis = serviceCatalogManagementApis;
+    	this.resourceCatalogManagementApis = resourceCatalogManagementApis;
+    	this.apiPartyApis = apiPartyApis;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        this.orgApi = new OrganizationApis(tmfApiFactory.getTMF632PartyManagementApiClient());
-        this.productOfferingApi = new ProductOfferingApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
-        this.productSpecificationApi = new ProductSpecificationApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
-        this.serviceSpecificationApi = new ServiceSpecificationApis(tmfApiFactory.getTMF633ServiceCatalogApiClient());
-        this.resourceSpecificationApi = new ResourceSpecificationApis(tmfApiFactory.getTMF634ResourceCatalogApiClient());
-        logger.info("TmfDataRetriever initialized with the following api: {}, {}, {}, {}, {}", orgApi, productOfferingApi, productSpecificationApi, serviceSpecificationApi, resourceSpecificationApi);
-    }
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        this.orgApi = new OrganizationApis(tmfApiFactory.getTMF632PartyManagementApiClient());
+//        this.productOfferingApi = new ProductOfferingApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
+//        this.productSpecificationApi = new ProductSpecificationApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
+//        this.serviceSpecificationApi = new ServiceSpecificationApis(tmfApiFactory.getTMF633ServiceCatalogApiClient());
+//        this.resourceSpecificationApi = new ResourceSpecificationApis(tmfApiFactory.getTMF634ResourceCatalogApiClient());
+//        logger.info("TmfDataRetriever initialized with the following api: {}, {}, {}, {}, {}", orgApi, productOfferingApi, productSpecificationApi, serviceSpecificationApi, resourceSpecificationApi);
+//    }
 
     // =============== TMF ORGANIZATIONS ===============
 
     public Organization getOrganizationById(String orgId, String fields) {
-//        logger.debug("Retrieving Organization from TMF API with id: {}", orgId);
+
         if (orgId == null) {
             logger.warn("Organization ID is null, cannot retrieve organization.");
             return null;
         }
-        return this.orgApi.getOrganization(orgId, fields);
+        try {
+        	
+        	logger.debug("Retrieving Organization from TMF API with id: {}", orgId);
+			return apiPartyApis.getOrganization(orgId, fields);
+		} catch (ApiException e) {
+			logger.error("Error: {}", e.getMessage());
+			return null;
+		}
     }
 
     public List<Organization> getAllPaginatedOrganizations(String fields, Map<String, String> filter) {
 //        logger.debug("Retrieving all Product Offerings from TMF API");
         //TODO: implement pagination
-        List<Organization> allOfferings = orgApi.getOrganizations(fields, filter);
+//    	List<Organization> allOfferings = orgApi.getOrganizations(fields, filter);
+        
+        List<Organization> allOrganizations = FetchUtils.streamAll(
+	        apiPartyApis::listOrganizations,    // method reference
+	        null,                       		// fields
+	        null,            					// filter
+	        100                         		// pageSize
+		).toList();        
 
-        logger.info("Retrieved {} organization from TMF API", allOfferings.size());
-        return allOfferings;
+        logger.info("Retrieved {} organization from TMF API", allOrganizations.size());
+        return allOrganizations;
     }
 
     // =============== PRODUCT OFFERING ===============
 
     public ProductOffering getProductOfferingById(String poId, String fields) {
-//        logger.debug("Retrieving Product Offering from TMF API with id: {}", poId);
+    	
         if (poId == null) {
             logger.warn("Product Offering ID is null, cannot retrieve product offering.");
             return null;
         }
-        return this.productOfferingApi.getProductOffering(poId, fields);
+        
+        logger.debug("Retrieving Product Offering from TMF API with id: {}", poId);
+        
+        try {
+			return productCatalogManagementApis.getProductOffering(poId, fields);
+		} catch (it.eng.dome.tmforum.tmf620.v4.ApiException e) {
+			logger.error("Error: {}", e.getMessage());
+			return null;
+		}
     }
 
     public List<ProductOffering> getAllPaginatedProductOfferings(String fields, Map<String, String> filter) {
 //        logger.debug("Retrieving all Product Offerings from TMF API");
-        //TODO: implement pagination
-        List<ProductOffering> allOfferings = productOfferingApi.getAllProductOfferings(fields, filter);
-
-        logger.info("Retrieved {} offerings from TMF API", allOfferings.size());
-        return allOfferings;
+        //TODO: implement pagination 
+//    	List<ProductOffering> allOfferings = productOfferingApi.getAllProductOfferings(fields, filter);
+    	
+        List<ProductOffering> allProductOfferings = FetchUtils.streamAll(
+        	productCatalogManagementApis::listProductOfferings,    // method reference
+	        null,                       		// fields
+	        null,            					// filter
+	        100                         		// pageSize
+		).toList();
+        
+        logger.info("Retrieved {} offerings from TMF API", allProductOfferings.size());
+        return allProductOfferings;
     }
 
     // =============== PRODUCT SPECIFICATION ===============
 
     public ProductSpecification getProductSpecificationById(String psId, String fields) {
+    	
         if (psId == null) {
             logger.warn("Product Specification ID is null, cannot retrieve product specification.");
             return null;
         }
-        return this.productSpecificationApi.getProductSpecification(psId, fields);
-
+        
+        try {
+			return productCatalogManagementApis.getProductSpecification(psId, fields);
+		} catch (it.eng.dome.tmforum.tmf620.v4.ApiException e) {
+			logger.error("Error: {}", e.getMessage());
+			return null;
+		}
     }
 
     // =============== SERVICE SPECIFICATION ===============
@@ -103,7 +154,13 @@ public class TmfDataRetriever implements InitializingBean {
             logger.warn("Service Specification ID is null, cannot retrieve service specification.");
             return null;
         }
-        return this.serviceSpecificationApi.getServiceSpecification(ssId, fields);
+        
+        try {
+			return serviceCatalogManagementApis.getServiceSpecification(ssId, fields);
+		} catch (it.eng.dome.tmforum.tmf633.v4.ApiException e) {
+			logger.error("Error: {}", e.getMessage());
+			return null;
+		}
     }
 
     // =============== RESOURCE SPECIFICATION ===============
@@ -113,6 +170,12 @@ public class TmfDataRetriever implements InitializingBean {
             logger.warn("Resource Specification ID is null, cannot retrieve resource specification.");
             return null;
         }
-        return this.resourceSpecificationApi.getResourceSpecification(rsId, fields);
+        
+        try {
+			return resourceCatalogManagementApis.getResourceSpecification(rsId, fields);
+		} catch (it.eng.dome.tmforum.tmf634.v4.ApiException e) {
+			logger.error("Error: {}", e.getMessage());
+			return null;
+		}
     }
 }

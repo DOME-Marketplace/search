@@ -70,7 +70,7 @@ public class IndexingObject {
 
 	// from RelatedParty
 	@Field(type = FieldType.Keyword)
-	private String relatedPartyId;
+	private List<String> relatedPartyIds;
 
 	// from ServiceSpecification
 	@Field(type = FieldType.Nested)
@@ -195,12 +195,12 @@ public class IndexingObject {
 		this.productSpecificationDescription = productSpecificationDescription;
 	}
 
-	public String getRelatedPartyId() {
-		return relatedPartyId;
+	public List<String> getRelatedPartyIds() {
+		return relatedPartyIds;
 	}
 
-	public void setRelatedPartyId(String relatedPartyId) {
-		this.relatedPartyId = relatedPartyId;
+	public void setRelatedPartyIds(List<String> relatedPartyIds) {
+		this.relatedPartyIds = relatedPartyIds;
 	}
 
 	public List<ServiceSpecificationDTO> getServices() {

@@ -23,6 +23,8 @@ import org.springframework.web.client.ResourceAccessException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class MappingManager {
@@ -65,10 +67,12 @@ public class MappingManager {
 		objToIndex.setProductSpecificationId(productSpecDetails.getId() != null ? productSpecDetails.getId() : null);
 		objToIndex.setProductSpecificationName(productSpecDetails.getName() != null ? productSpecDetails.getName() : null);
 		objToIndex.setProductSpecificationDescription(productSpecDetails.getDescription() != null ? productSpecDetails.getDescription() : null);
-		if (productSpecDetails.getRelatedParty() != null) {
-			for (RelatedParty party : productSpecDetails.getRelatedParty()) {
-				objToIndex.setRelatedPartyId(party.getId());
-			}
+		if (productSpecDetails.getRelatedParty() != null && !productSpecDetails.getRelatedParty().isEmpty()) {
+			List<String> relatedPartyIds = productSpecDetails.getRelatedParty().stream()
+					.map(RelatedParty::getId)
+					.filter(Objects::nonNull) // exclude null
+					.collect(Collectors.toList());
+			objToIndex.setRelatedPartyIds(relatedPartyIds);
 		}
 
 		return objToIndex;
