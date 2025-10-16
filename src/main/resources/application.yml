@@ -16,11 +16,6 @@ elasticsearch:
     ssl:
       enabled: false
       verification: false
-spring:
-  security:
-    user:
-      name: admin
-      password: admin
 # Spring Management Configuration - Actuator
 management:
   server:

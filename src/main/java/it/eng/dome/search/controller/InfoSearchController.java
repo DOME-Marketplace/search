@@ -45,7 +45,7 @@ public class InfoSearchController {
 			Health health = this.healthService.getHealth();
 
 			return ResponseEntity.ok(health);
-
+			
 		} catch (Exception e) {
 			logger.warn("Failed to serialize Health: {}", e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -24,18 +24,7 @@ import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
 public class TmfDataRetriever {
 
     private final Logger logger = LoggerFactory.getLogger(TmfDataRetriever.class);
-
-    // Factory for TMF APIss
-//    @Autowired
-//    private TmfApiFactory tmfApiFactory;
-
-    // TMForum API to retrieve bills, organizations and products
-//    private OrganizationApis orgApi;
-//    private ProductOfferingApis productOfferingApi;
-//    private ProductSpecificationApis productSpecificationApi;
-//    private ServiceSpecificationApis serviceSpecificationApi;
-//    private ResourceSpecificationApis resourceSpecificationApi;
-    
+   
     private ProductCatalogManagementApis productCatalogManagementApis;
     private ServiceCatalogManagementApis serviceCatalogManagementApis;
     private ResourceCatalogManagementApis resourceCatalogManagementApis;
@@ -51,15 +40,6 @@ public class TmfDataRetriever {
     	this.apiPartyApis = apiPartyApis;
     }
 
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        this.orgApi = new OrganizationApis(tmfApiFactory.getTMF632PartyManagementApiClient());
-//        this.productOfferingApi = new ProductOfferingApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
-//        this.productSpecificationApi = new ProductSpecificationApis(tmfApiFactory.getTMF620ProductCatalogApiClient());
-//        this.serviceSpecificationApi = new ServiceSpecificationApis(tmfApiFactory.getTMF633ServiceCatalogApiClient());
-//        this.resourceSpecificationApi = new ResourceSpecificationApis(tmfApiFactory.getTMF634ResourceCatalogApiClient());
-//        logger.info("TmfDataRetriever initialized with the following api: {}, {}, {}, {}, {}", orgApi, productOfferingApi, productSpecificationApi, serviceSpecificationApi, resourceSpecificationApi);
-//    }
 
     // =============== TMF ORGANIZATIONS ===============
 

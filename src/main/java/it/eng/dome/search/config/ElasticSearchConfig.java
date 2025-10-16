@@ -45,7 +45,8 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
     private final Logger logger = LoggerFactory.getLogger(ElasticSearchConfig.class);
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public RestHighLevelClient elasticsearchClient() {
 
         HttpHeaders compatibilityHeaders = new HttpHeaders();

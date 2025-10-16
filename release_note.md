@@ -8,6 +8,7 @@
 * Usage of `AbstractHealthService` class from `Brokerage Utils` to manage **getInfo()** and **getHealth()** features.
 * Add `TmfApiConfig` class to avoid loading the **TMFourm APIs** objects every time they are used in service classes.
 * Add `TrailingSlashFilter` filter to remove trailing slash from request path.
+* Generate automatic `REST_APIs.md` file from **Swagger APIs** using the `generate-rest-apis` profile (`mvn spring-boot:run -Pgenerate-rest-apis`).
 
 ### <code>1.0.7</code>
 **Improvement**
