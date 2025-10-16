@@ -9,35 +9,35 @@
 ### browsing-resource
 | Verb | Path | Task |
 |------|------|------|
-| POST | `/api/RandomizedProductOfferings` | postRandomizedProductOfferingsUsingPOST |
+| POST | `/api/RandomizedProductOfferings` | postRandomizedProductOfferings |
 
 ### search-resource
 | Verb | Path | Task |
 |------|------|------|
-| POST | `/api/SearchProduct/{query}` | searchProductUsingPOST |
-| POST | `/api/SearchProductByFilterCategory` | searchProductByFilterCategoryUsingPOST |
-| GET | `/api/offerings/clearRepository` | clearRepositoryUsingGET |
+| POST | `/api/SearchProduct/{query}` | searchProduct |
+| POST | `/api/SearchProductByFilterCategory` | searchProductByFilterCategory |
+| GET | `/api/offerings/clearRepository` | clearRepository |
 
 ### provider-resource
 | Verb | Path | Task |
 |------|------|------|
-| POST | `/api/providersByCategories` | getProvidersByCategoriesUsingPOST |
-| POST | `/api/searchOrganizations` | searchOrganizationsUsingPOST |
+| POST | `/api/providersByCategories` | getProvidersByCategories |
+| POST | `/api/searchOrganizations` | searchOrganizations |
 
 ### basic-error-controller
 | Verb | Path | Task |
 |------|------|------|
-| GET | `/error` | errorHtmlUsingGET |
-| HEAD | `/error` | errorHtmlUsingHEAD |
-| POST | `/error` | errorHtmlUsingPOST |
-| PUT | `/error` | errorHtmlUsingPUT |
-| DELETE | `/error` | errorHtmlUsingDELETE |
-| OPTIONS | `/error` | errorHtmlUsingOPTIONS |
-| PATCH | `/error` | errorHtmlUsingPATCH |
+| GET | `/error` | error |
+| HEAD | `/error` | error |
+| POST | `/error` | error |
+| PUT | `/error` | error |
+| DELETE | `/error` | error |
+| OPTIONS | `/error` | error |
+| PATCH | `/error` | error |
 
 ### info-search-controller
 | Verb | Path | Task |
 |------|------|------|
-| GET | `/search/health` | getHealthUsingGET |
-| GET | `/search/info` | getInfoUsingGET |
+| GET | `/search/health` | getHealth |
+| GET | `/search/info` | getInfo |
 

@@ -94,6 +94,8 @@ public class MarkdownGenerationListener {
 					JsonNode operation = methods.path(method);
 					String tag = operation.path("tags").get(0).asText();
 					String opId = operation.path("operationId").asText();
+					opId = opId.replaceAll("Using(GET|POST|PUT|DELETE|PATCH|OPTIONS|HEAD)$", "");
+					
 					String line = String.format("| %s | `%s` | %s |", method.toUpperCase(), path, opId);
 					tagToEndpoints.computeIfAbsent(tag, k -> new ArrayList<>()).add(line);
 				});
