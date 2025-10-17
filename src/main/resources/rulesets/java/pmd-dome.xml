@@ -16,6 +16,7 @@
     <exclude name="ArrayIsStoredDirectly"/>
     <exclude name="AvoidPrintStackTrace"/>
     <exclude name="LooseCoupling"/>
+    <exclude name="UseConcurrentHashMap"/>
   </rule>
   
   <!--rule ref="category/java/performance.xml"/-->
