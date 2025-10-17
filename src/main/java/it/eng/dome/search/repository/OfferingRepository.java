@@ -1,11 +1,12 @@
 package it.eng.dome.search.repository;
 
-import it.eng.dome.search.domain.IndexingObject;
+import java.util.List;
+
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import it.eng.dome.search.domain.IndexingObject;
 
 @Repository
 public interface OfferingRepository extends ElasticsearchRepository<IndexingObject, String> {
@@ -33,5 +34,4 @@ public interface OfferingRepository extends ElasticsearchRepository<IndexingObje
 
 	// documents that contains a List of RelatedPartyIds
 	List<IndexingObject> findByRelatedPartyIdsIn(List<String> relatedPartyIds);
-
 }
