@@ -16,14 +16,15 @@
     <exclude name="ArrayIsStoredDirectly"/>
     <exclude name="AvoidPrintStackTrace"/>
     <exclude name="LooseCoupling"/>
-    <exclude name="UseConcurrentHashMap"/>
   </rule>
   
   <!--rule ref="category/java/performance.xml"/-->
   <!-- rule ref="category/java/codestyle.xml"/ -->
   <!--rule ref="category/java/design.xml"/-->
   <!--rule ref="category/java/errorprone.xml"/-->
-  <rule ref="category/java/multithreading.xml"/>
+  <rule ref="category/java/multithreading.xml">
+  	<exclude name="UseConcurrentHashMap"/>
+  </rule>
   <rule ref="category/java/security.xml"/>
 
 </ruleset>
