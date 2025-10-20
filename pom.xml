@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!DOCTYPE xml>
+<project xmlns="https://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -11,7 +13,7 @@
 	</parent>
 	<groupId>it.eng.dome</groupId>
 	<artifactId>search</artifactId>
-	<version>0.1.9-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<name>Search and Browsing</name>
 	<description>Demo for DOME Project</description>
 	<properties>
@@ -66,9 +68,54 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.18.1</version>
 		</dependency>
+
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>			
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- tmf  -->
+
+		<!-- Brokerage Utils dependencies -->
+		<dependency>
+			<groupId>it.eng.dome.brokerage</groupId>
+			<artifactId>brokerage-utils</artifactId>
+			<version>[2.2.0, 2.3.0)</version>
+		</dependency>
+
+		<!-- TMF620 Catalog -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf620-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!-- TMF632 Party Management -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf632-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!--  TMF633 Sercvice Catalog Management  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf633-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+
+		<!--  TMF634 Resource Catalog  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf634-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -86,8 +133,23 @@
 						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<jvmArguments>--add-opens java.base/java.net=ALL-UNNAMED</jvmArguments>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+	    <profile>
+	        <id>generate-rest-apis</id>
+	        <activation>
+	            <activeByDefault>false</activeByDefault>
+	        </activation>
+	        <properties>
+	            <spring-boot.run.arguments>--rest_api_docs.generate_md=true</spring-boot.run.arguments>
+	        </properties>
+	    </profile>
+	</profiles>
 
 </project>
