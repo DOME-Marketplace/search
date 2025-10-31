@@ -2,6 +2,22 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.1.1</code>
+**Improvement**
+* When `SearchOrganizations filter` are empty, all Organizations are returned.
+* Added Lombok annotations (`@Data, @NoArgsConstructor, @AllArgsConstructor`) to reduce boilerplate code.
+* Changed `relatedPartyIds` field in `IndexingObject` to a `List<RelatedPartyDTO>` for better data representation.
+
+**Feature**
+* Compliance Levels Management: 
+  * Added `complianceLevels` filter in `/api/searchOrganizations` endpoint to enable filtering by compliance levels.
+  * Indexed and exposed `complianceLevels` field in `IndexingObject` for search and filtering. 
+  * Integrated `VCDecoderBasic` in `OrganizationService` to extract compliance levels from VC tokens.
+* New Metadata Endpoints for Frontend:
+  * `GET /api/categories` → Retrieve all available TMF categories (categories.name).
+  * `GET /api/countries` → Retrieve all available countries from TMF organizations (partyCharacteristic.country).
+  * `GET /api/complianceLevels` → Retrieve all available compliance levels (hardcoded: ["BL", "P", "P+"]).
+
 ### <code>1.1.0</code>
 **Improvement**
 * Add new `Brokerage Utils` version: `2.2.0`.
