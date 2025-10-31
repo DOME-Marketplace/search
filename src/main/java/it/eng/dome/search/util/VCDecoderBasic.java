@@ -1,6 +1,8 @@
 package it.eng.dome.search.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public class VCDecoderBasic {
 
         // Decodifica Base64URL
         byte[] decodedBytes = Base64.getUrlDecoder().decode(payload);
-        String json = new String(decodedBytes);
+        String json = new String(decodedBytes, StandardCharsets.UTF_8);
 
         // Converte il JSON in Map
         Map<String, Object> vcData = mapper.readValue(json, Map.class);

@@ -52,8 +52,6 @@ public class ProviderService {
             //return findAllProviders(pageable); // metodo da creare per recuperare tutto
         }
 
-        List<Organization> resultOrganizations = new ArrayList<>();
-
         // Lista temporanea per fare l'intersezione dei vari filtri
         List<List<Organization>> listsToIntersect = new ArrayList<>();
 
@@ -91,9 +89,9 @@ public class ProviderService {
         }
 
         // Intersezione di tutti i filtri selezionati
-        resultOrganizations = intersectOrganizations(listsToIntersect.toArray(new List[0]));
-        printListLog("After intersection, Providers", resultOrganizations, Organization::getId);
-        return paginate(resultOrganizations, pageable);
+        List<Organization> intersected = intersectOrganizations(listsToIntersect.toArray(new List[0]));
+        printListLog("After intersection, Providers", intersected, Organization::getId);
+        return paginate(intersected, pageable);
     }
 
     private boolean hasValues(List<?> list) {

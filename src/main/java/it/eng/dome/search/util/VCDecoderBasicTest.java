@@ -1,8 +1,13 @@
 package it.eng.dome.search.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 public class VCDecoderBasicTest {
+
+    private static final Logger log = LoggerFactory.getLogger(VCDecoderBasicTest.class);
 
     public static void main(String[] args) {
         try {
@@ -14,13 +19,13 @@ public class VCDecoderBasicTest {
 
             Map<String, Object> decodedVC = VCDecoderBasic.decode(vcToken);
 
-            System.out.println("=== Decodifica VC ===");
-            decodedVC.forEach((key, value) -> System.out.println(key + " : " + value));
+            log.info("=== Decodifica VC ===");
+            decodedVC.forEach((key, value) -> log.info(key," {} : {}", value));
 
 
             String labelLevel = VCDecoderBasic.extractLabelLevel(vcToken);
-            System.out.println("== Label Level ==");
-            System.out.println(labelLevel);
+            log.info("== Label Level ==");
+            log.info(labelLevel);
 
         } catch (Exception e) {
             e.printStackTrace();
