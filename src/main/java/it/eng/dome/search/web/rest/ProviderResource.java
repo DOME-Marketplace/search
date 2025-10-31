@@ -3,7 +3,6 @@ package it.eng.dome.search.web.rest;
 import it.eng.dome.search.rest.web.util.PaginationUtil;
 import it.eng.dome.search.service.ProviderService;
 import it.eng.dome.search.service.dto.OrganizationSearchRequest;
-import it.eng.dome.search.service.dto.SearchRequest;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,11 +28,24 @@ public class ProviderResource {
         return new ResponseEntity<>(results.getContent(), headers, HttpStatus.OK);
     }
 
-    @PostMapping("/providersByCategories")
-    public ResponseEntity<List<Organization>> getProvidersByCategories(@RequestBody(required = false) SearchRequest filterRequest, Pageable pageable) {
-        Page<Organization> providersPage = providerService.getProvidersByCategories(filterRequest, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(providersPage, "/api/providersByCategories");
-        return new ResponseEntity<>(providersPage.getContent(), headers, HttpStatus.OK);
+    // --- GET /categories ---
+    @GetMapping("/categories")
+    public ResponseEntity<List<String>> getCategories() {
+        List<String> categories = providerService.getAllCategories();
+        return ResponseEntity.ok(categories);
+    }
+
+    // --- GET /countries ---
+    @GetMapping("/countries")
+    public ResponseEntity<List<String>> getCountries() {
+        List<String> countries = providerService.getAllCountries();
+        return ResponseEntity.ok(countries);
+    }
+
+    // --- GET /countries ---
+    @GetMapping("/complianceLevels")
+    public ResponseEntity<List<String>> getComplianceLevels() {
+        List<String> complianceLevels = providerService.getAllComplianceLevels();
+        return ResponseEntity.ok(complianceLevels);
     }
 }
-

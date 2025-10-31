@@ -13,5 +13,5 @@ public class OrganizationSearchRequest {
 
     private List<String> categories = new ArrayList<>();
     private List<String> countries = new ArrayList<>();
-//    private List<String> complianceLevels = new ArrayList<>();
+    private List<String> complianceLevels = new ArrayList<>();
 }

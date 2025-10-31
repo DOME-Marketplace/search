@@ -9,6 +9,7 @@ import it.eng.dome.search.semantic.domain.Analysis;
 import it.eng.dome.search.semantic.domain.AnalyzeResultObject;
 import it.eng.dome.search.semantic.domain.CategorizationResultObject;
 import it.eng.dome.search.service.TmfDataRetriever;
+import it.eng.dome.search.util.VCDecoderBasic;
 import it.eng.dome.tmforum.tmf620.v4.model.*;
 import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
 import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
@@ -68,12 +69,33 @@ public class MappingManager {
 		objToIndex.setProductSpecificationName(productSpecDetails.getName() != null ? productSpecDetails.getName() : null);
 		objToIndex.setProductSpecificationDescription(productSpecDetails.getDescription() != null ? productSpecDetails.getDescription() : null);
 		if (productSpecDetails.getRelatedParty() != null && !productSpecDetails.getRelatedParty().isEmpty()) {
-			List<String> relatedPartyIds = productSpecDetails.getRelatedParty().stream()
-					.map(RelatedParty::getId)
-					.filter(Objects::nonNull) // exclude null
-					.collect(Collectors.toList());
-			objToIndex.setRelatedPartyIds(relatedPartyIds);
+			List<RelatedPartyDTO> relatedParties = toRelatedPartyDTOs(productSpecDetails.getRelatedParty());
+			objToIndex.setRelatedParties(relatedParties);
 		}
+
+		// compliance levels
+		List<String> complianceLevels = new ArrayList<>();
+		if (prodSpecDTO.getProductSpecCharacteristic() != null) {
+			for (ProductSpecCharacteristicDTO characteristic : prodSpecDTO.getProductSpecCharacteristic()) {
+				// decode only if the name is Compliance:VC
+				if ("Compliance:VC".equalsIgnoreCase(characteristic.getName())) {
+					if (characteristic.getProductSpecCharacteristicValue() != null) {
+						for (ProductSpecCharacteristicValueDTO charValueDTO : characteristic.getProductSpecCharacteristicValue()) {
+							try {
+								String complianceLevel = VCDecoderBasic.extractLabelLevel(charValueDTO.getValue());
+								if (complianceLevel != null && !complianceLevel.isBlank()) {
+									log.info("Decoded VC for ProductSpecCharacteristicValue {}: {}", charValueDTO.getValue(), complianceLevel);
+									complianceLevels.add(complianceLevel);
+								}
+							} catch (Exception e) {
+								log.warn("Failed to decode VC for ProductSpecCharacteristicValue {}: {}", charValueDTO.getValue(), e.getMessage());
+							}
+						}
+					}
+				}
+			}
+		}
+		objToIndex.setComplianceLevels(complianceLevels);
 
 		return objToIndex;
 	}
@@ -294,6 +316,8 @@ public class MappingManager {
 		dto.setLastUpdate(productSpec.getLastUpdate() != null
 				? productSpec.getLastUpdate().format(DATE_FORMATTER)
 				: null);
+		dto.setProductSpecCharacteristic(productSpec.getProductSpecCharacteristic() != null	? this.toProductSpecCharacteristicDTOList(productSpec.getProductSpecCharacteristic())
+				: null);
 		dto.setRelatedParty(productSpec.getRelatedParty() != null ? this.toRelatedPartyDTOs(productSpec.getRelatedParty()) : null);
 		dto.setProductNumber(productSpec.getProductNumber() != null ? productSpec.getProductNumber() : null);
 		return dto;
@@ -349,12 +373,43 @@ public class MappingManager {
 		dto.setRelatedParty(resourceSpec.getRelatedParty() != null ? resourceSpec.getRelatedParty() : null);
 		return dto;
 	}
-	
+
+	List<ProductSpecCharacteristicDTO> toProductSpecCharacteristicDTOList(List<ProductSpecificationCharacteristic> list) {
+		List<ProductSpecCharacteristicDTO> dtos = new ArrayList<>();
+		for (ProductSpecificationCharacteristic c : list)
+			dtos.add(toProductSpecCharacteristicDTO(c));
+		return dtos;
+	}
+
+	private ProductSpecCharacteristicDTO toProductSpecCharacteristicDTO(ProductSpecificationCharacteristic c) {
+		ProductSpecCharacteristicDTO dto = new ProductSpecCharacteristicDTO();
+		dto.setId(c.getId());
+		dto.setName(c.getName());
+		dto.setProductSpecCharacteristicValue(
+				c.getProductSpecCharacteristicValue() != null
+						? toProductSpecCharacteristicValueDTOList(c.getProductSpecCharacteristicValue())
+						.toArray(new ProductSpecCharacteristicValueDTO[0])
+						: null
+		);
+		return dto;
+	}
+
+	private List<ProductSpecCharacteristicValueDTO> toProductSpecCharacteristicValueDTOList(List<CharacteristicValueSpecification> list) {
+		List<ProductSpecCharacteristicValueDTO> dtos = new ArrayList<>();
+		for (CharacteristicValueSpecification v : list) {
+			ProductSpecCharacteristicValueDTO dto = new ProductSpecCharacteristicValueDTO();
+			dto.setIsDefault(v.getIsDefault());
+			dto.setValue(v.getValue() != null ? v.getValue().toString() : null);
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+
 	private RelatedPartyDTO toRelatedPartyDTO(RelatedParty party) {
 		RelatedPartyDTO dto = new RelatedPartyDTO();
 		dto.setId(party.getId());
 		dto.setName(party.getName() != null ? party.getName() : null);
-		dto.setReferredType(party.getAtReferredType() != null ? party.getAtReferredType() : null);
+//		dto.setReferredType(party.getAtReferredType() != null ? party.getAtReferredType() : null);
 		dto.setRole(party.getRole() != null ? party.getRole() : null);
 		return dto;
 	}

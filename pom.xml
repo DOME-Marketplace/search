@@ -11,24 +11,24 @@
 		<version>2.7.17</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>it.eng.dome</groupId>
 	<artifactId>search</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<name>Search and Browsing</name>
 	<description>Demo for DOME Project</description>
+
 	<properties>
 		<java.version>11</java.version>
 		<skipTests>true</skipTests>
 	</properties>
+
 	<dependencies>
+		<!-- Spring Boot Starters -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.springframework.boot</groupId> -->
-		<!-- <artifactId>spring-boot-starter-security</artifactId> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -42,6 +42,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>org.springframework.boot</groupId> -->
+		<!-- <artifactId>spring-boot-starter-security</artifactId> -->
+		<!-- </dependency> -->
+
+		<!-- Swagger / Springfox -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>
@@ -57,12 +63,8 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.springframework.security</groupId> -->
-		<!-- <artifactId>spring-security-test</artifactId> -->
-		<!-- <scope>test</scope> -->
-		<!-- </dependency> -->
-		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+
+		<!-- Jsoup -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
@@ -76,8 +78,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- tmf  -->
-
 		<!-- Brokerage Utils dependencies -->
 		<dependency>
 			<groupId>it.eng.dome.brokerage</groupId>
@@ -85,6 +85,7 @@
 			<version>[2.2.0, 2.3.0)</version>
 		</dependency>
 
+		<!-- TMF SDK dependencies -->
 		<!-- TMF620 Catalog -->
 		<dependency>
 			<groupId>it.eng.dome.tmforum-sdk</groupId>
@@ -112,6 +113,32 @@
 			<artifactId>tmf634-v4</artifactId>
 			<version>[2.1.0, 2.2.0)</version>
 		</dependency>
+
+		<!-- Nimbus JOSE + JWT -->
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>9.37.3</version>
+		</dependency>
+
+		<!-- JSON Parsing con Jackson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.15.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.15.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.15.2</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

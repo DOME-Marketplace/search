@@ -3,6 +3,7 @@ package it.eng.dome.search.service;
 import it.eng.dome.search.domain.IndexingObject;
 import it.eng.dome.search.repository.OfferingRepository;
 import it.eng.dome.search.service.dto.SearchRequest;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
@@ -59,6 +60,16 @@ public class SearchProcessor {
         } else {
             logger.info("No categories specified for filtering.");
         }
+
+		// Add a filter to include only products with status "launched"
+		// Add a filter to include only products with status "Launched" or "launched"
+		boolQueryBuilder.filter(
+				QueryBuilders.termsQuery(
+						"productOfferingLifecycleStatus",
+						"Launched",
+						"launched"
+				)
+		);
 
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
@@ -141,23 +152,33 @@ public class SearchProcessor {
 		QueryBuilder queryBuilder = QueryBuilders.functionScoreQuery(boolQuery, ScoreFunctionBuilders.weightFactorFunction(1));
 
 		// Create a BoolQueryBuilder to combine the main query and the category filter
-		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(queryBuilder);
+		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-		// Add category filter if categories are specified in the searchRequest
+		// Log della query full-text
+		logger.info("Building full-text query for: {}", q);
+		boolQueryBuilder.must(queryBuilder);
+
 		if (request.getCategories() != null && !request.getCategories().isEmpty()) {
 			logger.info("Adding category filter for categories: {}", request.getCategories());
 			BoolQueryBuilder nestedBoolQuery = QueryBuilders.boolQuery();
 			nestedBoolQuery.must(QueryBuilders.termsQuery("categories.name", request.getCategories()));
-
 			// Create a nested query to filter by categories
-			boolQueryBuilder = boolQueryBuilder.filter(QueryBuilders.nestedQuery("categories", nestedBoolQuery, org.apache.lucene.search.join.ScoreMode.None));
+			boolQueryBuilder = boolQueryBuilder.filter(
+					QueryBuilders.nestedQuery("categories", nestedBoolQuery,
+							org.apache.lucene.search.join.ScoreMode.None));
 		} else {
 			logger.info("No categories specified for filtering.");
 		}
 
 		// Add a filter to include only products with status "launched"
-		TermQueryBuilder termQueryBuilderStatus = QueryBuilders.termQuery("productOfferingLifecycleStatus", "launched");
-		boolQueryBuilder = boolQueryBuilder.filter(termQueryBuilderStatus);
+		// Add a filter to include only products with status "Launched" or "launched"
+		boolQueryBuilder.filter(
+				QueryBuilders.termsQuery(
+						"productOfferingLifecycleStatus",
+						"Launched",
+						"launched"
+				)
+		);
 
 		// Build the Elasticsearch query
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()

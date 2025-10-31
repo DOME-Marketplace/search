@@ -1,9 +1,15 @@
 package it.eng.dome.search.service;
 
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import it.eng.dome.tmforum.tmf620.v4.model.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,10 +31,10 @@ public class TmfDataRetriever {
 
     private final Logger logger = LoggerFactory.getLogger(TmfDataRetriever.class);
    
-    private ProductCatalogManagementApis productCatalogManagementApis;
-    private ServiceCatalogManagementApis serviceCatalogManagementApis;
-    private ResourceCatalogManagementApis resourceCatalogManagementApis;
-    private APIPartyApis apiPartyApis;
+    private final ProductCatalogManagementApis productCatalogManagementApis;
+    private final ServiceCatalogManagementApis serviceCatalogManagementApis;
+    private final ResourceCatalogManagementApis resourceCatalogManagementApis;
+    private final APIPartyApis apiPartyApis;
 
     public TmfDataRetriever(ProductCatalogManagementApis productCatalogManagementApis, 
     		ServiceCatalogManagementApis serviceCatalogManagementApis, 
@@ -51,7 +57,7 @@ public class TmfDataRetriever {
         }
         try {
         	
-        	logger.debug("Retrieving Organization from TMF API with id: {}", orgId);
+//        	logger.debug("Retrieving Organization from TMF API with id: {}", orgId);
 			return apiPartyApis.getOrganization(orgId, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getMessage());
@@ -59,19 +65,16 @@ public class TmfDataRetriever {
 		}
     }
 
-    public List<Organization> getAllPaginatedOrganizations(String fields, Map<String, String> filter) {
-//        logger.debug("Retrieving all Product Offerings from TMF API");
-        //TODO: implement pagination
-//    	List<Organization> allOfferings = orgApi.getOrganizations(fields, filter);
-        
+    public List<Organization> getAllPaginatedOrganizations(String fields, Map<String, String> filter, int pageSize) {
         List<Organization> allOrganizations = FetchUtils.streamAll(
 	        apiPartyApis::listOrganizations,    // method reference
-	        null,                       		// fields
-	        null,            					// filter
-	        100                         		// pageSize
-		).toList();        
+	        fields,                       		// fields
+	        filter,            					// filter
+	        pageSize                         	// pageSize
+		).collect(Collectors.toList());
 
-        logger.info("Retrieved {} organization from TMF API", allOrganizations.size());
+
+       // logger.info("Retrieved {} organization from TMF API", allOrganizations.size());
         return allOrganizations;
     }
 
@@ -84,7 +87,7 @@ public class TmfDataRetriever {
             return null;
         }
         
-        logger.debug("Retrieving Product Offering from TMF API with id: {}", poId);
+        //logger.debug("Retrieving Product Offering from TMF API with id: {}", poId);
         
         try {
 			return productCatalogManagementApis.getProductOffering(poId, fields);
@@ -94,21 +97,46 @@ public class TmfDataRetriever {
 		}
     }
 
+    /**
+     * Fetches ProductOfferings from TMF API in batches and processes each batch using the provided processor.
+     *
+     * @param filter    optional filters to apply (pass null for no filters)
+     * @param batchSize number of items per batch
+     * @param processor callback to process each batch of ProductOfferings
+     */
+    public void fetchProductOfferingsByBatch(Map<String, String> filter, int batchSize, FetchUtils.BatchProcessor<ProductOffering> processor) {
+        FetchUtils.fetchByBatch(
+                productCatalogManagementApis::listProductOfferings,  // TMF API method
+                null,                                                // fields to retrieve (null = all)
+                (filter != null) ? filter : new HashMap<String, String>(),    // filters (empty map if null)
+                batchSize,                                           // batch size
+                processor                                             // callback to process each batch
+        );
+    }
+
     public List<ProductOffering> getAllPaginatedProductOfferings(String fields, Map<String, String> filter) {
-//        logger.debug("Retrieving all Product Offerings from TMF API");
-        //TODO: implement pagination 
-//    	List<ProductOffering> allOfferings = productOfferingApi.getAllProductOfferings(fields, filter);
-    	
         List<ProductOffering> allProductOfferings = FetchUtils.streamAll(
         	productCatalogManagementApis::listProductOfferings,    // method reference
-	        null,                       		// fields
-	        null,            					// filter
+	        fields,                       		// fields
+	        filter,            					// filter
 	        100                         		// pageSize
-		).toList();
-        
+		).collect(Collectors.toList());
+
         logger.info("Retrieved {} offerings from TMF API", allProductOfferings.size());
         return allProductOfferings;
     }
+
+    // =============== CATEGORY ===============
+    public void fetchCategoriesByBatch(String fields, Map<String, String> filter, int batchSize, FetchUtils.BatchProcessor<Category> processor) {
+        FetchUtils.fetchByBatch(
+                productCatalogManagementApis::listCategories,                // TMF API method
+                fields,                                                     // fields to retrieve (null = all)
+                (filter != null) ? filter : new HashMap<String, String>(), // filters (empty map if null)
+                batchSize,                                                // batch size
+                processor                                                // callback to process each batch
+        );
+    }
+
 
     // =============== PRODUCT SPECIFICATION ===============
 

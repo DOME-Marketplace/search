@@ -23,15 +23,15 @@ public interface OfferingRepository extends ElasticsearchRepository<IndexingObje
 //	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"term\": {\"categories.id\": \"?0\"}}}}")
 //	List<IndexingObject> findByCategoryId(String categoryId);
 
+	// Search by category IDs or names
 	@Query("{\"nested\": {\"path\": \"categories\", \"query\": {\"bool\": {\"should\": [ {\"terms\": {\"categories.id\": ?0}}, {\"terms\": {\"categories.name\": ?0}} ]}}}}")
 	List<IndexingObject> findByCategoryIdsOrNames(List<String> categoryValues);
 
-	@Query("{ \"exists\": { \"field\": \"relatedPartyIds\" } }")
-	List<IndexingObject> findAllWithRelatedPartyIds();
+	// Find all documents where relatedParties field exists
+	@Query("{ \"exists\": { \"field\": \"relatedParties\" } }")
+	List<IndexingObject> findAllWithRelatedParties();
 
-	//documents that contains xx RelatedParty
-	List<IndexingObject> findByRelatedPartyIdsContaining(String relatedPartyId);
-
-	// documents that contains a List of RelatedPartyIds
-	List<IndexingObject> findByRelatedPartyIdsIn(List<String> relatedPartyIds);
+	// Search by compliance levels
+	@Query("{\"terms\": {\"complianceLevels.keyword\": ?0}}")
+	List<IndexingObject> findByComplianceLevels(List<String> complianceLevels);
 }

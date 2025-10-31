@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class IndexingService {
@@ -31,70 +29,60 @@ public class IndexingService {
 
 	private final AtomicBoolean running = new AtomicBoolean(false);
 
-	@Scheduled(fixedDelay = 300000) // every 5 min
+	@Scheduled(fixedDelay = 300000) // every 5 minutes
 	public void indexing() {
+		// Evita esecuzioni concorrenti
 		if (!running.compareAndSet(false, true)) {
 			log.warn("Indexing already running, skipping execution.");
 			return;
 		}
 
 		try {
-			log.info("Starting indexing process...");
+			log.info("Starting ProductOffering indexing process (batch by batch)...");
 
-			List<ProductOffering> offerings = tmfDataRetriever.getAllPaginatedProductOfferings(null, null);
-			if (offerings == null || offerings.isEmpty()) {
-				log.warn("No ProductOfferings found from TMF");
-				return;
-			}
-			log.info("Fetched {} ProductOfferings from TMF", offerings.size());
+			AtomicInteger created = new AtomicInteger();
+			AtomicInteger updated = new AtomicInteger();
+			AtomicInteger processed = new AtomicInteger();
 
-			// Step 1: prefetch existing
-			List<String> offeringIds = offerings.stream()
-					.map(ProductOffering::getId)
-					.collect(Collectors.toList());
+			// Chiama il metodo batch di TmfDataRetriever
+			tmfDataRetriever.fetchProductOfferingsByBatch(null, 100, batch -> {
+				for (ProductOffering po : batch) {
+					try {
+						processed.incrementAndGet();
 
-			List<IndexingObject> existing = offeringRepo.findByProductOfferingIdIn(offeringIds);
-			Map<String, IndexingObject> existingMap = existing.stream()
-					.collect(Collectors.toMap(IndexingObject::getProductOfferingId, io -> io));
+						// Controlla se il ProductOffering esiste già in Elasticsearch
+						IndexingObject existingObj = offeringRepo.findByProductOfferingIdIn(List.of(po.getId()))
+								.stream()
+								.findFirst()
+								.orElseGet(IndexingObject::new);
 
-			// Step 2: process and collect updates
-			int created = 0;
-			int updated = 0;
-			List<IndexingObject> toSave = new ArrayList<>();
+						boolean isNew = (existingObj.getId() == null);
 
-			for (ProductOffering po : offerings) {
-				IndexingObject existingObj = existingMap.get(po.getId());
-				if (existingObj != null) {
-					updated++;
-				} else {
-					created++;
-					existingObj = new IndexingObject();
+						// Trasforma il ProductOffering in IndexingObject
+						IndexingObject processedObj = indexingManager.processOfferingFromTMForum(po, existingObj);
+
+						// Salva su Elasticsearch
+						offeringRepo.save(processedObj);
+
+						if (isNew) created.incrementAndGet();
+						else updated.incrementAndGet();
+
+						if (processed.get() % 100 == 0) {
+							log.info("Processed {} offerings so far...", processed.get());
+						}
+					} catch (Exception e) {
+						log.error("Error processing ProductOffering {}: {}", po.getId(), e.getMessage(), e);
+					}
 				}
-				
-				log.debug("Processing productOffering: {}", po.getId());
-				IndexingObject processed = indexingManager.processOfferingFromTMForum(po, existingObj);
-				toSave.add(processed);
-			}
+			});
 
-			log.debug("Saving {} index objects", toSave.size());
-			//offeringRepo.saveAll(toSave);
-
-			int count = 0;
-			for (IndexingObject indexingObject : toSave) {
-				try {
-					log.debug("{} - saving index: {}", ++count, indexingObject.getId());
-					offeringRepo.save(indexingObject);
-				}catch (Exception e) {
-					log.error("Error saving indexing: {} - {}", indexingObject.getId(), e.getMessage());
-				}
-			}
-			
-		
-			log.info("Indexing process terminated: {} processed ({} updated, {} created)", toSave.size(), updated, created);
+			log.info("Indexing process completed: {} processed ({} created, {} updated)",
+					processed.get(), created.get(), updated.get());
 
 		} catch (Exception e) {
-			log.error("Error during indexing: {}", e.getMessage(), e);
+			log.error("Unexpected error during indexing: {}", e.getMessage(), e);
 		} finally {
+			// libera il flag per la prossima schedulazione
 			running.set(false);
 		}
 	}
@@ -103,6 +91,74 @@ public class IndexingService {
 	public void clearRepository() {
 		offeringRepo.deleteAll();
 	}
+
+//	@Scheduled(fixedDelay = 300000) // every 5 min
+//	public void indexing() {
+//		if (!running.compareAndSet(false, true)) {
+//			log.warn("Indexing already running, skipping execution.");
+//			return;
+//		}
+//
+//		try {
+//			log.info("Starting indexing process...");
+//
+//			List<ProductOffering> offerings = tmfDataRetriever.getAllPaginatedProductOfferings(null, null);
+//			if (offerings == null || offerings.isEmpty()) {
+//				log.warn("No ProductOfferings found from TMF");
+//				return;
+//			}
+//			log.info("Fetched {} ProductOfferings from TMF", offerings.size());
+//
+//			// Step 1: prefetch existing
+//			List<String> offeringIds = offerings.stream()
+//					.map(ProductOffering::getId)
+//					.collect(Collectors.toList());
+//
+//			List<IndexingObject> existing = offeringRepo.findByProductOfferingIdIn(offeringIds);
+//			Map<String, IndexingObject> existingMap = existing.stream()
+//					.collect(Collectors.toMap(IndexingObject::getProductOfferingId, io -> io));
+//
+//			// Step 2: process and collect updates
+//			int created = 0;
+//			int updated = 0;
+//			List<IndexingObject> toSave = new ArrayList<>();
+//
+//			for (ProductOffering po : offerings) {
+//				IndexingObject existingObj = existingMap.get(po.getId());
+//				if (existingObj != null) {
+//					updated++;
+//				} else {
+//					created++;
+//					existingObj = new IndexingObject();
+//				}
+//
+//				log.debug("Processing productOffering: {}", po.getId());
+//				IndexingObject processed = indexingManager.processOfferingFromTMForum(po, existingObj);
+//				toSave.add(processed);
+//			}
+//
+//			log.debug("Saving {} index objects", toSave.size());
+//			//offeringRepo.saveAll(toSave);
+//
+//			int count = 0;
+//			for (IndexingObject indexingObject : toSave) {
+//				try {
+//					log.debug("{} - saving index: {}", ++count, indexingObject.getId());
+//					offeringRepo.save(indexingObject);
+//				}catch (Exception e) {
+//					log.error("Error saving indexing: {} - {}", indexingObject.getId(), e.getMessage());
+//				}
+//			}
+//
+//
+//			log.info("Indexing process terminated: {} processed ({} updated, {} created)", toSave.size(), updated, created);
+//
+//		} catch (Exception e) {
+//			log.error("Error during indexing: {}", e.getMessage(), e);
+//		} finally {
+//			running.set(false);
+//		}
+//	}
 
 	// @Scheduled(fixedDelay = 3000)
 	// private void test() {
