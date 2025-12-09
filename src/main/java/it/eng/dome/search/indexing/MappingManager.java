@@ -1,18 +1,9 @@
 package it.eng.dome.search.indexing;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.dto.*;
-import it.eng.dome.search.rest.web.util.RestSemanticUtil;
-import it.eng.dome.search.semantic.domain.Analysis;
-import it.eng.dome.search.semantic.domain.AnalyzeResultObject;
-import it.eng.dome.search.semantic.domain.CategorizationResultObject;
-import it.eng.dome.search.service.TmfDataRetriever;
-import it.eng.dome.search.util.VCDecoderBasic;
-import it.eng.dome.tmforum.tmf620.v4.model.*;
-import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
-import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +12,37 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
 
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.domain.dto.CategoryDTO;
+import it.eng.dome.search.domain.dto.ProductOfferingDTO;
+import it.eng.dome.search.domain.dto.ProductOfferingPriceDTO;
+import it.eng.dome.search.domain.dto.ProductSpecCharacteristicDTO;
+import it.eng.dome.search.domain.dto.ProductSpecCharacteristicValueDTO;
+import it.eng.dome.search.domain.dto.ProductSpecificationDTO;
+import it.eng.dome.search.domain.dto.RelatedPartyDTO;
+import it.eng.dome.search.domain.dto.ResourceSpecificationDTO;
+import it.eng.dome.search.domain.dto.ServiceSpecificationDTO;
+import it.eng.dome.search.rest.web.util.RestSemanticUtil;
+import it.eng.dome.search.semantic.domain.Analysis;
+import it.eng.dome.search.semantic.domain.AnalyzeResultObject;
+import it.eng.dome.search.semantic.domain.CategorizationResultObject;
+import it.eng.dome.search.service.TmfDataRetriever;
+import it.eng.dome.search.util.VCDecoderBasic;
+import it.eng.dome.tmforum.tmf620.v4.model.CategoryRef;
+import it.eng.dome.tmforum.tmf620.v4.model.CharacteristicValueSpecification;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPriceRefOrValue;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecificationCharacteristic;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecificationRef;
+import it.eng.dome.tmforum.tmf620.v4.model.RelatedParty;
+import it.eng.dome.tmforum.tmf620.v4.model.ResourceSpecificationRef;
+import it.eng.dome.tmforum.tmf620.v4.model.ServiceSpecificationRef;
+import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
+import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
 
 @Component
 public class MappingManager {

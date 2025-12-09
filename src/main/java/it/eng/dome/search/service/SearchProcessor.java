@@ -3,7 +3,6 @@ package it.eng.dome.search.service;
 import it.eng.dome.search.domain.IndexingObject;
 import it.eng.dome.search.repository.OfferingRepository;
 import it.eng.dome.search.service.dto.SearchRequest;
-import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;

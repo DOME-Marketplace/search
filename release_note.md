@@ -2,6 +2,12 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.1.2</code>
+**Improvement**
+* Usage of the `Brokerage Utils 2.2.5`.
+* Set fixed versions for **TMForum SDK dependencies**.
+
+
 ### <code>1.1.1</code>
 **Improvement**
 * When `SearchOrganizations filter` are empty, all Organizations are returned.

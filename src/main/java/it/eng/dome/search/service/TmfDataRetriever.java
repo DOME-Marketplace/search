@@ -1,15 +1,11 @@
 package it.eng.dome.search.service;
 
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import it.eng.dome.tmforum.tmf620.v4.model.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,6 +15,7 @@ import it.eng.dome.brokerage.api.ProductCatalogManagementApis;
 import it.eng.dome.brokerage.api.ResourceCatalogManagementApis;
 import it.eng.dome.brokerage.api.ServiceCatalogManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
+import it.eng.dome.tmforum.tmf620.v4.model.Category;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
 import it.eng.dome.tmforum.tmf632.v4.ApiException;
