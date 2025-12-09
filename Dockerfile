@@ -10,7 +10,7 @@
 #ENTRYPOINT exec java $JAVA_OPTS -jar search.jar
 
 # Use Java base image JDK 17
-FROM openjdk:17-jdk-alpine
+FROM eclipse-temurin:17-jdk-alpine
 
 # Install curl
 RUN apk update && apk add --no-cache curl
