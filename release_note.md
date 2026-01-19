@@ -2,6 +2,11 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.1.3</code>
+**Improvement**
+* Set `Brokerage Utils` version to `2.2.7`.
+
+
 ### <code>1.1.2</code>
 **Improvement**
 * Usage of the `Brokerage Utils 2.2.5`.
