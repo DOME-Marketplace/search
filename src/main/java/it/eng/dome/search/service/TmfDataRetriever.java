@@ -116,7 +116,7 @@ public class TmfDataRetriever {
         	productCatalogManagementApis::listProductOfferings,    // method reference
 	        fields,                       		// fields
 	        filter,            					// filter
-	        50                         		// pageSize
+	        100                         		// pageSize
 		).collect(Collectors.toList());
 
         logger.info("Retrieved {} offerings from TMF API", allProductOfferings.size());

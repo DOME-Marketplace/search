@@ -53,6 +53,8 @@ tmforumapi:
   tmf632_party_management_path: tmf-api/party/v4
   tmf633_service_catalog_path: tmf-api/serviceCatalogManagement/v4
   tmf634_resource_catalog_path: tmf-api/resourceCatalog/v4
+  # read timeout in seconds
+  timeout: 60
 
 dome:
   classify:

@@ -31,6 +31,9 @@ public final class TmfApiFactory implements InitializingBean {
 
     @Value("${tmforumapi.tmf_port}")
     public String tmfPort;
+    
+    @Value("${tmforumapi.timeout}")
+    public int timeout;
 
     @Value( "${tmforumapi.tmf620_catalog_path}" )
     private String tmf620ProductCatalogPath;
@@ -52,6 +55,8 @@ public final class TmfApiFactory implements InitializingBean {
     public it.eng.dome.tmforum.tmf620.v4.ApiClient getTMF620ProductCatalogApiClient() {
         if (apiClientTmf620 == null) {
             apiClientTmf620 = it.eng.dome.tmforum.tmf620.v4.Configuration.getDefaultApiClient();
+            apiClientTmf620.setReadTimeout(timeout * 1000);
+            
             if (tmfEnvoy) {
                 // usage of envoyProxy to access on TMForum APIs
                 apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
@@ -67,6 +72,8 @@ public final class TmfApiFactory implements InitializingBean {
     public it.eng.dome.tmforum.tmf632.v4.ApiClient getTMF632PartyManagementApiClient() {
         if (apiClientTmf632 == null) {
             apiClientTmf632 = it.eng.dome.tmforum.tmf632.v4.Configuration.getDefaultApiClient();
+            apiClientTmf632.setReadTimeout(timeout * 1000);
+            
             if (tmfEnvoy) {
                 // usage of envoyProxy to access on TMForum APIs
                 apiClientTmf632.setBasePath(tmfEndpoint + "/" + tmf632PartyManagementPath);
@@ -82,6 +89,8 @@ public final class TmfApiFactory implements InitializingBean {
     public it.eng.dome.tmforum.tmf633.v4.ApiClient getTMF633ServiceCatalogApiClient() {
         if (apiClientTmf633 == null) {
             apiClientTmf633 = it.eng.dome.tmforum.tmf633.v4.Configuration.getDefaultApiClient();
+            apiClientTmf633.setReadTimeout(timeout * 1000);
+            
             if (tmfEnvoy) {
                 // usage of envoyProxy to access on TMForum APIs
                 apiClientTmf633.setBasePath(tmfEndpoint + "/" + tmf633ServiceCatalogPath);
@@ -97,6 +106,8 @@ public final class TmfApiFactory implements InitializingBean {
     public it.eng.dome.tmforum.tmf634.v4.ApiClient getTMF634ResourceCatalogApiClient() {
         if (apiClientTmf634 == null) {
             apiClientTmf634 = it.eng.dome.tmforum.tmf634.v4.Configuration.getDefaultApiClient();
+            apiClientTmf634.setReadTimeout(timeout * 1000);
+            
             if (tmfEnvoy) {
                 // usage of envoyProxy to access on TMForum APIs
                 apiClientTmf634.setBasePath(tmfEndpoint + "/" + tmf634ResourceCatalogPath);
