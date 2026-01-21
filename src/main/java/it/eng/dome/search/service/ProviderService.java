@@ -44,7 +44,7 @@ public class ProviderService {
         if (!hasCategories && !hasCountries && !hasComplianceLevels) {
 //            log.warn("No filter criteria provided");
             log.info("No filter criteria provided, return all providers");
-            List<Organization> all = tmfDataRetriever.getAllPaginatedOrganizations(null, null, 100);
+            List<Organization> all = tmfDataRetriever.getAllPaginatedOrganizations(null, null, 50);
             printListLog("All Providers", all, Organization::getId);
             return this.paginate(all, pageable);
             //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "At least one filter (categories or countries) must be provided");
@@ -254,7 +254,7 @@ public class ProviderService {
         Set<String> allCategories = new HashSet<>();
 
         log.info("Retrieving all categories from TMF...");
-        tmfDataRetriever.fetchCategoriesByBatch("name", null, 100, batch -> {
+        tmfDataRetriever.fetchCategoriesByBatch("name", null, 50, batch -> {
             if (batch != null) {
                 batch.forEach(cat -> {
                     if (cat.getName() != null && !cat.getName().isBlank()) {
@@ -276,7 +276,7 @@ public class ProviderService {
         Set<String> allCountries = new HashSet<>();
 
         log.info("Retrieving all countries from TMF...");
-        List<Organization> allOrg = tmfDataRetriever.getAllPaginatedOrganizations(null, null, 100);
+        List<Organization> allOrg = tmfDataRetriever.getAllPaginatedOrganizations(null, null, 50);
         if (allOrg != null) {
             for (Organization org : allOrg) {
                 if (org.getPartyCharacteristic() != null) {
