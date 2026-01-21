@@ -2,6 +2,10 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.1.4</code>
+**Bug Fix**
+* Reduced batch size from 100 to 50 to prevent timeout errors during processing.
+
 ### <code>1.1.3</code>
 **Improvement**
 * Set `Brokerage Utils` version to `2.2.7`.

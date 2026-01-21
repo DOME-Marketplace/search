@@ -45,7 +45,7 @@ public class IndexingService {
 			AtomicInteger processed = new AtomicInteger();
 
 			// Chiama il metodo batch di TmfDataRetriever
-			tmfDataRetriever.fetchProductOfferingsByBatch(null, 100, batch -> {
+			tmfDataRetriever.fetchProductOfferingsByBatch(null, 50, batch -> {
 				for (ProductOffering po : batch) {
 					try {
 						processed.incrementAndGet();
