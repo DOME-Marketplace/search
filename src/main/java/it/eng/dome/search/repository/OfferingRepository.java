@@ -28,10 +28,10 @@ public interface OfferingRepository extends ElasticsearchRepository<IndexingObje
 	List<IndexingObject> findByCategoryIdsOrNames(List<String> categoryValues);
 
 	// Find all documents where relatedParties field exists
-	@Query("{ \"exists\": { \"field\": \"relatedParties\" } }")
+	@Query("{\"nested\": { \"path\": \"relatedParties\", \"query\": { \"exists\": { \"field\": \"relatedParties.id\" } } } }")
 	List<IndexingObject> findAllWithRelatedParties();
 
 	// Search by compliance levels
-	@Query("{\"terms\": {\"complianceLevels.keyword\": ?0}}")
+	@Query("{\"terms\": {\"complianceLevels\": ?0}}")
 	List<IndexingObject> findByComplianceLevels(List<String> complianceLevels);
 }

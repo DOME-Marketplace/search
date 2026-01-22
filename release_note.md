@@ -5,6 +5,7 @@
 ### <code>1.1.4</code>
 **Bug Fix**
 * Set `ReadTimeout` using `timeout` variable in application.yaml.
+* Fix `OfferingRepository` to use the correct elastic queries.
 
 ### <code>1.1.3</code>
 **Improvement**
