@@ -74,6 +74,15 @@ public class MappingManager {
 		objToIndex.setProductOfferingName(product.getName());
 		objToIndex.setProductOfferingNameText(product.getName());
 		objToIndex.setCategories(toCategoryDTOList(product.getCategory()));
+		
+		ProductOffering productOffering = tmfDataRetriever.getProductOfferingById(product.getId(), null);
+		if (productOffering != null) {
+			List<RelatedPartyDTO> relatedParties = toRelatedPartyDTOs(productOffering.getRelatedParty());
+//			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOUND " + product.getRelatedParty().size() + " relatedParty");
+//			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SET " + relatedParties.size() + " relatedParty");
+			objToIndex.setRelatedParties(relatedParties);
+		}
+		
 		return objToIndex;
 	}
 
@@ -85,10 +94,10 @@ public class MappingManager {
 		objToIndex.setProductSpecificationId(productSpecDetails.getId() != null ? productSpecDetails.getId() : null);
 		objToIndex.setProductSpecificationName(productSpecDetails.getName() != null ? productSpecDetails.getName() : null);
 		objToIndex.setProductSpecificationDescription(productSpecDetails.getDescription() != null ? productSpecDetails.getDescription() : null);
-		if (productSpecDetails.getRelatedParty() != null && !productSpecDetails.getRelatedParty().isEmpty()) {
-			List<RelatedPartyDTO> relatedParties = toRelatedPartyDTOs(productSpecDetails.getRelatedParty());
-			objToIndex.setRelatedParties(relatedParties);
-		}
+//		if (productSpecDetails.getRelatedParty() != null && !productSpecDetails.getRelatedParty().isEmpty()) {
+//			List<RelatedPartyDTO> relatedParties = toRelatedPartyDTOs(productSpecDetails.getRelatedParty());
+//			objToIndex.setRelatedParties(relatedParties);
+//		}
 
 		// compliance levels
 		List<String> complianceLevels = new ArrayList<>();

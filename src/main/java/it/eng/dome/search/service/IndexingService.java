@@ -31,7 +31,7 @@ public class IndexingService {
 
 	@Scheduled(fixedDelay = 300000) // every 5 minutes
 	public void indexing() {
-		// Evita esecuzioni concorrenti
+		// Avoid overlapping executions
 		if (!running.compareAndSet(false, true)) {
 			log.warn("Indexing already running, skipping execution.");
 			return;
@@ -44,7 +44,7 @@ public class IndexingService {
 			AtomicInteger updated = new AtomicInteger();
 			AtomicInteger processed = new AtomicInteger();
 
-			// Chiama il metodo batch di TmfDataRetriever
+			// call TMF API in batch method
 			tmfDataRetriever.fetchProductOfferingsByBatch(null, 100, batch -> {
 				for (ProductOffering po : batch) {
 					try {
@@ -58,10 +58,10 @@ public class IndexingService {
 
 						boolean isNew = (existingObj.getId() == null);
 
-						// Trasforma il ProductOffering in IndexingObject
+						// transformation ProductOffering -> IndexingObject
 						IndexingObject processedObj = indexingManager.processOfferingFromTMForum(po, existingObj);
 
-						// Salva su Elasticsearch
+						// save to Elasticsearch
 						offeringRepo.save(processedObj);
 
 						if (isNew) created.incrementAndGet();
@@ -82,7 +82,7 @@ public class IndexingService {
 		} catch (Exception e) {
 			log.error("Unexpected error during indexing: {}", e.getMessage(), e);
 		} finally {
-			// libera il flag per la prossima schedulazione
+			// free the running flag for next execution
 			running.set(false);
 		}
 	}
