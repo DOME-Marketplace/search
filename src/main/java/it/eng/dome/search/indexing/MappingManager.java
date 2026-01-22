@@ -78,8 +78,8 @@ public class MappingManager {
 		ProductOffering productOffering = tmfDataRetriever.getProductOfferingById(product.getId(), null);
 		if (productOffering != null) {
 			List<RelatedPartyDTO> relatedParties = toRelatedPartyDTOs(productOffering.getRelatedParty());
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOUND " + product.getRelatedParty().size() + " relatedParty");
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SET " + relatedParties.size() + " relatedParty");
+//			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOUND " + product.getRelatedParty().size() + " relatedParty");
+//			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SET " + relatedParties.size() + " relatedParty");
 			objToIndex.setRelatedParties(relatedParties);
 		}
 		
