@@ -1,7 +1,9 @@
 package it.eng.dome.search.service;
 
 import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.domain.ProviderIndex;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
+import it.eng.dome.tmforum.tmf632.v4.model.Organization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +131,30 @@ public class ResultProcessor {
 			log.warn("HttpServerErrorException - Error during processResultsScore(). Skipped: {}", e.getMessage());
 			return new PageImpl<>(new ArrayList<>());
 		}
+	}
+
+	public Page<Organization> processProviderResults(Page<ProviderIndex> page, Pageable pageable) {
+
+		Map<String, Organization> mapOrganizations = new HashMap<>();
+		List<Organization> resultList = new ArrayList<>();
+
+		log.info("Total number of Providers: {}", page.getTotalElements());
+
+		for (ProviderIndex providerIndex : page.getContent()) {
+			String orgId = providerIndex.getId();
+			if (orgId != null && !mapOrganizations.containsKey(orgId)) {
+				Organization org = tmfDataRetriever.getOrganizationById(orgId, null);
+				if (org != null) {
+					mapOrganizations.put(orgId, org);
+					resultList.add(org);
+					log.info("Fetched Organization {}: {}", orgId, org.getTradingName());
+				} else {
+					log.warn("Organization {} not found", orgId);
+				}
+			}
+		}
+
+		return new PageImpl<>(resultList, pageable, page.getTotalElements());
 	}
 
 }

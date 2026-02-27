@@ -7,7 +7,6 @@ import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class IndexingService {
 
 	private final AtomicBoolean running = new AtomicBoolean(false);
 
-	@Scheduled(fixedDelay = 300000) // every 5 minutes
+//	@Scheduled(fixedDelay = 300000) // every 5 minutes
 	public void indexing() {
 		// Avoid overlapping executions
 		if (!running.compareAndSet(false, true)) {

@@ -57,8 +57,11 @@ tmforumapi:
   timeout: 60
 
 dome:
+  catalog:
+    base-url: ${DOME_BASE_URL:https://dome-marketplace-sbx.org}
+    catalog-path: /catalog/catalog
+    config-path: /config
   classify:
     url: ${CLASSIFY_URL:https://deployenv6.expertcustomers.ai:8086/services/dome/classify}
-  
   analyze:
     url: ${ANALYZE_URL:https://deployenv6.expertcustomers.ai:8086/services/dome/analyze}
