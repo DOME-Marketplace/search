@@ -51,7 +51,7 @@ public class ProviderResource {
         return ResponseEntity.ok(complianceLevels);
     }
 
-    @PostMapping(value = "/SearchOrganizations")
+    @PostMapping(value = "/searchOrganizations")
     public ResponseEntity<List<Organization>> searchOrganizations(@RequestBody OrganizationSearchRequest request,
                                                                   @RequestParam(name="considerAllOrgs", required = false, defaultValue = "false") boolean considerAllOrgs,
                                                                   Pageable pageable){

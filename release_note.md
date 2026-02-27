@@ -2,6 +2,10 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.2.1</code>
+**Bug Fix**
+* Rename endpoint `/api/SearchOrganizations` to `/api/searchOrganizations` to follow REST API naming conventions.
+
 ### <code>1.2.0</code>
 **Feature**
 * Introduced new Elasticsearch index `provider-index` dedicated to Organizations (providers) indexing.
