@@ -120,7 +120,7 @@ public class ProviderProcessor {
 	}
 
 	// --- helper per aggregazioni semplici ---
-	private List<String> getAggregatedField(String fieldName, boolean considerAllOrgs, String countField) {
+	private List<String> getAggregatedField(String fieldName, boolean considerAllOrgs) {
 		NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder().withMaxResults(0);
 
 		if (!considerAllOrgs) {
