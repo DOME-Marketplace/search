@@ -1,6 +1,7 @@
 package it.eng.dome.search.indexing;
 
 import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.domain.ProviderIndex;
 import it.eng.dome.search.service.TmfDataRetriever;
 import it.eng.dome.tmforum.tmf620.v4.model.*;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;
@@ -111,6 +112,32 @@ public class IndexingManager {
 			log.info("ProcessOffering TMForum => Mapping Resources associated: " + resourceList.size());
 			objToIndex = mappingManager.prepareTMFResourceSpecMetadata(resourceList, objToIndex);
 		}
+		return objToIndex;
+	}
+
+	public ProviderIndex processProviderFromIndexingObject(Organization organization, List<IndexingObject> offerings,	ProviderIndex objToIndex, List<String> domeCatalogCategories) {
+		try {
+
+			if (organization == null || organization.getId() == null) {
+				log.warn("Organization is null or has no ID. Skipping.");
+				return objToIndex;
+			}
+
+			// ---- Map Organization basic metadata ----
+			objToIndex = mappingManager.prepareOrganizationMetadata(organization, objToIndex);
+
+			// ---- Aggregation from offerings ----
+			objToIndex = mappingManager.prepareProviderAggregationMetadata(offerings, objToIndex, domeCatalogCategories);
+
+			// ---- Published offerings count ----
+			int publishedCount = (offerings != null) ? offerings.size() : 0;
+			objToIndex.setPublishedOfferingsCount(publishedCount);
+
+		} catch (Exception e) {
+			log.warn("Exception - Error during processProviderFromTMForum(). Skipped: {}",
+					e.getMessage(), e);
+		}
+
 		return objToIndex;
 	}
 

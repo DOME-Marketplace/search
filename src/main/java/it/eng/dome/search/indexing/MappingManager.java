@@ -1,9 +1,23 @@
 package it.eng.dome.search.indexing;
 
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.domain.ProviderIndex;
+import it.eng.dome.search.domain.dto.*;
+import it.eng.dome.search.rest.web.util.RestSemanticUtil;
+import it.eng.dome.search.semantic.domain.Analysis;
+import it.eng.dome.search.semantic.domain.AnalyzeResultObject;
+import it.eng.dome.search.semantic.domain.CategorizationResultObject;
+import it.eng.dome.search.service.TmfDataRetriever;
+import it.eng.dome.search.util.VCDecoderBasic;
+import it.eng.dome.tmforum.tmf620.v4.model.*;
+import it.eng.dome.tmforum.tmf632.v4.model.Characteristic;
+import it.eng.dome.tmforum.tmf632.v4.model.ExternalReference;
+import it.eng.dome.tmforum.tmf632.v4.model.Organization;
+import it.eng.dome.tmforum.tmf632.v4.model.OrganizationIdentification;
+import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
+import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,37 +26,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.domain.dto.CategoryDTO;
-import it.eng.dome.search.domain.dto.ProductOfferingDTO;
-import it.eng.dome.search.domain.dto.ProductOfferingPriceDTO;
-import it.eng.dome.search.domain.dto.ProductSpecCharacteristicDTO;
-import it.eng.dome.search.domain.dto.ProductSpecCharacteristicValueDTO;
-import it.eng.dome.search.domain.dto.ProductSpecificationDTO;
-import it.eng.dome.search.domain.dto.RelatedPartyDTO;
-import it.eng.dome.search.domain.dto.ResourceSpecificationDTO;
-import it.eng.dome.search.domain.dto.ServiceSpecificationDTO;
-import it.eng.dome.search.rest.web.util.RestSemanticUtil;
-import it.eng.dome.search.semantic.domain.Analysis;
-import it.eng.dome.search.semantic.domain.AnalyzeResultObject;
-import it.eng.dome.search.semantic.domain.CategorizationResultObject;
-import it.eng.dome.search.service.TmfDataRetriever;
-import it.eng.dome.search.util.VCDecoderBasic;
-import it.eng.dome.tmforum.tmf620.v4.model.CategoryRef;
-import it.eng.dome.tmforum.tmf620.v4.model.CharacteristicValueSpecification;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPriceRefOrValue;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecificationCharacteristic;
-import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecificationRef;
-import it.eng.dome.tmforum.tmf620.v4.model.RelatedParty;
-import it.eng.dome.tmforum.tmf620.v4.model.ResourceSpecificationRef;
-import it.eng.dome.tmforum.tmf620.v4.model.ServiceSpecificationRef;
-import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
-import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class MappingManager {
@@ -100,29 +89,8 @@ public class MappingManager {
 //		}
 
 		// compliance levels
-		List<String> complianceLevels = new ArrayList<>();
-		if (prodSpecDTO.getProductSpecCharacteristic() != null) {
-			for (ProductSpecCharacteristicDTO characteristic : prodSpecDTO.getProductSpecCharacteristic()) {
-				// decode only if the name is Compliance:VC
-				if ("Compliance:VC".equalsIgnoreCase(characteristic.getName())) {
-					if (characteristic.getProductSpecCharacteristicValue() != null) {
-						for (ProductSpecCharacteristicValueDTO charValueDTO : characteristic.getProductSpecCharacteristicValue()) {
-							try {
-								String complianceLevel = VCDecoderBasic.extractLabelLevel(charValueDTO.getValue());
-								if (complianceLevel != null && !complianceLevel.isBlank()) {
-									log.info("Decoded VC for ProductSpecCharacteristicValue {}: {}", charValueDTO.getValue(), complianceLevel);
-									complianceLevels.add(complianceLevel);
-								}
-							} catch (Exception e) {
-								log.warn("Failed to decode VC for ProductSpecCharacteristicValue {}: {}", charValueDTO.getValue(), e.getMessage());
-							}
-						}
-					}
-				}
-			}
-		}
-		objToIndex.setComplianceLevels(complianceLevels);
-
+		// invece di tutta la logica presente prima
+		objToIndex.setComplianceLevels(extractComplianceLevels(productSpecDetails));
 		return objToIndex;
 	}
 
@@ -458,4 +426,162 @@ public class MappingManager {
 		return dto;
 	}
 
+	private OrganizationDTO toOrganizationDTO(Organization organization) {
+		OrganizationDTO dto = new OrganizationDTO();
+		dto.setId(organization.getId());
+		dto.setHref(organization.getHref());
+		dto.setTradingName(organization.getTradingName());
+		dto.setExternalReference(toExternalReferenceDTOList(organization.getExternalReference()));
+		dto.setOrganizationIdentification(toOrganizationIdentificationDTOList(organization.getOrganizationIdentification()));
+		dto.setPartyCharacteristic(toPartyCharacteristicDTOList(organization.getPartyCharacteristic()));
+		return dto;
+	}
+
+	private List<ExternalReferenceDTO> toExternalReferenceDTOList(List<ExternalReference> list) {
+		List<ExternalReferenceDTO> dtos = new ArrayList<>();
+		if(list!=null) {
+			for (ExternalReference r : list) {
+				ExternalReferenceDTO dto = new ExternalReferenceDTO();
+				dto.setExternalReferenceType(r.getExternalReferenceType() != null ? r.getExternalReferenceType() : null);
+				dto.setName(r.getName() != null ? r.getName() : null);
+				dtos.add(dto);
+			}
+		}
+		return dtos;
+	}
+
+	private List<OrganizationIdentificationDTO> toOrganizationIdentificationDTOList(List<OrganizationIdentification> list) {
+		List<OrganizationIdentificationDTO> dtos = new ArrayList<>();
+		if(list!=null) {
+			for (OrganizationIdentification o : list) {
+				OrganizationIdentificationDTO dto = new OrganizationIdentificationDTO();
+				dto.setIdentificationId(o.getIdentificationId() != null ? o.getIdentificationId() : null);
+				dto.setIdentificationType(o.getIdentificationType() != null ? o.getIdentificationType() : null);
+				dto.setIssuingAuthority(o.getIssuingAuthority() != null ? o.getIssuingAuthority() : null);
+				dto.setAtType(o.getAtType() != null ? o.getAtType() : null);
+				dtos.add(dto);
+			}
+		}
+		return dtos;
+	}
+
+	public List<PartyCharacteristicDTO> toPartyCharacteristicDTOList(List<Characteristic> list) {
+		List<PartyCharacteristicDTO> dtos = new ArrayList<>();
+		if(list!=null) {
+			for (Characteristic c : list) {
+				PartyCharacteristicDTO dto = new PartyCharacteristicDTO();
+				dto.setName(c.getName() != null ? c.getName() : null);
+				dto.setValue(c.getValue() != null ? c.getValue().toString() : null);
+				dtos.add(dto);
+			}
+		}
+		return dtos;
+	}
+
+	private String extractCountry(Organization organization) {
+		if (organization.getPartyCharacteristic() == null) {
+			return null;
+		}
+
+		for (Characteristic c : organization.getPartyCharacteristic()) {
+			if ("country".equalsIgnoreCase(c.getName()) && c.getValue() != null) {
+				return c.getValue().toString();
+			}
+		}
+
+		return null;
+	}
+
+	// --- helper to extract compliance levels ---
+	private List<String> extractComplianceLevels(ProductSpecification spec) {
+		List<String> complianceLevels = new ArrayList<>();
+
+		if (spec != null && spec.getProductSpecCharacteristic() != null) {
+			for (ProductSpecificationCharacteristic characteristic : spec.getProductSpecCharacteristic()) {
+				if ("Compliance:VC".equalsIgnoreCase(characteristic.getName())
+						&& characteristic.getProductSpecCharacteristicValue() != null) {
+
+					for (CharacteristicValueSpecification value : characteristic.getProductSpecCharacteristicValue()) {
+						try {
+							String complianceLevel = VCDecoderBasic.extractLabelLevel(value.getValue().toString());
+							if (complianceLevel != null && !complianceLevel.isBlank()) {
+								log.info("Decoded VC for ProductSpecCharacteristicValue {}: {}", value.getValue(), complianceLevel);
+								complianceLevels.add(complianceLevel);
+							}
+						} catch (Exception e) {
+							log.warn("Failed to decode VC for ProductSpecCharacteristicValue {}: {}", value.getValue(), e.getMessage());
+						}
+					}
+				}
+			}
+		}
+
+		return complianceLevels.stream().distinct().collect(Collectors.toList());
+	}
+
+	// PROVIDER SPECIFIC MAPPING
+	public ProviderIndex prepareOrganizationMetadata(Organization organization,	ProviderIndex objToIndex) {
+		OrganizationDTO organizationDTO = toOrganizationDTO(organization);
+		objToIndex.setOrganization(organizationDTO);
+
+		objToIndex.setId(organization.getId());
+
+		// fallback: tradingName -> name
+		objToIndex.setTradingName(
+				organization.getTradingName() != null
+						? organization.getTradingName()
+						: organization.getName()
+		);
+
+		objToIndex.setCountry(extractCountry(organization));
+
+		return objToIndex;
+	}
+
+	public ProviderIndex prepareProviderAggregationMetadata(
+			List<IndexingObject> offerings,
+			ProviderIndex objToIndex,
+			List<String> domeCatalogCategories) {
+
+		Set<CategoryDTO> categories = new HashSet<>();
+		Set<String> complianceLevels = new HashSet<>();
+
+		if (offerings != null) {
+
+			for (IndexingObject offering : offerings) {
+
+				// ---- Categories ----
+				if (offering.getCategories() != null) {
+
+					for (CategoryDTO category : offering.getCategories()) {
+
+						if (category == null || category.getName() == null) {
+							continue;
+						}
+
+						// filter by DOME catalog categories if provided
+						if (domeCatalogCategories == null
+								|| domeCatalogCategories.contains(category.getName())) {
+
+							categories.add(category);
+
+						} else {
+							log.debug("Category {} ignored because not in DOME Catalog Categories",
+									category.getName());
+						}
+					}
+				}
+
+				// ---- Compliance Levels ----
+				if (offering.getComplianceLevels() != null) {
+					complianceLevels.addAll(offering.getComplianceLevels());
+				}
+			}
+		}
+
+		objToIndex.setCategories(new ArrayList<>(categories));
+		objToIndex.setComplianceLevels(new ArrayList<>(complianceLevels));
+
+		return objToIndex;
+	}
 }

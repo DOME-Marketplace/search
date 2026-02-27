@@ -1,6 +1,6 @@
 # DOME Search REST APIs
 
-**Version:** 1.1.4  
+**Version:** 1.2.0  
 **Description:** DOME Search REST APIs Swagger documentation  
 
 
@@ -11,29 +11,32 @@
 |------|------|------|
 | POST | `/api/RandomizedProductOfferings` | postRandomizedProductOfferings |
 
+### provider-resource
+| Verb | Path | Task |
+|------|------|------|
+| POST | `/api/SearchOrganizations` | searchOrganizations |
+| GET | `/api/categories` | getCategories |
+| GET | `/api/complianceLevels` | getComplianceLevels |
+| GET | `/api/countries` | getCountries |
+| GET | `/api/organizations/clearRepository` | clearRepository |
+
 ### search-resource
 | Verb | Path | Task |
 |------|------|------|
 | POST | `/api/SearchProduct/{query}` | searchProduct |
 | POST | `/api/SearchProductByFilterCategory` | searchProductByFilterCategory |
-| GET | `/api/offerings/clearRepository` | clearRepository |
-
-### provider-resource
-| Verb | Path | Task |
-|------|------|------|
-| POST | `/api/providersByCategories` | getProvidersByCategories |
-| POST | `/api/searchOrganizations` | searchOrganizations |
+| GET | `/api/offerings/clearRepository` | clearRepositoryUsingGET_1 |
 
 ### basic-error-controller
 | Verb | Path | Task |
 |------|------|------|
-| GET | `/error` | error |
-| HEAD | `/error` | error |
-| POST | `/error` | error |
-| PUT | `/error` | error |
-| DELETE | `/error` | error |
-| OPTIONS | `/error` | error |
-| PATCH | `/error` | error |
+| GET | `/error` | errorHtml |
+| HEAD | `/error` | errorHtml |
+| POST | `/error` | errorHtml |
+| PUT | `/error` | errorHtml |
+| DELETE | `/error` | errorHtml |
+| OPTIONS | `/error` | errorHtml |
+| PATCH | `/error` | errorHtml |
 
 ### info-search-controller
 | Verb | Path | Task |
