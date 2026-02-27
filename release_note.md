@@ -2,6 +2,18 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.2.0</code>
+**Feature**
+* Introduced new Elasticsearch index `provider-index` dedicated to Organizations (providers) indexing.
+* Implemented `ProviderIndexingService` to manage the indexing process of Organizations in the `provider-index` based on ProductOfferings store in ES (`Launched` status only) and considering only DOME Catalog Categories.
+* Added orchestration layer to manage the indexing process of both ProductOfferings and Organizations.
+* Update REST APIs to support and expose the new `provider-index` for search and retrieval of Organizations.
+* Added new attribute `considerAllOrgs` in REST APIs to allow users to choose whether to consider all indexed Organizations or only those Organizations that have at least one ProductOffering on the Marketplace.
+
+**Improvement**
+* Usage of the `Brokerage Utils 2.2.8`.
+* Set `catalog url` using `DOME_BASE_URL` variable in application.yaml.
+
 ### <code>1.1.4</code>
 **Bug Fix**
 * Set `ReadTimeout` using `timeout` variable in application.yaml.
