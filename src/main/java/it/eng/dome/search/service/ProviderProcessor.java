@@ -83,11 +83,11 @@ public class ProviderProcessor {
 
 	// --- Aggregazioni con considerAllOrgs ---
 	public List<String> getAllCountries(boolean considerAllOrgs) {
-		return getAggregatedField("country", considerAllOrgs, "publishedOfferingsCount");
+		return getAggregatedField("country", considerAllOrgs);
 	}
 
 	public List<String> getAllComplianceLevels(boolean considerAllOrgs) {
-		return getAggregatedField("complianceLevels", considerAllOrgs, "publishedOfferingsCount");
+		return getAggregatedField("complianceLevels", considerAllOrgs);
 	}
 
 	public List<String> getAllCategories(boolean considerAllOrgs) {
