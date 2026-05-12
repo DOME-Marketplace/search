@@ -2,6 +2,10 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.3.0</code>
+**Feature**
+* Enabling HTTPS: add `ELASTIC_SSL_ENABLED` and `ELASTIC_SSL_VERIFICATION` to manage https requests.
+
 ### <code>1.2.1</code>
 **Bug Fix**
 * Rename endpoint `/api/SearchOrganizations` to `/api/searchOrganizations` to follow REST API naming conventions.
