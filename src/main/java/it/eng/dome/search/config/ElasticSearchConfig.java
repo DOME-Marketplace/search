@@ -56,7 +56,7 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
         ClientConfiguration.MaybeSecureClientConfigurationBuilder builder = ClientConfiguration.builder()
                 .connectedTo(elasticsearchHost + ":" + elasticsearchPort);
 
-        logger.info("Search connected to host {} port {}", elasticsearchHost, elasticsearchPort);
+		logger.info("Search connected via {}://{}:{} (sslVerification={})", usingSsl ? "https" : "http", elasticsearchHost, elasticsearchPort, usingSslVerification);
 
         ClientConfiguration.TerminalClientConfigurationBuilder builderWithProtocol;
         if (usingSsl) {
@@ -83,8 +83,7 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
         if (elasticsearchUsername != null && elasticsearchPassword != null && !elasticsearchUsername.isBlank()
                 && !elasticsearchPassword.isBlank()) {
 
-            logger.debug("Set credentials for username {} and password {} ", elasticsearchUsername,
-                    elasticsearchPassword);
+            logger.debug("Set credentials for username {} and password {} ", elasticsearchUsername, elasticsearchPassword);
 
             builderWithProtocol = builderWithProtocol.withBasicAuth(elasticsearchUsername, elasticsearchPassword);
         }
