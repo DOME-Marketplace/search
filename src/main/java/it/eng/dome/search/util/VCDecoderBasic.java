@@ -22,13 +22,13 @@ public class VCDecoderBasic {
             throw new IllegalArgumentException("VC token non può essere vuoto");
         }
 
-        // Splitta il JWT in tre parti: header, payload, signature
+        // Split the JWT into three parts: header, payload, signature
         String[] parts = vcToken.split("\\.");
         if (parts.length < 2) {
-            throw new IllegalArgumentException("Token VC malformato");
+            throw new IllegalArgumentException("Malformed VC Token");
         }
 
-        // Il payload è la seconda parte
+        // The payload is the second part
         String payload = parts[1];
 
         // Decodifica Base64URL

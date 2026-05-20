@@ -63,15 +63,37 @@ public class MappingManager {
 		objToIndex.setProductOfferingName(product.getName());
 		objToIndex.setProductOfferingNameText(product.getName());
 		objToIndex.setCategories(toCategoryDTOList(product.getCategory()));
-		
+
 		ProductOffering productOffering = tmfDataRetriever.getProductOfferingById(product.getId(), null);
 		if (productOffering != null) {
 			List<RelatedPartyDTO> relatedParties = toRelatedPartyDTOs(productOffering.getRelatedParty());
-//			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOUND " + product.getRelatedParty().size() + " relatedParty");
-//			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SET " + relatedParties.size() + " relatedParty");
+			// System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOUND " +
+			// product.getRelatedParty().size() + " relatedParty");
+			// System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SET " +
+			// relatedParties.size() + " relatedParty");
 			objToIndex.setRelatedParties(relatedParties);
 		}
-		
+
+		return objToIndex;
+	}
+
+	public IndexingObject prepareOfferingPriceMetadata(List<ProductOfferingPriceRefOrValue> popList,
+			IndexingObject objToIndex) {
+		if (popList != null && !popList.isEmpty()) {
+			// map nested list of ProductOfferingPrice
+			List<ProductOfferingPriceDTO> priceDTOs = toProductOfferingPriceDTOs(popList);
+			objToIndex.setProductOfferingPrice(priceDTOs);
+
+			// map flat fields (take the first price as reference)
+			ProductOfferingPriceRefOrValue firstPrice = popList.get(0);
+			objToIndex.setProductOfferingPriceId(firstPrice.getId());
+			objToIndex.setProductOfferingPriceName(firstPrice.getName());
+
+			// Nota: priceType solitamente deriva dal campo @type o @baseType in TMF
+			if (firstPrice.getPriceType() != null) {
+				objToIndex.setProductOfferingPriceType(firstPrice.getPriceType());
+			}
+		}
 		return objToIndex;
 	}
 
@@ -79,14 +101,19 @@ public class MappingManager {
 		// prepare metadata of Product Specifications
 		ProductSpecificationDTO prodSpecDTO = toProductSpecificationDTO(productSpecDetails);
 		objToIndex.setProductSpecification(prodSpecDTO);
-		objToIndex.setProductSpecificationBrand(productSpecDetails.getBrand() != null ? productSpecDetails.getBrand() : null);
+		objToIndex.setProductSpecificationBrand(
+				productSpecDetails.getBrand() != null ? productSpecDetails.getBrand() : null);
 		objToIndex.setProductSpecificationId(productSpecDetails.getId() != null ? productSpecDetails.getId() : null);
-		objToIndex.setProductSpecificationName(productSpecDetails.getName() != null ? productSpecDetails.getName() : null);
-		objToIndex.setProductSpecificationDescription(productSpecDetails.getDescription() != null ? productSpecDetails.getDescription() : null);
-//		if (productSpecDetails.getRelatedParty() != null && !productSpecDetails.getRelatedParty().isEmpty()) {
-//			List<RelatedPartyDTO> relatedParties = toRelatedPartyDTOs(productSpecDetails.getRelatedParty());
-//			objToIndex.setRelatedParties(relatedParties);
-//		}
+		objToIndex.setProductSpecificationName(
+				productSpecDetails.getName() != null ? productSpecDetails.getName() : null);
+		objToIndex.setProductSpecificationDescription(
+				productSpecDetails.getDescription() != null ? productSpecDetails.getDescription() : null);
+		// if (productSpecDetails.getRelatedParty() != null &&
+		// !productSpecDetails.getRelatedParty().isEmpty()) {
+		// List<RelatedPartyDTO> relatedParties =
+		// toRelatedPartyDTOs(productSpecDetails.getRelatedParty());
+		// objToIndex.setRelatedParties(relatedParties);
+		// }
 
 		// compliance levels
 		// invece di tutta la logica presente prima
@@ -94,7 +121,8 @@ public class MappingManager {
 		return objToIndex;
 	}
 
-	public IndexingObject prepareTMFServiceSpecMetadata(List<ServiceSpecificationRef> serviceList, IndexingObject objToIndex) {
+	public IndexingObject prepareTMFServiceSpecMetadata(List<ServiceSpecificationRef> serviceList,
+			IndexingObject objToIndex) {
 		// Retrieve TMF objects
 		List<ServiceSpecification> listServiceDetails = fetchServiceSpecifications(serviceList);
 		// Mapping to DTO and set in IndexingObject
@@ -102,7 +130,8 @@ public class MappingManager {
 		return objToIndex;
 	}
 
-	public IndexingObject prepareTMFResourceSpecMetadata(List<ResourceSpecificationRef> resourceList, IndexingObject objToIndex) {
+	public IndexingObject prepareTMFResourceSpecMetadata(List<ResourceSpecificationRef> resourceList,
+			IndexingObject objToIndex) {
 		// Retrieve TMF objects
 		List<ResourceSpecification> listResourceDetails = fetchResourceSpecifications(resourceList);
 		// Mapping to DTO and set in IndexingObject
@@ -112,13 +141,13 @@ public class MappingManager {
 
 	public IndexingObject prepareClassify(IndexingObject objToIndex) {
 
-        try {
-            String contentToClassify = null;
-            if (objToIndex.getProductOfferingDescription() != null){
+		try {
+			String contentToClassify = null;
+			if (objToIndex.getProductOfferingDescription() != null) {
 				contentToClassify = objToIndex.getProductOfferingDescription();
 			}
 
-			//log.debug("Content to Classify {}", contentToClassify);
+			// log.debug("Content to Classify {}", contentToClassify);
 
 			if (contentToClassify != null) {
 				contentToClassify = Jsoup.parse(contentToClassify).text();
@@ -127,22 +156,27 @@ public class MappingManager {
 					String requestForClassifyObject = restSemanticUtil.classifyText(contentToClassify);
 
 					if (requestForClassifyObject == null) {
-						log.warn("ClassifyText: product offering ID {} cannot found", objToIndex.getProductOfferingId());
+						log.warn("ClassifyText: product offering ID {} cannot found",
+								objToIndex.getProductOfferingId());
 					} else {
-						CategorizationResultObject categorizationResultObj = objectMapper.readValue(requestForClassifyObject, CategorizationResultObject.class);
+						CategorizationResultObject categorizationResultObj = objectMapper
+								.readValue(requestForClassifyObject, CategorizationResultObject.class);
 						String[] cat = categorizationResultObj.getIpct_categories();
 
 						if (cat.length != 0) {
 							objToIndex.setClassifyResult(cat);
 						}
 
-						 /* if(cat.length!=0) { for(String s :cat) objToIndex.setClassifyResult(" , "+s);
-						 }*/
+						/*
+						 * if(cat.length!=0) { for(String s :cat) objToIndex.setClassifyResult(" , "+s);
+						 * }
+						 */
 
 					}
 
 				} catch (HttpStatusCodeException exception) {
-					log.error("Error for classifyText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+					log.error("Error for classifyText with status: {} - {}", exception.getStatusCode().value(),
+							exception.getStatusCode().name());
 				} catch (ResourceAccessException e) {
 					log.error("Error for classifyText. Caught ResourceAccessException: {}", e.getMessage(), e);
 				}
@@ -153,49 +187,52 @@ public class MappingManager {
 			log.warn("Exception - Error during prepareClassify(). Skipped: {}", e.getMessage(), e);
 		}
 
-        return objToIndex;
-    }
+		return objToIndex;
+	}
 
-    public IndexingObject prepareAnalyze(IndexingObject objToIndex) {
+	public IndexingObject prepareAnalyze(IndexingObject objToIndex) {
 
-        try {
-            if (objToIndex.getProductOfferingDescription() != null){
-                String contentToAnalyze = objToIndex.getProductOfferingDescription();
-                contentToAnalyze = contentToAnalyze.replace("\\", " ");
-                contentToAnalyze = Jsoup.parse(contentToAnalyze).text();
-                if (!contentToAnalyze.isEmpty()) {
+		try {
+			if (objToIndex.getProductOfferingDescription() != null) {
+				String contentToAnalyze = objToIndex.getProductOfferingDescription();
+				contentToAnalyze = contentToAnalyze.replace("\\", " ");
+				contentToAnalyze = Jsoup.parse(contentToAnalyze).text();
+				if (!contentToAnalyze.isEmpty()) {
 					try {
 						String requestForAnalyzeObject = restSemanticUtil.analyzeText(contentToAnalyze);
 						if (requestForAnalyzeObject == null) {
 							log.warn("Request for analyzeText cannot found");
-						} else{
-							AnalyzeResultObject analyzeResultObject = objectMapper.readValue(requestForAnalyzeObject, AnalyzeResultObject.class);
+						} else {
+							AnalyzeResultObject analyzeResultObject = objectMapper.readValue(requestForAnalyzeObject,
+									AnalyzeResultObject.class);
 
 							Analysis cat = analyzeResultObject.getAnalysis();
 							if (!cat.content.isEmpty()) {
 								objToIndex.setAnalyzeResult(cat.getContent());
 							}
 
-
-							/* if(cat.length!=0) { for(String s :cat) objToIndex.setAnalyzeResult(" , "+s);
-							 }*/
+							/*
+							 * if(cat.length!=0) { for(String s :cat) objToIndex.setAnalyzeResult(" , "+s);
+							 * }
+							 */
 
 						}
 					} catch (HttpStatusCodeException exception) {
-						log.error("Error for analyzeText with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+						log.error("Error for analyzeText with status: {} - {}", exception.getStatusCode().value(),
+								exception.getStatusCode().name());
 					} catch (ResourceAccessException e) {
 						log.error("Error for analyzeText. Caught ResourceAccessException: {}", e.getMessage(), e);
 					}
-                }
-            }
+				}
+			}
 
-        } catch (JsonProcessingException e) {
+		} catch (JsonProcessingException e) {
 			log.warn("JsonProcessingException - Error during prepareAnalyze(). Skipped: {}", e.getMessage(), e);
-        } catch (Exception e) {
+		} catch (Exception e) {
 			log.warn("Exception - Error during prepareAnalyze(). Skipped: {}", e.getMessage(), e);
 		}
-        return objToIndex;
-    }
+		return objToIndex;
+	}
 
 	// --- Helper methods for fetching TMF objects ---
 	private List<ServiceSpecification> fetchServiceSpecifications(List<ServiceSpecificationRef> serviceRefs) {
@@ -210,9 +247,11 @@ public class MappingManager {
 					log.warn("getTMFServiceSpecificationById {} - Service Specification cannot found", s.getId());
 				}
 			} catch (HttpStatusCodeException exception) {
-				log.error("Error for getTMFServiceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				log.error("Error for getTMFServiceSpecificationById with status: {} - {}",
+						exception.getStatusCode().value(), exception.getStatusCode().name());
 			} catch (ResourceAccessException e) {
-				log.error("Error for prepareTMFServiceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage(), e);
+				log.error("Error for prepareTMFServiceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage(),
+						e);
 			}
 		}
 
@@ -231,9 +270,11 @@ public class MappingManager {
 					log.warn("getTMFResourceSpecificationById {} - Resource Specification cannot found", r.getId());
 				}
 			} catch (HttpStatusCodeException exception) {
-				log.error("Error for getTMFResourceSpecificationById with status: {} - {}", exception.getStatusCode().value(), exception.getStatusCode().name());
+				log.error("Error for getTMFResourceSpecificationById with status: {} - {}",
+						exception.getStatusCode().value(), exception.getStatusCode().name());
 			} catch (ResourceAccessException e) {
-				log.error("Error for prepareTMFResourceSpecMetadata. Caught ResourceAccessException: {}", e.getMessage(), e);
+				log.error("Error for prepareTMFResourceSpecMetadata. Caught ResourceAccessException: {}",
+						e.getMessage(), e);
 			}
 		}
 
@@ -261,16 +302,16 @@ public class MappingManager {
 
 	List<ProductOfferingPriceDTO> toProductOfferingPriceDTOs(List<ProductOfferingPriceRefOrValue> popList) {
 		List<ProductOfferingPriceDTO> dtos = new ArrayList<>();
-		if(popList!=null) {
+		if (popList != null) {
 			for (ProductOfferingPriceRefOrValue p : popList)
 				dtos.add(toProductOfferingPriceDTO(p));
 		}
 		return dtos;
 	}
-	
+
 	List<RelatedPartyDTO> toRelatedPartyDTOs(List<RelatedParty> parties) {
 		List<RelatedPartyDTO> dtos = new ArrayList<>();
-		if(parties!=null) {
+		if (parties != null) {
 			for (RelatedParty p : parties)
 				dtos.add(toRelatedPartyDTO(p));
 		}
@@ -289,7 +330,7 @@ public class MappingManager {
 		dto.setLastUpdate(product.getLastUpdate() != null
 				? product.getLastUpdate().format(DATE_FORMATTER)
 				: null);
-		dto.setCategory(this.toCategoryDTOList(product.getCategory()) );
+		dto.setCategory(this.toCategoryDTOList(product.getCategory()));
 		dto.setVersion(product.getVersion() != null ? product.getVersion() : null);
 		if (product.getProductSpecification() != null)
 			dto.setProductSpecification(this.toProductSpecificationDTOByRef(product.getProductSpecification()));
@@ -300,7 +341,8 @@ public class MappingManager {
 	private ProductSpecificationDTO toProductSpecificationDTO(ProductSpecification productSpec) {
 		ProductSpecificationDTO dto = new ProductSpecificationDTO();
 		dto.setId(productSpec.getId());
-//		dto.setHref(productSpec.getHref() != null ? productSpec.getHref().toString(): null);
+		// dto.setHref(productSpec.getHref() != null ? productSpec.getHref().toString():
+		// null);
 		dto.setName(productSpec.getName() != null ? productSpec.getName() : null);
 		dto.setDescription(productSpec.getDescription() != null ? productSpec.getDescription() : null);
 		dto.setBrand(productSpec.getBrand() != null ? productSpec.getBrand() : null);
@@ -310,9 +352,11 @@ public class MappingManager {
 		dto.setLastUpdate(productSpec.getLastUpdate() != null
 				? productSpec.getLastUpdate().format(DATE_FORMATTER)
 				: null);
-		dto.setProductSpecCharacteristic(productSpec.getProductSpecCharacteristic() != null	? this.toProductSpecCharacteristicDTOList(productSpec.getProductSpecCharacteristic())
+		dto.setProductSpecCharacteristic(productSpec.getProductSpecCharacteristic() != null
+				? this.toProductSpecCharacteristicDTOList(productSpec.getProductSpecCharacteristic())
 				: null);
-		dto.setRelatedParty(productSpec.getRelatedParty() != null ? this.toRelatedPartyDTOs(productSpec.getRelatedParty()) : null);
+		dto.setRelatedParty(
+				productSpec.getRelatedParty() != null ? this.toRelatedPartyDTOs(productSpec.getRelatedParty()) : null);
 		dto.setProductNumber(productSpec.getProductNumber() != null ? productSpec.getProductNumber() : null);
 		return dto;
 	}
@@ -320,7 +364,7 @@ public class MappingManager {
 	private ProductSpecificationDTO toProductSpecificationDTOByRef(ProductSpecificationRef prdSPec) {
 		ProductSpecificationDTO dto = new ProductSpecificationDTO();
 		dto.setId(prdSPec.getId());
-//		dto.setHref(prdSPec.getHref() != null ? prdSPec.getHref().toString() : null);
+		// dto.setHref(prdSPec.getHref() != null ? prdSPec.getHref().toString() : null);
 		dto.setName(prdSPec.getName() != null ? prdSPec.getName() : null);
 
 		return dto;
@@ -329,7 +373,7 @@ public class MappingManager {
 	private ProductOfferingPriceDTO toProductOfferingPriceDTO(ProductOfferingPriceRefOrValue pop) {
 		ProductOfferingPriceDTO dto = new ProductOfferingPriceDTO();
 		dto.setId(pop.getId());
-//		dto.setHref(pop.getHref() != null ? pop.getHref().toString() : null);
+		// dto.setHref(pop.getHref() != null ? pop.getHref().toString() : null);
 		dto.setName(pop.getName() != null ? pop.getName() : null);
 		dto.setDescription(pop.getDescription() != null ? pop.getDescription() : null);
 		dto.setVersion(pop.getVersion() != null ? pop.getVersion() : null);
@@ -368,7 +412,8 @@ public class MappingManager {
 		return dto;
 	}
 
-	List<ProductSpecCharacteristicDTO> toProductSpecCharacteristicDTOList(List<ProductSpecificationCharacteristic> list) {
+	List<ProductSpecCharacteristicDTO> toProductSpecCharacteristicDTOList(
+			List<ProductSpecificationCharacteristic> list) {
 		List<ProductSpecCharacteristicDTO> dtos = new ArrayList<>();
 		for (ProductSpecificationCharacteristic c : list)
 			dtos.add(toProductSpecCharacteristicDTO(c));
@@ -382,13 +427,13 @@ public class MappingManager {
 		dto.setProductSpecCharacteristicValue(
 				c.getProductSpecCharacteristicValue() != null
 						? toProductSpecCharacteristicValueDTOList(c.getProductSpecCharacteristicValue())
-						.toArray(new ProductSpecCharacteristicValueDTO[0])
-						: null
-		);
+								.toArray(new ProductSpecCharacteristicValueDTO[0])
+						: null);
 		return dto;
 	}
 
-	private List<ProductSpecCharacteristicValueDTO> toProductSpecCharacteristicValueDTOList(List<CharacteristicValueSpecification> list) {
+	private List<ProductSpecCharacteristicValueDTO> toProductSpecCharacteristicValueDTOList(
+			List<CharacteristicValueSpecification> list) {
 		List<ProductSpecCharacteristicValueDTO> dtos = new ArrayList<>();
 		for (CharacteristicValueSpecification v : list) {
 			ProductSpecCharacteristicValueDTO dto = new ProductSpecCharacteristicValueDTO();
@@ -403,14 +448,15 @@ public class MappingManager {
 		RelatedPartyDTO dto = new RelatedPartyDTO();
 		dto.setId(party.getId());
 		dto.setName(party.getName() != null ? party.getName() : null);
-//		dto.setReferredType(party.getAtReferredType() != null ? party.getAtReferredType() : null);
+		// dto.setReferredType(party.getAtReferredType() != null ?
+		// party.getAtReferredType() : null);
 		dto.setRole(party.getRole() != null ? party.getRole() : null);
 		return dto;
 	}
 
 	List<CategoryDTO> toCategoryDTOList(List<CategoryRef> categoryRefs) {
 		List<CategoryDTO> dtos = new ArrayList<>();
-		if(categoryRefs!=null) {
+		if (categoryRefs != null) {
 			for (CategoryRef c : categoryRefs)
 				dtos.add(toCategoryDTO(c));
 		}
@@ -420,9 +466,10 @@ public class MappingManager {
 	private CategoryDTO toCategoryDTO(CategoryRef categoryRef) {
 		CategoryDTO dto = new CategoryDTO();
 		dto.setId(categoryRef.getId());
-//		dto.setHref(categoryRef.getHref() != null ? categoryRef.getHref().toString() : null);
+		// dto.setHref(categoryRef.getHref() != null ? categoryRef.getHref().toString()
+		// : null);
 		dto.setName(categoryRef.getName() != null ? categoryRef.getName() : null);
-		//TODO: add other fields if needed
+		// TODO: add other fields if needed
 		return dto;
 	}
 
@@ -432,17 +479,19 @@ public class MappingManager {
 		dto.setHref(organization.getHref());
 		dto.setTradingName(organization.getTradingName());
 		dto.setExternalReference(toExternalReferenceDTOList(organization.getExternalReference()));
-		dto.setOrganizationIdentification(toOrganizationIdentificationDTOList(organization.getOrganizationIdentification()));
+		dto.setOrganizationIdentification(
+				toOrganizationIdentificationDTOList(organization.getOrganizationIdentification()));
 		dto.setPartyCharacteristic(toPartyCharacteristicDTOList(organization.getPartyCharacteristic()));
 		return dto;
 	}
 
 	private List<ExternalReferenceDTO> toExternalReferenceDTOList(List<ExternalReference> list) {
 		List<ExternalReferenceDTO> dtos = new ArrayList<>();
-		if(list!=null) {
+		if (list != null) {
 			for (ExternalReference r : list) {
 				ExternalReferenceDTO dto = new ExternalReferenceDTO();
-				dto.setExternalReferenceType(r.getExternalReferenceType() != null ? r.getExternalReferenceType() : null);
+				dto.setExternalReferenceType(
+						r.getExternalReferenceType() != null ? r.getExternalReferenceType() : null);
 				dto.setName(r.getName() != null ? r.getName() : null);
 				dtos.add(dto);
 			}
@@ -450,9 +499,10 @@ public class MappingManager {
 		return dtos;
 	}
 
-	private List<OrganizationIdentificationDTO> toOrganizationIdentificationDTOList(List<OrganizationIdentification> list) {
+	private List<OrganizationIdentificationDTO> toOrganizationIdentificationDTOList(
+			List<OrganizationIdentification> list) {
 		List<OrganizationIdentificationDTO> dtos = new ArrayList<>();
-		if(list!=null) {
+		if (list != null) {
 			for (OrganizationIdentification o : list) {
 				OrganizationIdentificationDTO dto = new OrganizationIdentificationDTO();
 				dto.setIdentificationId(o.getIdentificationId() != null ? o.getIdentificationId() : null);
@@ -467,7 +517,7 @@ public class MappingManager {
 
 	public List<PartyCharacteristicDTO> toPartyCharacteristicDTOList(List<Characteristic> list) {
 		List<PartyCharacteristicDTO> dtos = new ArrayList<>();
-		if(list!=null) {
+		if (list != null) {
 			for (Characteristic c : list) {
 				PartyCharacteristicDTO dto = new PartyCharacteristicDTO();
 				dto.setName(c.getName() != null ? c.getName() : null);
@@ -505,11 +555,13 @@ public class MappingManager {
 						try {
 							String complianceLevel = VCDecoderBasic.extractLabelLevel(value.getValue().toString());
 							if (complianceLevel != null && !complianceLevel.isBlank()) {
-								log.info("Decoded VC for ProductSpecCharacteristicValue {}: {}", value.getValue(), complianceLevel);
+								log.info("Decoded VC for ProductSpecCharacteristicValue {}: {}", value.getValue(),
+										complianceLevel);
 								complianceLevels.add(complianceLevel);
 							}
 						} catch (Exception e) {
-							log.warn("Failed to decode VC for ProductSpecCharacteristicValue {}: {}", value.getValue(), e.getMessage());
+							log.warn("Failed to decode VC for ProductSpecCharacteristicValue {}: {}", value.getValue(),
+									e.getMessage());
 						}
 					}
 				}
@@ -520,7 +572,7 @@ public class MappingManager {
 	}
 
 	// PROVIDER SPECIFIC MAPPING
-	public ProviderIndex prepareOrganizationMetadata(Organization organization,	ProviderIndex objToIndex) {
+	public ProviderIndex prepareOrganizationMetadata(Organization organization, ProviderIndex objToIndex) {
 		OrganizationDTO organizationDTO = toOrganizationDTO(organization);
 		objToIndex.setOrganization(organizationDTO);
 
@@ -530,8 +582,7 @@ public class MappingManager {
 		objToIndex.setTradingName(
 				organization.getTradingName() != null
 						? organization.getTradingName()
-						: organization.getName()
-		);
+						: organization.getName());
 
 		objToIndex.setCountry(extractCountry(organization));
 

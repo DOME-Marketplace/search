@@ -1,13 +1,14 @@
 package it.eng.dome.search.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
-import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CatalogResponse {
+public class CatalogCategoryDTO {
     private String id;
     private String name;
-    private List<CatalogCategoryDTO> category; 
+    private String parentId;
+    private String lifecycleStatus;
 }
