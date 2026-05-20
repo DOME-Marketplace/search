@@ -70,6 +70,19 @@ public class IndexingObject {
 	@Field(type = FieldType.Text)
 	private String productSpecificationOwner;
 
+	//from product OfferingPrice
+	@Field(type = FieldType.Nested)
+	private List<ProductOfferingPriceDTO> productOfferingPrice;
+
+	@Field(type = FieldType.Keyword)
+	private String productOfferingPriceId;
+
+	@Field(type = FieldType.Text)
+	private String productOfferingPriceName;
+
+	@Field(type = FieldType.Text)
+	private String productOfferingPriceType;
+
 	// compliance levels
 	@Field(type = FieldType.Keyword)
 	private List<String> complianceLevels;

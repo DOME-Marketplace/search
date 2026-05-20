@@ -105,9 +105,17 @@ public class ProviderIndexingService {
              * STEP 4
              * Retrieve DOME catalog categories
              */
-            List<String> domeCatalogCategories = domeCatalogService.getCatalogCategories();
-            log.info("Found {} categories in DOME Catalog",
-                    domeCatalogCategories.size());
+            // List<String> domeCatalogCategories = domeCatalogService.getCatalogCategories();
+            // log.info("Found {} categories in DOME Catalog",
+            //         domeCatalogCategories.size());
+
+            // List<String> subCategories = domeCatalogService.getDomeMainSubCategories();
+            // log.info("Found {} sub-categories in DOME Main Categories:", subCategories.size());
+            // subCategories.forEach(cat -> log.info(" - Category: {}", cat));
+
+            List<String> subCategories = domeCatalogService.getOnlyDomeLeafCategories();
+            log.info("Found {} sub-categories in DOME Main Categories:", subCategories.size());
+            subCategories.forEach(cat -> log.info(" - Category: {}", cat));
 
             /*
              * STEP 5
@@ -135,7 +143,7 @@ public class ProviderIndexingService {
                                 organization,
                                 offerings,
                                 existing,
-                                domeCatalogCategories
+                                subCategories
                         );
 
                 providersToSave.add(processed);

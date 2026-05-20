@@ -49,7 +49,7 @@ public class IndexingService {
 					try {
 						processed.incrementAndGet();
 
-						// Controlla se il ProductOffering esiste già in Elasticsearch
+						// Check if the ProductOffering already exists in Elasticsearch
 						IndexingObject existingObj = offeringRepo.findByProductOfferingIdIn(List.of(po.getId()))
 								.stream()
 								.findFirst()

@@ -28,6 +28,10 @@ public class IndexingManager {
 			// map ProductOffering
 			objToIndex = mappingManager.prepareOfferingMetadata(product, objToIndex);
 
+			//map product offering price
+			log.debug("Mapping Prices for Offering ID: {}", product.getId());
+        	objToIndex = mappingManager.prepareOfferingPriceMetadata(product.getProductOfferingPrice(), objToIndex);
+
 			ProductSpecificationRef productSpecRef = product.getProductSpecification();
 			if (productSpecRef == null) {
 				log.warn("null value in ProductSpecification");

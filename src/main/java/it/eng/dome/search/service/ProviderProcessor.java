@@ -1,7 +1,10 @@
 package it.eng.dome.search.service;
 
-import it.eng.dome.search.domain.ProviderIndex;
-import it.eng.dome.search.service.dto.OrganizationSearchRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -17,9 +20,8 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import it.eng.dome.search.domain.ProviderIndex;
+import it.eng.dome.search.service.dto.OrganizationSearchRequest;
 
 @Service
 public class ProviderProcessor {
@@ -27,25 +29,39 @@ public class ProviderProcessor {
 	@Autowired
 	private ElasticsearchOperations elasticsearchOperations;
 
-	public ProviderProcessor(ElasticsearchOperations elasticsearchOperations) {
+	@Autowired
+	private DomeCatalogService domeCatalogService;
+
+	public ProviderProcessor(ElasticsearchOperations elasticsearchOperations, DomeCatalogService domeCatalogService) {
 		this.elasticsearchOperations = elasticsearchOperations;
+		this.domeCatalogService = domeCatalogService;
 	}
 
-	// --- search provider con considerAllOrgs ---
+	// --- search provider con considerAllOrgs (Gerarchico: AND tra root, OR tra foglie)---
 	public Page<ProviderIndex> searchProvider(OrganizationSearchRequest request, boolean considerAllOrgs, Pageable pageable) {
 		try {
 			BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
 
 			// Filter by categories (nested)
+			// 1. FILTRO CATEGORIE (Gerarchico: AND tra root, OR tra foglie)
 			if (request.getCategories() != null && !request.getCategories().isEmpty()) {
-				for (String cat : request.getCategories()) {
-					boolQuery.should(QueryBuilders.nestedQuery(
-							"categories",
-							QueryBuilders.termQuery("categories.name", cat),
-							ScoreMode.None
-					));
+				Map<String, List<String>> groupedRequest = domeCatalogService.groupCategoriesByRoot(request.getCategories());
+				
+				if (groupedRequest == null || groupedRequest.isEmpty()) {
+					// Categorie inesistenti: forziamo il fallimento della query
+					boolQuery.filter(QueryBuilders.termQuery("categories.name", "FORCE_EMPTY_RESULT_NO_MATCH_STR_TO_ZERO_RESULTS"));
+				} else {
+					for (Map.Entry<String, List<String>> entry : groupedRequest.entrySet()) {
+						List<String> catValues = entry.getValue();
+						BoolQueryBuilder groupOrQuery = QueryBuilders.boolQuery();
+						for (String value : catValues) {
+							groupOrQuery.should(QueryBuilders.termQuery("categories.name", value));
+						}
+						boolQuery.filter(
+							QueryBuilders.nestedQuery("categories", groupOrQuery, ScoreMode.None)
+						);
+					}
 				}
-				boolQuery.minimumShouldMatch(1);
 			}
 
 			// Filter by countries
@@ -55,7 +71,17 @@ public class ProviderProcessor {
 
 			// Filter by complianceLevels
 			if (request.getComplianceLevels() != null && !request.getComplianceLevels().isEmpty()) {
-				boolQuery.filter(QueryBuilders.termsQuery("complianceLevels", request.getComplianceLevels()));
+				List<String> mappedLevels = request.getComplianceLevels().stream()
+						.map(level -> {
+							switch (level.trim()) {
+								case "Baseline": return "BL";
+								case "Professional": return "P";
+								case "Professional+": return "PP";
+								default: return level;
+							}
+						})
+						.collect(Collectors.toList());
+				boolQuery.filter(QueryBuilders.termsQuery("complianceLevels", mappedLevels));
 			}
 
 			// --- filtro per organizzazioni con offering solo se considerAllOrgs = false ---
@@ -63,6 +89,7 @@ public class ProviderProcessor {
 				boolQuery.filter(QueryBuilders.rangeQuery("publishedOfferingsCount").gte(1));
 			}
 
+			//execution
 			NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder()
 					.withQuery(boolQuery)
 					.withPageable(pageable);

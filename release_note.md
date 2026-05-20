@@ -2,6 +2,18 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.4.0</code>
+**Improvement**
+* Alignment new DOME Catalog Categories and filters (procurementType and complianceLevels) in searchRequest and indexing process (added productOfferingPrice fields).
+* Alignment new DOME Catalog Categories in search provider and indexing process.
+* Change `SearchProduct` endpoints. Now, it support search with and without query parameter (`api/SearchProduct/{query}` and `api/SearchProduct`).
+
+**Feature**
+* Added `CatalogCategoryDTO` to manage new category hierarchy.
+
+**Bug Fix**
+* fix the vcToken split in `VCDecoderBasic.java`
+
 ### <code>1.3.0</code>
 **Feature**
 * Enabling HTTPS: add `ELASTIC_SSL_ENABLED` and `ELASTIC_SSL_VERIFICATION` to manage https requests.
