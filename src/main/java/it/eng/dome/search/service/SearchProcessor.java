@@ -147,7 +147,7 @@ public class SearchProcessor {
 
 		// HIERARCHICAL CATEGORIES LOGIC (AND between groups, OR between leaves)
 		if (request.getCategories() != null && !request.getCategories().isEmpty()) {
-			Map<String, Object> hierarchy = domeCatalogService.getCategoryHierarchy();
+			// Map<String, Object> hierarchy = domeCatalogService.getCategoryHierarchy();
 			Map<String, List<String>> groupedRequest = domeCatalogService
 					.groupCategoriesByRoot(request.getCategories());
 			// Se l'utente ha richiesto categorie, ma il servizio di raggruppamento restituisce una mappa vuota,
