@@ -2,6 +2,10 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.5.1</code>
+**Bug Fix**
+* Data Normalization: Resolved an inconsistency in the normalization logic within the ResultProcessor. By ensuring uniform handling of strings (specifically case-insensitive transformation) during the retrieval phase, the system now guarantees accurate and predictable sorting for the name field.
+
 ### <code>1.5.0</code>
 **Improvement**
 * Dynamic Sorting: Implemented support for dynamic search result sorting. The SearchProduct and SearchProvider APIs now support sorting parameters via query string (e.g., ?sort=field,asc/desc).

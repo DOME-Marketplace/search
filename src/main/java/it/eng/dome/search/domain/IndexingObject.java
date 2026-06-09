@@ -33,7 +33,7 @@ public class IndexingObject {
 	@Field(type = FieldType.Text)
 	private String productOfferingDescription;
 
-	@Field(type = FieldType.Keyword)
+	@Field(type = FieldType.Keyword, normalizer = "lowercase_normalizer")
 	private String productOfferingName;
 
 	@Field(type = FieldType.Text)
