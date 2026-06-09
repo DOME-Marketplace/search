@@ -1,6 +1,6 @@
 # DOME Search REST APIs
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Description:** DOME Search REST APIs Swagger documentation  
 
 

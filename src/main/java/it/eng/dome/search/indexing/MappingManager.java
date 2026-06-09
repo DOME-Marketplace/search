@@ -56,12 +56,15 @@ public class MappingManager {
 		objToIndex.setProductOfferingDescription(product.getDescription());
 		objToIndex.setProductOfferingId(product.getId());
 		objToIndex.setProductOfferingIsBundle(product.getIsBundle());
-		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate() != null
-				? product.getLastUpdate().format(DATE_FORMATTER)
-				: null);
+		// objToIndex.setProductOfferingLastUpdate(product.getLastUpdate() != null
+		// 		? product.getLastUpdate().format(DATE_FORMATTER)
+		// 		: null);
+		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate() != null 
+        ? product.getLastUpdate().toString() 
+        : null);
 		objToIndex.setProductOfferingLifecycleStatus(product.getLifecycleStatus());
-		objToIndex.setProductOfferingName(product.getName());
-		objToIndex.setProductOfferingNameText(product.getName());
+		objToIndex.setProductOfferingName(product.getName().trim());
+		objToIndex.setProductOfferingNameText(product.getName().trim());
 		objToIndex.setCategories(toCategoryDTOList(product.getCategory()));
 
 		ProductOffering productOffering = tmfDataRetriever.getProductOfferingById(product.getId(), null);
@@ -579,10 +582,12 @@ public class MappingManager {
 		objToIndex.setId(organization.getId());
 
 		// fallback: tradingName -> name
-		objToIndex.setTradingName(
-				organization.getTradingName() != null
-						? organization.getTradingName()
-						: organization.getName());
+		String tradingName = (organization.getTradingName() != null)
+						? organization.getTradingName().trim()
+						: organization.getName().trim();
+
+		objToIndex.setTradingName(tradingName);
+		objToIndex.setTradingNameText(tradingName);
 
 		objToIndex.setCountry(extractCountry(organization));
 

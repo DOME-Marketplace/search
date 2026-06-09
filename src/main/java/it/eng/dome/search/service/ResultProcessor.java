@@ -41,9 +41,11 @@ public class ResultProcessor {
 			for (IndexingObject indexingObj : listIdexingObject) {
 				if (indexingObj.getProductOfferingId() != null) {
 					if (!mapProductOffering.containsKey(indexingObj.getProductOfferingId())) {
-						ProductOffering productOffering = tmfDataRetriever.getProductOfferingById(indexingObj.getProductOfferingId(), null);
+						ProductOffering productOffering = tmfDataRetriever
+								.getProductOfferingById(indexingObj.getProductOfferingId(), null);
 						if (productOffering == null) {
-							log.warn("getProductOfferingById {} - Product Offering cannot found", indexingObj.getProductOfferingId());
+							log.warn("getProductOfferingById {} - Product Offering cannot found",
+									indexingObj.getProductOfferingId());
 						} else {
 							// store the fetched ProductOffering
 							mapProductOffering.put(indexingObj.getProductOfferingId(), productOffering);
@@ -66,13 +68,15 @@ public class ResultProcessor {
 		}
 	}
 
-	public Page<ProductOffering> processResultsWithScore(Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage, Pageable pageable) {
+	public Page<ProductOffering> processResultsWithScore(
+			Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage, Pageable pageable) {
 
 		HashMap<String, ProductOffering> mapProductOffering = new HashMap<>();
-        Page<IndexingObject> page = null;
+		Page<IndexingObject> page = null;
 		Map<IndexingObject, Float> scoreMap = new ConcurrentHashMap<>();
 
-		// Extract the first entry from resultPage to get the indexed objects and their scores
+		// Extract the first entry from resultPage to get the indexed objects and their
+		// scores
 		if (!resultPage.isEmpty()) {
 			for (Entry<Page<IndexingObject>, Map<IndexingObject, Float>> entry : resultPage.entrySet()) {
 				page = entry.getKey();
@@ -93,9 +97,11 @@ public class ResultProcessor {
 				if (indexingObj.getProductOfferingId() != null) {
 					// Retrieve product details only if not already fetched
 					if (!mapProductOffering.containsKey(indexingObj.getProductOfferingId())) {
-						ProductOffering productOffering = tmfDataRetriever.getProductOfferingById(indexingObj.getProductOfferingId(), null);
+						ProductOffering productOffering = tmfDataRetriever
+								.getProductOfferingById(indexingObj.getProductOfferingId(), null);
 						if (productOffering == null) {
-							log.warn("getProductOfferingById {} - PO cannot be found", indexingObj.getProductOfferingId());
+							log.warn("getProductOfferingById {} - PO cannot be found",
+									indexingObj.getProductOfferingId());
 						} else {
 							// Store the fetched ProductOffering
 							mapProductOffering.put(indexingObj.getProductOfferingId(), productOffering);
@@ -106,22 +112,46 @@ public class ResultProcessor {
 					ProductOffering productOffering = mapProductOffering.get(indexingObj.getProductOfferingId());
 					if (productOffering != null) {
 						Float score = scoreMap.get(indexingObj);
-//						log.debug("Processing IndexingObject: {} with score: {}", indexingObj.getProductOfferingId(), score);
+						// log.debug("Processing IndexingObject: {} with score: {}",
+						// indexingObj.getProductOfferingId(), score);
 						productScoreMap.put(productOffering, score != null ? score : 0.0f);
 					}
 				}
 			}
 
 			// Add all retrieved ProductOfferings to the list
-            List<ProductOffering> listProductOffering = new ArrayList<>(mapProductOffering.values());
+			// List<ProductOffering> listProductOffering = new ArrayList<>(mapProductOffering.values());
+			List<ProductOffering> listProductOffering = new ArrayList<>();
+			// Usiamo un Set per tracciare cosa abbiamo già aggiunto
+			java.util.Set<String> addedIds = new java.util.HashSet<>();
+
+			for (IndexingObject indexingObj : listIndexingObject) {
+				String id = indexingObj.getProductOfferingId();
+				if (id != null && mapProductOffering.containsKey(id) && !addedIds.contains(id)) {
+					listProductOffering.add(mapProductOffering.get(id));
+					addedIds.add(id); // Segniamo l'id come già aggiunto
+				}
+			}
 
 			// Sort the list based on scores in descending order
-			listProductOffering.sort((p1, p2) -> Float.compare(productScoreMap.get(p2), productScoreMap.get(p1)));
+			// listProductOffering.sort((p1, p2) -> Float.compare(productScoreMap.get(p2),
+			// productScoreMap.get(p1)));
 
-			if(!listProductOffering.isEmpty()) {
+			if (pageable.getSort().isUnsorted()) {
+				log.info("Nessun ordinamento specificato: riordino per score.");
+				listProductOffering.sort((p1, p2) -> Float.compare(productScoreMap.get(p2), productScoreMap.get(p1)));
+			} else {
+				log.info("Ordinamento specificato dal client: salto il riordino per score.");
+				// Se è specificato, lasciamo che i risultati arrivino nell'ordine deciso da
+				// Elasticsearch
+				// (che a questo punto sarà l'ordine che hai passato nel pageable)
+			}
+
+			if (!listProductOffering.isEmpty()) {
 				log.info("Sorted ProductOfferings:");
 				for (ProductOffering productOffering : listProductOffering) {
-					log.info("ProductOffering: {} - {} with score: {}", productOffering.getId(), productOffering.getName(), productScoreMap.get(productOffering));
+					log.info("ProductOffering: {} - {} with score: {}", productOffering.getId(),
+							productOffering.getName(), productScoreMap.get(productOffering));
 				}
 			}
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -41,7 +42,7 @@ public class IndexingObject {
 	@Field(type = FieldType.Text)
 	private String productOfferingLifecycleStatus;
 
-	@Field(type = FieldType.Text)
+	@Field(type = FieldType.Date, format = DateFormat.date_time)
 	private String productOfferingLastUpdate;
 
 	@Field(type = FieldType.Boolean)

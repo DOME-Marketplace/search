@@ -22,8 +22,11 @@ public class ProviderIndex {
     @Id
     protected String id;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String tradingName;
+
+    @Field(type = FieldType.Text)
+    private String tradingNameText;
 
     @Field(type = FieldType.Object)
     private OrganizationDTO organization;

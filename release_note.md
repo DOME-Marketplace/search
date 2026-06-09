@@ -2,6 +2,17 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.5.0</code>
+**Improvement**
+* Dynamic Sorting: Implemented support for dynamic search result sorting. The SearchProduct and SearchProvider APIs now support sorting parameters via query string (e.g., ?sort=field,asc/desc).
+* Enhanced Ranking Accuracy: Optimized the search engine to strictly respect client-specified order, ensuring that sort criteria (e.g., productOfferingName, productOfferingLastUpdate) correctly override default scoring logic.
+* Mapping Refinement: Updated the Elasticsearch mapping for ProviderIndex by introducing a multi-field for tradingName (Text + Keyword), enabling both full-text search and precise alphabetical sorting.
+* Date Handling: Standardized the productOfferingLastUpdate field in the mapping (from Text to Date), improving the accuracy and reliability of chronological sorting.
+
+**Bug Fix**
+* Integrity Fix: Resolved a bug in ResultProcessor that caused random result ordering (due to HashMap usage) during data retrieval, ensuring that the order defined by Elasticsearch is now preserved through to the final output.
+* Deduplication: Fixed a record duplication issue in search results by introducing an ID-based filter during the data aggregation process.
+
 ### <code>1.4.0</code>
 **Improvement**
 * Alignment new DOME Catalog Categories and filters (procurementType and complianceLevels) in searchRequest and indexing process (added productOfferingPrice fields).
