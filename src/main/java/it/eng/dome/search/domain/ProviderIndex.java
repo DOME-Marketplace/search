@@ -22,7 +22,7 @@ public class ProviderIndex {
     @Id
     protected String id;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Keyword, normalizer = "lowercase_normalizer")
     private String tradingName;
 
     @Field(type = FieldType.Text)
