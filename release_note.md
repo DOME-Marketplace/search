@@ -2,6 +2,15 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.5.3</code> (WIP)
+**Improvement**
+* Set `SCHEDULING_CRON_JOB_TASK` to schedule the search task
+
+
+### <code>1.5.2</code>
+**Improvement**
+* Added a normaliser to the IndexInitialisert handle case-sensitive comparisons
+
 ### <code>1.5.1</code>
 **Bug Fix**
 * Data Normalization: Resolved an inconsistency in the normalization logic within the ResultProcessor. By ensuring uniform handling of strings (specifically case-insensitive transformation) during the retrieval phase, the system now guarantees accurate and predictable sorting for the name field.

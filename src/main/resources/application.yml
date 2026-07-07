@@ -36,6 +36,10 @@ management:
     probes:
       enabled: true
 
+ # Scheduling Searching Task Configuration  
+  scheduling:
+    cron: ${SCHEDULING_CRON_JOB_TASK:0 */5 * * * ?}
+	  
 logging:
   level:
     it.eng.dome: ${LOG_LEVEL:DEBUG}
