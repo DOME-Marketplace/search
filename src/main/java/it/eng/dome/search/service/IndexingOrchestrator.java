@@ -24,8 +24,8 @@ public class IndexingOrchestrator {
         this.providerIndexingService = providerIndexingService;
     }
 
-    // every 5 minutes
-    @Scheduled(cron = "0 */5 * * * ?")
+    // set SCHEDULING_CRON_JOB_TASK var
+    @Scheduled(cron = "${scheduling.cron}")
     public void runFullIndexingFlow() {
 
         if (!running.compareAndSet(false, true)) {

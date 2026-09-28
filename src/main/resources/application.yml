@@ -1,4 +1,3 @@
-
 # Spring Configuration
 server: 
   port: 8080
@@ -36,13 +35,17 @@ management:
     probes:
       enabled: true
 
+ # Scheduling Searching Task Configuration  
+scheduling:
+  cron: ${SCHEDULING_CRON_JOB_TASK:0 */5 * * * ?}
+
 logging:
   level:
     it.eng.dome: ${LOG_LEVEL:DEBUG}
     org.apache.coyote.http11: ERROR
 
 tmforumapi:
-  tmf_endpoint: ${TMF_ENDPOINT:https://tmf.dome-marketplace-sbx.org}
+  tmf_endpoint: ${TMF_ENDPOINT:https://tmf.dome-marketplace-dev2.org}
   tmf_envoy:  ${TMF_ENVOY:true}
   # valid only if envoy false
   tmf_namespace: ${TMF_NAMESPACE:marketplace}
@@ -58,7 +61,7 @@ tmforumapi:
 
 dome:
   catalog:
-    base-url: ${DOME_BASE_URL:https://dome-marketplace-sbx.org}
+    base-url: ${DOME_BASE_URL:https://dome-marketplace-dev2.org}
     catalog-path: /catalog/catalog
     config-path: /config
     categories-path: /catalog/category

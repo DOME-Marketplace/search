@@ -15,7 +15,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -101,6 +107,13 @@ public class ProviderIndexingService {
             log.info("Found {} total organizations",
                     allOrganizations.size());
 
+            Set<String> currentTmfOrgIds = new HashSet<>();
+            for (Organization org : allOrganizations) {
+                if (org != null && org.getId() != null) {
+                    currentTmfOrgIds.add(org.getId());
+                }
+            }
+
             /*
              * STEP 4
              * Retrieve DOME catalog categories
@@ -151,12 +164,49 @@ public class ProviderIndexingService {
 
             /*
              * STEP 6
-             * Bulk save
+             * Bulk save active/updated providers
              */
-            providerIndexRepository.saveAll(providersToSave);
+            if (!providersToSave.isEmpty()) {
+                providerIndexRepository.saveAll(providersToSave);
+            }
 
-            log.info("Provider indexing completed successfully. {} providers indexed.",
-                    providersToSave.size());
+            /*
+             * STEP 7: CLEANUP PHASE FOR ORPHANED PROVIDERS
+             */
+            log.info("Running cleanup phase for providers no longer present in TMF...");
+            int markedAsDeletedCount = 0;
+            int providerPageNumber = 0;
+            int providerPageSize = 500;
+            Page<ProviderIndex> providerPage;
+
+            do {
+                Pageable providerPageable = PageRequest.of(providerPageNumber, providerPageSize);
+                providerPage = providerIndexRepository.findAll(providerPageable);
+
+                List<ProviderIndex> providersToDelete = new ArrayList<>();
+
+                for (ProviderIndex indexedProvider : providerPage.getContent()) {
+                    String providerId = indexedProvider.getId(); // o il campo corrispondente all'ID org nel documento ProviderIndex
+
+                    // Se l'organizzazione indicizzata non esiste più nelle TMF API
+                    if (providerId != null && !currentTmfOrgIds.contains(providerId)) {
+                        log.info("Provider/Organization {} no longer in TMF source. Removing from index.", providerId);
+                        providersToDelete.add(indexedProvider);
+                        markedAsDeletedCount++;
+                    }
+                }
+
+                // Eseguiamo la cancellazione (o potresti fare un update di stato se il ProviderIndex gestisce uno stato "Deleted")
+                if (!providersToDelete.isEmpty()) {
+                    providerIndexRepository.deleteAll(providersToDelete);
+                }
+
+                providerPageNumber++;
+
+            } while (providerPage.hasNext());
+
+            log.info("Provider indexing completed successfully. {} providers indexed, {} orphaned providers removed.",
+                    providersToSave.size(), markedAsDeletedCount);
 
         } catch (Exception e) {
             log.error("Unexpected error during Provider indexing: {}",

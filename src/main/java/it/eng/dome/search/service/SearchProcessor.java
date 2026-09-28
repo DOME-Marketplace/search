@@ -4,7 +4,11 @@ import it.eng.dome.search.domain.IndexingObject;
 import it.eng.dome.search.repository.OfferingRepository;
 import it.eng.dome.search.service.dto.SearchRequest;
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +59,26 @@ public class SearchProcessor {
 
 		if (q != null && !q.trim().isEmpty()) {
 			q = q.toLowerCase();
+
+			// 1. VERIFICHIAMO SE È UNA RICERCA ESATTA CON I DOPPI APICI (es. "availability protect")
+          boolean isExactMatch = q.startsWith("\"") && q.endsWith("\"") && q.length() > 2;
+
+          if (isExactMatch) {
+             // Rimuoviamo i doppi apici per estrarre la frase pulita
+             String cleanPhrase = q.substring(1, q.length() - 1);
+             logger.info("Building exact phrase match query for: {}", cleanPhrase);
+
+             // Essendo già normalizzato in lowercase nel mapping, 
+             // la termQuery troverà esattamente il corrispettivo pulito.
+             TermQueryBuilder exactQuery = QueryBuilders.termQuery("productOfferingName", cleanPhrase);
+
+             boolQueryBuilder.must(exactQuery);
+             
+             // Valorizziamo 'words' con la frase pulita per non rompere il calcolo dei boost successivi
+             words = new String[]{ cleanPhrase };
+
+          } else {
+
 			// Split the query into individual words
 			words = q.split("\\s+");
 
@@ -124,6 +148,7 @@ public class SearchProcessor {
 			// Log della query full-text
 			logger.info("Building full-text query for: {}", q);
 			boolQueryBuilder.must(queryBuilder);
+		  }
 		} else {
 			logger.info("No search query provided, skipping full-text search.");
 			// If there's no textual query, we use match_all to allow filters to work
