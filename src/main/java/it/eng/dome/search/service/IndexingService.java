@@ -9,7 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,11 +48,18 @@ public class IndexingService {
 			AtomicInteger updated = new AtomicInteger();
 			AtomicInteger processed = new AtomicInteger();
 
+			// 
+			Set<String> currentTmfOfferingIds = new HashSet<>();
+
 			// call TMF API in batch method
 			tmfDataRetriever.fetchProductOfferingsByBatch(null, 100, batch -> {
 				for (ProductOffering po : batch) {
 					try {
 						processed.incrementAndGet();
+
+						if (po.getId() != null) {
+							currentTmfOfferingIds.add(po.getId());
+						}
 
 						// Check if the ProductOffering already exists in Elasticsearch
 						IndexingObject existingObj = offeringRepo.findByProductOfferingIdIn(List.of(po.getId()))
@@ -63,8 +75,10 @@ public class IndexingService {
 						// save to Elasticsearch
 						offeringRepo.save(processedObj);
 
-						if (isNew) created.incrementAndGet();
-						else updated.incrementAndGet();
+						if (isNew) 
+							created.incrementAndGet();
+						else 
+							updated.incrementAndGet();
 
 						if (processed.get() % 100 == 0) {
 							log.info("Processed {} offerings so far...", processed.get());
@@ -75,8 +89,50 @@ public class IndexingService {
 				}
 			});
 
-			log.info("Indexing process completed: {} processed ({} created, {} updated)",
-					processed.get(), created.get(), updated.get());
+			// 2. CLEANUP PHASE / MARK AS DELETED
+			log.info("Running cleanup phase for offerings no longer present in TMF...");
+			int markedAsDeletedCount = 0;
+
+			int pageNumber = 0;
+			int pageSize = 500;
+			org.springframework.data.domain.Page<IndexingObject> page;
+
+			do {
+				// create pageable request for the current page
+				Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+				// retrieve a page of objects from Elasticsearch
+				page = offeringRepo.findAll(pageable);
+
+				List<IndexingObject> toUpdateList = new ArrayList<>();
+
+				for (IndexingObject indexedObj : page.getContent()) {
+					String offeringId = indexedObj.getProductOfferingId();
+
+					// If the indexed product is NO longer present in the TMF API set
+					// And is not already marked as 'Deleted'
+					if (offeringId != null && !currentTmfOfferingIds.contains(offeringId)) {
+						if (!"Deleted".equalsIgnoreCase(indexedObj.getProductOfferingLifecycleStatus())) {
+							log.info("Offering {} no longer in TMF source. Marking as Deleted.", offeringId);
+
+							indexedObj.setProductOfferingLifecycleStatus("Deleted");
+							toUpdateList.add(indexedObj);
+							markedAsDeletedCount++;
+						}
+					}
+				}
+
+				// Batch save the updates for the current block
+				if (!toUpdateList.isEmpty()) {
+					offeringRepo.saveAll(toUpdateList);
+				}
+
+				pageNumber++;
+
+			} while (page.hasNext()); // Continue as long as there are pages in Elasticsearch
+
+			log.info("Indexing process completed: {} processed ({} created, {} updated, {} marked as deleted)",
+					processed.get(), created.get(), updated.get(), markedAsDeletedCount);
 
 		} catch (Exception e) {
 			log.error("Unexpected error during indexing: {}", e.getMessage(), e);

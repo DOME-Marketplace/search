@@ -2,9 +2,14 @@
 
 **Release Notes** for the *Search*:
 
-### <code>1.5.3</code> (WIP)
+### <code>1.5.3</code>
 **Improvement**
 * Set `SCHEDULING_CRON_JOB_TASK` to schedule the search task
+* Refactored the `/SearchProduct` endpoint to use a Request Parameter (`?query=...`) instead of a Path Variable, making the query parameter optional and improving API flexibility
+
+**Bug Fix**
+* Implemented an indexing cleanup phase to automatically detect and mark orphaned product offerings (removed from TMF API) as `Deleted`, resolving pagination and ghost-result anomalies during searches.
+* Added a cleanup phase to `ProviderIndexingService` to automatically remove orphaned provider documents from Elasticsearch when their corresponding organizations are deleted from the TMF source.
 
 
 ### <code>1.5.2</code>

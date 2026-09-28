@@ -33,21 +33,21 @@ public class SearchResource {
 
 	// search 2.0 - Improvement Feb 2026
 	// Caso con query
-	@PostMapping("/SearchProduct/{query}")
-	public ResponseEntity<List<ProductOffering>> searchProductWithQuery(
-			@PathVariable String query,
+	@PostMapping("/SearchProduct")
+	public ResponseEntity<List<ProductOffering>> searchProduct(
+			@RequestParam(value = "query", required = false) String query,
 			@RequestBody SearchRequest request,
 			Pageable pageable) {
 		return executeSearch(query, request, pageable);
 	}
 
-	// Caso senza query
-	@PostMapping("/SearchProduct")
-	public ResponseEntity<List<ProductOffering>> searchProductNoQuery(
-			@RequestBody SearchRequest request,
-			Pageable pageable) {
-		return executeSearch(null, request, pageable);
-	}
+	// // Caso senza query
+	// @PostMapping("/SearchProduct")
+	// public ResponseEntity<List<ProductOffering>> searchProductNoQuery(
+	// 		@RequestBody SearchRequest request,
+	// 		Pageable pageable) {
+	// 	return executeSearch(null, request, pageable);
+	// }
 
 	// Metodo privato di supporto per non duplicare la logica
 	private ResponseEntity<List<ProductOffering>> executeSearch(String query, SearchRequest request,
@@ -56,7 +56,7 @@ public class SearchResource {
 				request, pageable);
 		Page<ProductOffering> pageProduct = resultProcessor.processResultsWithScore(resultPage, pageable);
 
-		String path = (query != null) ? "/api/SearchProduct/" + query : "/api/SearchProduct";
+		String path = (query != null && !query.isEmpty()) ? "/api/SearchProduct?query=" + query : "/api/SearchProduct";
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, path);
 
 		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
