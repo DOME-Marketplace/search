@@ -1,7 +1,8 @@
 package it.eng.dome.search.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import it.eng.dome.search.domain.dto.*;
+import it.eng.dome.search.domain.dto.CategoryDTO;
+import it.eng.dome.search.domain.dto.OrganizationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
