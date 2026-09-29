@@ -2,6 +2,10 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.5.4</code>
+**Bug Fix**
+* Fixed an Elasticsearch indexing issue affecting productOfferingLastUpdate date serialization.
+
 ### <code>1.5.3</code>
 **Improvement**
 * Set `SCHEDULING_CRON_JOB_TASK` to schedule the search task

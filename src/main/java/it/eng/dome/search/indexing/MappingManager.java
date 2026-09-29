@@ -53,6 +53,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.time.ZoneOffset;
+
 
 @Component
 public class MappingManager {
@@ -63,6 +65,8 @@ public class MappingManager {
 
 	// --- static unique formatter ---
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+
+	private static final DateTimeFormatter ES_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
 	@Autowired
 	private RestSemanticUtil restSemanticUtil;
@@ -80,9 +84,14 @@ public class MappingManager {
 		// objToIndex.setProductOfferingLastUpdate(product.getLastUpdate() != null
 		// 		? product.getLastUpdate().format(DATE_FORMATTER)
 		// 		: null);
-		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate() != null 
-        ? product.getLastUpdate().toString() 
-        : null);
+		// objToIndex.setProductOfferingLastUpdate(product.getLastUpdate() != null 
+        // ? product.getLastUpdate().toString() 
+        // : null);
+		objToIndex.setProductOfferingLastUpdate(product.getLastUpdate() != null
+				? product.getLastUpdate()
+						.withOffsetSameInstant(ZoneOffset.UTC)
+						.format(ES_DATE_TIME_FORMATTER)
+				: null);
 		objToIndex.setProductOfferingLifecycleStatus(product.getLifecycleStatus());
 		objToIndex.setProductOfferingName(product.getName().trim());
 		objToIndex.setProductOfferingNameText(product.getName().trim());
