@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.Locale;
 
 @Service
 public class SearchProcessor {
@@ -49,10 +50,14 @@ public class SearchProcessor {
 		this.domeCatalogService = domeCatalogService;
 	}
 
+	public Map<Page<IndexingObject>, Map<IndexingObject, Float>> searchAllFields(String q, SearchRequest request, Pageable pageable) {
+
+		return searchAllFields(q, "Launched", request, pageable);
+	}
+
 	// search in all fields with boosting, fuzzy, wildcard, category filtering and
-	// launched status
-	public Map<Page<IndexingObject>, Map<IndexingObject, Float>> searchAllFields(String q, SearchRequest request,
-			Pageable pageable) {
+	// choose status
+	public Map<Page<IndexingObject>, Map<IndexingObject, Float>> searchAllFields(String q, String lifecycleStatus, SearchRequest request, Pageable pageable) {
 
 		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 		String[] words = null;
@@ -252,13 +257,32 @@ public class SearchProcessor {
             // perché l'utente vuole vedere tutto l'insieme.
         }
 
-		// Add a filter to include only products with status "launched"
-		// Add a filter to include only products with status "Launched" or "launched"
+		// ORGANIZATION (SELLER) FILTER
+		// id and role must match on the same relatedParty element, so both go in one nested query
+		if (request.getOrganizationId() != null && !request.getOrganizationId().trim().isEmpty()) {
+			String organizationId = request.getOrganizationId().trim();
+			logger.info("Adding seller organization filter for: {}", organizationId);
+
+			BoolQueryBuilder sellerQuery = QueryBuilders.boolQuery()
+					.must(QueryBuilders.termQuery("relatedParties.id", organizationId))
+					.must(QueryBuilders.termsQuery("relatedParties.role", "Seller", "seller"));
+
+			boolQueryBuilder.filter(
+					QueryBuilders.nestedQuery("relatedParties", sellerQuery,
+							org.apache.lucene.search.join.ScoreMode.None));
+		}
+
+		// Add a filter to include only products with effective status
+		String effectiveStatus = (lifecycleStatus == null || lifecycleStatus.trim().isEmpty())
+        ? "Launched"
+        : lifecycleStatus.trim();
+		logger.info("Adding lifecycle status filter: {}", effectiveStatus);
+		
 		boolQueryBuilder.filter(
 				QueryBuilders.termsQuery(
 						"productOfferingLifecycleStatus",
-						"Launched",
-						"launched"));
+						effectiveStatus,
+						effectiveStatus.toLowerCase(Locale.ROOT)));
 
 		// Build the Elasticsearch query
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()
@@ -267,11 +291,22 @@ public class SearchProcessor {
 				.withTrackScores(true); // Enable score tracking
 
 		Query elasticQuery = nativeSearchQueryBuilder.build();
+		//logger.info("Offering search query: {}", boolQueryBuilder);
 
 		try {
 			// Execute the search query
 			SearchHits<IndexingObject> searchHits = elasticsearchOperations.search(elasticQuery, IndexingObject.class);
 			// logger.info("Found {} results", searchHits.getTotalHits());
+
+			//debug 
+			// searchHits.forEach(hit -> {
+			// 	IndexingObject obj = hit.getContent();
+
+			// 	logger.info(
+			// 			"ES result: offeringId={}, indexedLifecycleStatus={}",
+			// 			obj.getProductOfferingId(),
+			// 			obj.getProductOfferingLifecycleStatus());
+			// });
 
 			// Create a map to associate each IndexingObject with its score
 			Map<IndexingObject, Float> resultScoreMap = new ConcurrentHashMap<>();

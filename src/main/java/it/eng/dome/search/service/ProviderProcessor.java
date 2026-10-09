@@ -2,10 +2,12 @@ package it.eng.dome.search.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.lucene.search.join.ScoreMode;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -37,10 +39,16 @@ public class ProviderProcessor {
 		this.domeCatalogService = domeCatalogService;
 	}
 
-	// --- search provider con considerAllOrgs (Gerarchico: AND tra root, OR tra foglie)---
 	public Page<ProviderIndex> searchProvider(OrganizationSearchRequest request, boolean considerAllOrgs, Pageable pageable) {
+		return searchProvider(null, request, considerAllOrgs, pageable);
+	}
+
+	// --- search provider con considerAllOrgs (Gerarchico: AND tra root, OR tra foglie)---
+	public Page<ProviderIndex> searchProvider(String query, OrganizationSearchRequest request, boolean considerAllOrgs, Pageable pageable) {
 		try {
 			BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+
+			addKeywordSearch(boolQuery, query);
 
 			// Filter by categories (nested)
 			// 1. FILTRO CATEGORIE (Gerarchico: AND tra root, OR tra foglie)
@@ -105,6 +113,69 @@ public class ProviderProcessor {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new PageImpl<>(new ArrayList<>());
+		}
+	}
+
+	private void addKeywordSearch(BoolQueryBuilder boolQuery, String query) {
+		if (query == null || query.trim().isEmpty()) {
+			return;
+		}
+
+		String normalizedQuery = query.trim().toLowerCase(Locale.ROOT);
+
+		// As in offering search, quotes request an exact full-name match.
+		boolean isExactMatch = normalizedQuery.length() > 2
+				&& normalizedQuery.startsWith("\"")
+				&& normalizedQuery.endsWith("\"");
+
+		if (isExactMatch) {
+			String exactName = normalizedQuery.substring(
+					1, normalizedQuery.length() - 1).trim();
+
+			boolQuery.must(QueryBuilders.termQuery("tradingName", exactName));
+			return;
+		}
+
+		// BoolQueryBuilder textQuery = QueryBuilders.boolQuery()
+		// 		.should(QueryBuilders.termQuery("tradingName", normalizedQuery)
+		// 				.boost(10.0f))
+		// 		.should(QueryBuilders.matchQuery("tradingNameText", normalizedQuery)
+		// 				.operator(Operator.OR)
+		// 				.boost(5.0f))
+		// 		.should(QueryBuilders.matchQuery("tradingNameText", normalizedQuery)
+		// 				.operator(Operator.OR)
+		// 				.fuzziness(Fuzziness.AUTO)
+		// 				.boost(1.0f))
+		// 		.minimumShouldMatch(1);
+
+		// boolQuery.must(textQuery);
+
+		String[] words = normalizedQuery.split("\\s+");
+
+		for (String rawWord : words) {
+			if (rawWord.isEmpty()) {
+				continue;
+			}
+
+			String word = rawWord
+					.replace("\\", "\\\\")
+					.replace("*", "\\*")
+					.replace("?", "\\?");
+
+			BoolQueryBuilder wordQuery = QueryBuilders.boolQuery()
+					.should(QueryBuilders.matchQuery("tradingNameText", rawWord).boost(5.0f))
+					.should(QueryBuilders.prefixQuery("tradingNameText", rawWord).boost(3.0f))
+					.should(QueryBuilders.wildcardQuery("tradingName", "*" + word + "*").boost(1.0f))
+					.minimumShouldMatch(1);
+
+			if (rawWord.length() >= 4) {
+				wordQuery.should(
+						QueryBuilders.fuzzyQuery("tradingNameText", rawWord)
+								.fuzziness(Fuzziness.AUTO)
+								.boost(0.5f));
+			}
+
+			boolQuery.must(wordQuery);
 		}
 	}
 
