@@ -14,7 +14,7 @@
 
 	<groupId>it.eng.dome</groupId>
 	<artifactId>search</artifactId>
-	<version>1.5.4</version>
+	<version>1.6.0</version>
 	<name>Search and Browsing</name>
 	<description>Demo for DOME Project</description>
 

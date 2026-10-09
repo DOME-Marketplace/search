@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -41,27 +42,43 @@ public class SearchResource {
 	@PostMapping("/SearchProduct")
 	public ResponseEntity<List<ProductOffering>> searchProduct(
 			@RequestParam(value = "query", required = false) String query,
+			@RequestParam(value = "lifecycleStatus", defaultValue = "Launched") String lifecycleStatus,
 			@RequestBody SearchRequest request,
 			Pageable pageable) {
-		return executeSearch(query, request, pageable);
+		return executeSearch(query, lifecycleStatus, request, pageable);
 	}
 
 	// // Caso senza query
 	// @PostMapping("/SearchProduct")
 	// public ResponseEntity<List<ProductOffering>> searchProductNoQuery(
+	// 		@RequestParam(value = "lifecycleStatus", defaultValue = "Launched") String lifecycleStatus,
 	// 		@RequestBody SearchRequest request,
 	// 		Pageable pageable) {
-	// 	return executeSearch(null, request, pageable);
+	// 	return executeSearch(null, lifecycleStatus, request, pageable);
 	// }
 
 	// Metodo privato di supporto per non duplicare la logica
-	private ResponseEntity<List<ProductOffering>> executeSearch(String query, SearchRequest request,
-			Pageable pageable) {
+	private ResponseEntity<List<ProductOffering>> executeSearch(String query, String lifecycleStatus, SearchRequest request, Pageable pageable) {
+		
+		String effectiveStatus = (lifecycleStatus == null || lifecycleStatus.trim().isEmpty())
+            ? "Launched"
+            : lifecycleStatus.trim();
+			
 		Map<Page<IndexingObject>, Map<IndexingObject, Float>> resultPage = searchProcessor.searchAllFields(query,
-				request, pageable);
+				effectiveStatus, request, pageable);
+		
 		Page<ProductOffering> pageProduct = resultProcessor.processResultsWithScore(resultPage, pageable);
 
-		String path = (query != null && !query.isEmpty()) ? "/api/SearchProduct?query=" + query : "/api/SearchProduct";
+		UriComponentsBuilder pathBuilder = UriComponentsBuilder
+		.fromPath("/api/SearchProduct")
+		.queryParam("lifecycleStatus", effectiveStatus);
+
+		if (query != null && !query.trim().isEmpty()) {
+			pathBuilder.queryParam("query", query);
+		}
+
+		String path = pathBuilder.build().encode().toUriString();
+
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, path);
 
 		return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);

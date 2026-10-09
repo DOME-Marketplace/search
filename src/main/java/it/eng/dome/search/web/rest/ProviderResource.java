@@ -56,15 +56,27 @@ public class ProviderResource {
         return ResponseEntity.ok(complianceLevels);
     }
 
-    @PostMapping(value = "/searchOrganizations")
-    public ResponseEntity<List<Organization>> searchOrganizations(@RequestBody OrganizationSearchRequest request,
-                                                                  @RequestParam(name="considerAllOrgs", required = false, defaultValue = "false") boolean considerAllOrgs,
-                                                                  Pageable pageable){
-        Page<ProviderIndex> page = providerProcessor.searchProvider(request, considerAllOrgs, pageable);
+         @PostMapping(value = "/searchOrganizations")
+    public ResponseEntity<List<Organization>> searchOrganizations(
+            @RequestParam(value = "query", required = false) String query,
+            @RequestBody OrganizationSearchRequest request,
+            @RequestParam(name = "considerAllOrgs", required = false, defaultValue = "false") boolean considerAllOrgs,
+            Pageable pageable) {
+        Page<ProviderIndex> page = providerProcessor.searchProvider(query, request, considerAllOrgs, pageable);
         Page<Organization> pageProduct = resultProcessor.processProviderResults(page, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/searchOrganizations");
         return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
     }
+
+    // @PostMapping(value = "/searchOrganizations")
+    // public ResponseEntity<List<Organization>> searchOrganizations(@RequestBody OrganizationSearchRequest request,
+    //                                                               @RequestParam(name="considerAllOrgs", required = false, defaultValue = "false") boolean considerAllOrgs,
+    //                                                               Pageable pageable){
+    //     Page<ProviderIndex> page = providerProcessor.searchProvider(request, considerAllOrgs, pageable);
+    //     Page<Organization> pageProduct = resultProcessor.processProviderResults(page, pageable);
+    //     HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageProduct, "/api/searchOrganizations");
+    //     return new ResponseEntity<>(pageProduct.getContent(), headers, HttpStatus.OK);
+    // }
 
     @GetMapping("/organizations/clearRepository")
     public ResponseEntity<?> clearRepository() {

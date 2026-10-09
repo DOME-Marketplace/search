@@ -1,6 +1,6 @@
 # DOME Search REST APIs
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Description:** DOME Search REST APIs Swagger documentation  
 
 
@@ -14,8 +14,7 @@
 ### search-resource
 | Verb | Path | Task |
 |------|------|------|
-| POST | `/api/SearchProduct` | searchProductNoQuery |
-| POST | `/api/SearchProduct/{query}` | searchProductWithQuery |
+| POST | `/api/SearchProduct` | searchProduct |
 | GET | `/api/offerings/clearRepository` | clearRepositoryUsingGET_1 |
 
 ### provider-resource
@@ -30,13 +29,13 @@
 ### basic-error-controller
 | Verb | Path | Task |
 |------|------|------|
-| GET | `/error` | error |
-| HEAD | `/error` | error |
-| POST | `/error` | error |
-| PUT | `/error` | error |
-| DELETE | `/error` | error |
-| OPTIONS | `/error` | error |
-| PATCH | `/error` | error |
+| GET | `/error` | errorHtml |
+| HEAD | `/error` | errorHtml |
+| POST | `/error` | errorHtml |
+| PUT | `/error` | errorHtml |
+| DELETE | `/error` | errorHtml |
+| OPTIONS | `/error` | errorHtml |
+| PATCH | `/error` | errorHtml |
 
 ### info-search-controller
 | Verb | Path | Task |

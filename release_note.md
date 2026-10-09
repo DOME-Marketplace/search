@@ -2,6 +2,16 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.6.0</code>
+**Feature**
+* Added optional keyword search support to `/api/searchOrganizations` through the `query` request parameter. Organization search can now be executed with or without a keyword, consistently with `/api/SearchProduct`.
+* Added support for filtering product offerings by organization identifier in organization-scoped search scenarios.
+* Added optional lifecycleStatus query parameter to `/api/SearchProduct` (default `Launched`), keeping the current behavior unchanged.
+
+**Improvement**
+* Enhanced organization search usability by supporting partial matches on `tradingName` (e.g. `eng` → `Engineering`, `fico` → `FICODES`).
+* Improved consistency of the organization details page by ensuring that filtered and full-text offer searches remain restricted to the current organization.
+
 ### <code>1.5.4</code>
 **Bug Fix**
 * Fixed an Elasticsearch indexing issue affecting productOfferingLastUpdate date serialization.
