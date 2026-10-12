@@ -30,6 +30,12 @@ http://localhost:8080/swagger-ui/index.html#/
 > [!TIP]
 > In the Swagger endpoint it's possible to check the **current version** of the search software.
 
+> [!NOTE]  
+> By default spring boot application starts on port number 8080. If port 8080 is occupied in your system then you can change the port number by uncommenting and updating the **server.port** property inside the **application.yaml** file that is available inside the **src > main > resources** folder.
+
+> [!NOTE]  
+> In order to use the profile (see pom.xml) please use: `mvn spring-boot:run -Pgenerate-rest-apis`
+
 ## How to test
 To test the new improvements in the code, after creating a new **docker image** of the **search** (see [details](#how-to-create-a-docker-image)), you can use this command:
 
