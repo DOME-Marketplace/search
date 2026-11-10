@@ -2,6 +2,10 @@
 
 **Release Notes** for the *Search*:
 
+### <code>1.6.1</code>
+**Improvement / Bug Fix**
+- Added hybrid fallback logic for category filtering: unmapped categories not found in the DOME catalog are now correctly filtered via direct index matching (`categories.name`).
+
 ### <code>1.6.0</code>
 **Feature**
 * Added optional keyword search support to `/api/searchOrganizations` through the `query` request parameter. Organization search can now be executed with or without a keyword, consistently with `/api/SearchProduct`.

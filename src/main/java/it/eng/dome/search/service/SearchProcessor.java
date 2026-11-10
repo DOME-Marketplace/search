@@ -1,8 +1,15 @@
 package it.eng.dome.search.service;
 
-import it.eng.dome.search.domain.IndexingObject;
-import it.eng.dome.search.repository.OfferingRepository;
-import it.eng.dome.search.service.dto.SearchRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.Operator;
@@ -23,13 +30,9 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.Locale;
+import it.eng.dome.search.domain.IndexingObject;
+import it.eng.dome.search.repository.OfferingRepository;
+import it.eng.dome.search.service.dto.SearchRequest;
 
 @Service
 public class SearchProcessor {
@@ -161,48 +164,87 @@ public class SearchProcessor {
 			boolQueryBuilder.must(QueryBuilders.matchAllQuery());
 		}
 
-		// if (request.getCategories() != null && !request.getCategories().isEmpty()) {
-		// logger.info("Adding category filter for categories: {}",
-		// request.getCategories());
-		// BoolQueryBuilder nestedBoolQuery = QueryBuilders.boolQuery();
-		// nestedBoolQuery.must(QueryBuilders.termsQuery("categories.name",
-		// request.getCategories()));
-		// // Create a nested query to filter by categories
-		// boolQueryBuilder = boolQueryBuilder.filter(
-		// QueryBuilders.nestedQuery("categories", nestedBoolQuery,
-		// org.apache.lucene.search.join.ScoreMode.None));
-		// } else {
-		// logger.info("No categories specified for filtering.");
-		// }
-
-		// HIERARCHICAL CATEGORIES LOGIC (AND between groups, OR between leaves)
+		// HIERARCHICAL + HYBRID FALLBACK CATEGORIES LOGIC (fix for francisco)
 		if (request.getCategories() != null && !request.getCategories().isEmpty()) {
-			// Map<String, Object> hierarchy = domeCatalogService.getCategoryHierarchy();
+
+			// try to group categories by their root using the DOME catalog
 			Map<String, List<String>> groupedRequest = domeCatalogService
 					.groupCategoriesByRoot(request.getCategories());
-			// Se l'utente ha richiesto categorie, ma il servizio di raggruppamento restituisce una mappa vuota,
-            // significa che nessuna delle categorie inserite esiste nella gerarchia ufficiale.
-            if (groupedRequest == null || groupedRequest.isEmpty()) {
-                logger.warn("Categories were requested but none exist in the hierarchy. Forcing 0 results.");
-                // Iniettiamo un filtro impossibile da soddisfare per azzerare i risultati (AND con il resto)
-                boolQueryBuilder.filter(QueryBuilders.termQuery("categories.name", "FORCE_EMPTY_RESULT_NO_MATCH_STR_TO_FORCE_ZERO_RESULTS"));
-			} else {
+
+			// found recognized categories in the DOME catalog
+			Set<String> recognizedCategories = new HashSet<>();
+			if (groupedRequest != null) {
+				groupedRequest.values().forEach(recognizedCategories::addAll);
+			}
+
+			// find "external" categories not present in the DOME catalog
+			List<String> unmappedCategories = request.getCategories().stream()
+					.filter(cat -> !recognizedCategories.contains(cat))
+					.collect(Collectors.toList());
+
+			if (groupedRequest != null && !groupedRequest.isEmpty()) {
+				// --- CASE A: We found matches in the DOME hierarchy ---
 				for (Map.Entry<String, List<String>> entry : groupedRequest.entrySet()) {
 					List<String> catValues = entry.getValue();
 
-					// Create an OR block for categories of the same group
 					BoolQueryBuilder groupOrQuery = QueryBuilders.boolQuery();
 					for (String value : catValues) {
 						groupOrQuery.should(QueryBuilders.termQuery("categories.name", value));
 					}
 
-					// Add the group in FILTER (AND) via a Nested Query
+					// Add the official group in AND (filter) via Nested Query
 					boolQueryBuilder.filter(
 							QueryBuilders.nestedQuery("categories", groupOrQuery,
 									org.apache.lucene.search.join.ScoreMode.None));
 				}
 			}
+
+			// FALLBACK: If there are requested categories that were NOT part of the
+			// DOME catalog, we filter them directly on the IndexingObject (OR among them, but AND with the rest)
+			if (!unmappedCategories.isEmpty()) {
+				logger.info("Categories not found in DOME catalog, falling back to direct index filtering for: {}",
+						unmappedCategories);
+
+				BoolQueryBuilder unmappedOrQuery = QueryBuilders.boolQuery();
+				for (String unmappedCat : unmappedCategories) {
+					unmappedOrQuery.should(QueryBuilders.termQuery("categories.name", unmappedCat));
+				}
+
+				boolQueryBuilder.filter(
+						QueryBuilders.nestedQuery("categories", unmappedOrQuery,
+								org.apache.lucene.search.join.ScoreMode.None));
+			}
+
 		}
+
+		// HIERARCHICAL CATEGORIES LOGIC (AND between groups, OR between leaves)
+		// if (request.getCategories() != null && !request.getCategories().isEmpty()) {
+		// 	// Map<String, Object> hierarchy = domeCatalogService.getCategoryHierarchy();
+		// 	Map<String, List<String>> groupedRequest = domeCatalogService
+		// 			.groupCategoriesByRoot(request.getCategories());
+		// 	// Se l'utente ha richiesto categorie, ma il servizio di raggruppamento restituisce una mappa vuota,
+        //     // significa che nessuna delle categorie inserite esiste nella gerarchia ufficiale.
+        //     if (groupedRequest == null || groupedRequest.isEmpty()) {
+        //         logger.warn("Categories were requested but none exist in the hierarchy. Forcing 0 results.");
+        //         // Iniettiamo un filtro impossibile da soddisfare per azzerare i risultati (AND con il resto)
+        //         boolQueryBuilder.filter(QueryBuilders.termQuery("categories.name", "FORCE_EMPTY_RESULT_NO_MATCH_STR_TO_FORCE_ZERO_RESULTS"));
+		// 	} else {
+		// 		for (Map.Entry<String, List<String>> entry : groupedRequest.entrySet()) {
+		// 			List<String> catValues = entry.getValue();
+
+		// 			// Create an OR block for categories of the same group
+		// 			BoolQueryBuilder groupOrQuery = QueryBuilders.boolQuery();
+		// 			for (String value : catValues) {
+		// 				groupOrQuery.should(QueryBuilders.termQuery("categories.name", value));
+		// 			}
+
+		// 			// Add the group in FILTER (AND) via a Nested Query
+		// 			boolQueryBuilder.filter(
+		// 					QueryBuilders.nestedQuery("categories", groupOrQuery,
+		// 							org.apache.lucene.search.join.ScoreMode.None));
+		// 		}
+		// 	}
+		// }
 
 		// COMPLIANCE LEVELS LOGIC
 		if (request.getComplianceLevels() != null && !request.getComplianceLevels().isEmpty()) {
